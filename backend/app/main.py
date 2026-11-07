@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.db import get_db
-from app.routers import findings, insights, posters, rules, toppers
+from app.routers import account, findings, imports, insights, members, organisations, posters, rules, toppers
 from rules.registry import load_rule_pack
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -24,7 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-for module in (posters, findings, toppers, rules, insights):
+for module in (organisations, account, members, imports, posters, findings, toppers, rules, insights):
     app.include_router(module.router)
 
 
