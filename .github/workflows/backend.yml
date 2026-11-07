@@ -1,0 +1,48 @@
+# Runs the backend tests on every push and pull request that touches the backend.
+# On a push to main, if they pass, it asks Render to redeploy the API through a deploy hook.
+#
+# Setup (once): in Render, open the service > Settings > Deploy Hook and copy the URL. In GitHub, open
+# the repo > Settings > Secrets and variables > Actions > New repository secret, named RENDER_DEPLOY_HOOK.
+# Until that secret exists, the deploy step is skipped and only the tests run.
+name: Backend
+
+on:
+  push:
+    branches: [main]
+    paths: ["backend/**", "test-posters/**", ".github/workflows/backend.yml"]
+  pull_request:
+    paths: ["backend/**", "test-posters/**"]
+  workflow_dispatch: # "Run workflow" button, to redeploy by hand
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: pip install -r requirements.txt
+      # No secrets needed: tests use fixture readings and never call Gemini or Supabase.
+      - run: pytest -q
+
+  deploy:
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask Render to deploy
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "RENDER_DEPLOY_HOOK isn't set yet, so nothing was deployed."
+            exit 0
+          fi
+          curl --fail --silent --show-error -X POST "$HOOK" > /dev/null
+          echo "Render deploy started."

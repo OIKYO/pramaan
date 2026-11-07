@@ -81,6 +81,10 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Checkboxes use a separate `<label htmlFor>`.** Wrapping a Radix checkbox in a `<label>` toggled it twice, so tags silently didn't stick (found while testing the upload page in a real browser).
 - **The demo-account buttons on the login page need `VITE_DEMO_PASSWORD`.** It's the same password the README lists for the judges; leave it empty to hide the buttons.
 
+## Deployment
+
+- **The API deploys through a Render deploy hook, triggered by GitHub Actions after the backend tests pass** (`.github/workflows/backend.yml`). The Render service deploys the public repo by URL rather than through Render's GitHub app, so the repo can stay on the main GitHub account while the service runs on a different Render account. A push that breaks a test never reaches the live API.
+
 ## Demo data
 
 - **Fictional phone numbers start with `+91 1`.** India doesn't give numbers in that range to subscribers, so no demo number can belong to a real person.
