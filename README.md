@@ -45,7 +45,8 @@ Password for every account: `Northfield-demo-2026`. Sign in with these on the lo
 2. Your industry suggests **rulebooks**, and Pramaan uses its words: a coaching institute keeps "Courses and fees" and a "Toppers register"; a restaurant keeps "Menu and prices". Head office adds or removes rulebooks on the **Rulebooks** page; checks in a rulebook you don't keep never run.
 3. **Overview** shows a setup checklist that follows your rulebooks: brand kit (name, helpline, logo, colours), branches, what you offer and its prices, the people posters may show, approved figures and your team.
 4. **Import data** takes the spreadsheets you already keep (CSV): download a template, upload, and see every change and every problem by line and column before anything is saved. Exports from each rulebook page use the same columns, so they import back.
-5. **Team** adds people with a role and a branch or region. Each gets a temporary password, shown once, and must choose their own at first sign-in. Head office can reset passwords and remove access.
+5. **Bring people in** with an invite link (head office invites anyone; regional managers invite branch staff in their region; a link works once and expires after 7 days), or give them the organisation's join code, which they enter while creating their account. Head office sees the code on Organisation › Profile and can replace it.
+6. **Team** also adds people directly with a role and a branch or region. Each gets a temporary password, shown once, and must choose their own at first sign-in. Head office can reset passwords and remove access.
 
 Each organisation sees only its own data: every table carries `org_id` and every row-level-security policy starts with "your organisation only".
 
