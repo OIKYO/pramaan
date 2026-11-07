@@ -24,7 +24,7 @@ export function OrganisationForm({ org }: { org: Organisation }) {
         <Input value={name} onChange={(e) => setName(e.target.value)} maxLength={120} />
       </Field>
       <div>
-        <Button type="submit" variant="secondary" disabled={rename.isPending || name.trim() === org.name}>Save name</Button>
+        <Button type="submit" variant="secondary" disabled={rename.isPending || name.trim() === org.name}>Save</Button>
       </div>
     </form>
   );
