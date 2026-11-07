@@ -1,5 +1,5 @@
 import { Highlight } from "@/components/ui/Highlight";
-import type { Problem } from "@/lib/findings";
+import type { Box, Problem } from "@/lib/findings";
 import { cn } from "@/lib/utils";
 
 interface PosterCanvasProps {
@@ -19,6 +19,19 @@ const BOX_TONE = {
 
 const BADGE_TONE = { block: "bg-blocked", needs_human: "bg-info", warn: "bg-warning", pass: "bg-passed" } as const;
 
+/** Findings that point at the same spot share one box. Bigger boxes are drawn first, so a small
+ * box inside a bigger one (a rank inside a topper's card) stays on top and clickable. */
+function groupByBox(problems: Problem[]): { box: Box; items: Problem[] }[] {
+  const groups = new Map<string, { box: Box; items: Problem[] }>();
+  for (const p of problems) {
+    if (!p.box) continue;
+    const key = p.box.join(",");
+    groups.set(key, { box: p.box, items: [...(groups.get(key)?.items ?? []), p] });
+  }
+  const area = ([y0, x0, y1, x1]: Box) => (y1 - y0) * (x1 - x0);
+  return [...groups.values()].sort((a, b) => area(b.box) - area(a.box));
+}
+
 /** The poster with a numbered box over each problem. Click a box to open its finding. */
 export function PosterCanvas({ imageUrl, title, problems, selected, onSelect }: PosterCanvasProps) {
   return (
@@ -28,15 +41,16 @@ export function PosterCanvas({ imageUrl, title, problems, selected, onSelect }: 
       ) : (
         <div className="grid aspect-[4/5] place-items-center text-sm text-muted-text">The image couldn't be loaded.</div>
       )}
-      {problems.map(({ number, finding, box }) => {
-        if (!box) return null;
+      {groupByBox(problems).map(({ box, items }) => {
         const [ymin, xmin, ymax, xmax] = box;
-        const isSelected = selected === number;
-        const settled = finding.status !== "open";
+        const at = items.findIndex((p) => p.number === selected);
+        const top = items[0].finding; // most serious first
+        // Clicking a shared box steps through its findings, then deselects.
+        const next = at === -1 ? items[0].number : (items[at + 1]?.number ?? null);
         return (
           <Highlight
-            key={finding.id}
-            active={isSelected}
+            key={box.join(",")}
+            active={at !== -1}
             className="absolute"
             style={{
               top: `calc(${ymin / 10}% - 4px)`,
@@ -47,23 +61,28 @@ export function PosterCanvas({ imageUrl, title, problems, selected, onSelect }: 
           >
             <button
               type="button"
-              onClick={() => onSelect(isSelected ? null : number)}
-              aria-label={`Finding ${number}: ${finding.message}`}
-              aria-pressed={isSelected}
+              onClick={() => onSelect(next)}
+              aria-label={items.map((p) => `Finding ${p.number}: ${p.finding.message}`).join(" ")}
+              aria-pressed={at !== -1}
               className={cn(
                 "relative size-full rounded-sm border-2",
-                BOX_TONE[finding.severity],
-                settled && "border-dashed opacity-50",
-                isSelected && "ring-4 ring-ink/30",
+                BOX_TONE[top.severity],
+                items.every((p) => p.finding.status !== "open") && "border-dashed opacity-50",
+                at !== -1 && "ring-4 ring-ink/30",
               )}
             >
-              <span
-                className={cn(
-                  "absolute -top-3 -left-3 grid size-6 place-items-center rounded-full text-xs font-semibold text-white shadow",
-                  BADGE_TONE[finding.severity],
-                )}
-              >
-                {number}
+              <span className="absolute -top-3 -left-3 flex gap-0.5">
+                {items.map((p) => (
+                  <span
+                    key={p.number}
+                    className={cn(
+                      "grid size-6 place-items-center rounded-full text-xs font-semibold text-white shadow",
+                      BADGE_TONE[p.finding.severity],
+                    )}
+                  >
+                    {p.number}
+                  </span>
+                ))}
               </span>
             </button>
           </Highlight>
