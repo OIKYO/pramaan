@@ -47,7 +47,8 @@ def signup(body: SignupRequest) -> SignupResult:
     profile: dict = {}
     if body.industry_group:
         profile = _profile(body.industry_group, body.industry or OTHER_INDUSTRY, body.org_type or "other", body.focus)
-    rulebooks = suggested_rulebooks(profile.get("industry_group"), profile.get("industry"), profile.get("focus", []))
+    rulebooks = suggested_rulebooks(profile.get("industry_group"), profile.get("industry"), profile.get("org_type"),
+                                    profile.get("focus", []))
 
     db = get_db()
     name, full_name, email = body.organisation_name.strip(), body.full_name.strip(), body.email.strip().lower()

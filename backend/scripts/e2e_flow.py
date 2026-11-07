@@ -83,7 +83,7 @@ def main() -> None:
     try:
         check("health check needs no login", httpx.get(f"{api}/health").json()["ok"] is True)
         check("signed-out requests are refused", httpx.get(f"{api}/rules").status_code == 401)
-        check("the rule pack has 17 checks", len(staff.get("/rules").json()["rules"]) == 17)
+        check("the rule pack has 27 checks", len(staff.get("/rules").json()["rules"]) == 27)
         check("regional managers can't upload posters",
               regional.upload("/posters", "01-clean.png", title="x", channel="print").status_code == 403)
 

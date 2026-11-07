@@ -152,7 +152,8 @@ def main() -> None:
     db.table("organisations").upsert({
         "id": ORG_ID, "name": ORG_NAME, "industry_group": "education", "industry": "Coaching Institutes",
         "org_type": "coaching", "focus": ["admissions", "results"],
-        "rulebooks": ["brand", "contacts", "claims", "offerings", "figures", "people", "rankings"],
+        "rulebooks": ["brand", "contacts", "claims", "people", "rights", "offerings", "figures", "dates", "offers",
+                      "legal", "rankings"],
     }).execute()
     region = db.table("regions").upsert({"org_id": ORG_ID, "name": "East"}, on_conflict="org_id,name").execute().data[0]
     branches = {}

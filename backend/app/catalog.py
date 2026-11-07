@@ -59,15 +59,26 @@ def complete(rulebooks: list[str]) -> list[str]:
     return [b for b in rulebook_ids() if b in chosen]
 
 
-def suggested_rulebooks(group_id: str | None, industry: str | None, focus: list[str]) -> list[str]:
-    """What an organisation like this usually needs. Honest claims suits everyone."""
+def suggested_rulebooks(group_id: str | None, industry: str | None, org_type: str | None, focus: list[str]) -> list[str]:
+    """What an organisation like this starts with: the rulebooks everyone keeps, the general ones that
+    act only when a poster shows what they check, and what its industry, subdomain, kind of
+    organisation and focus call for."""
+    catalog = load_catalog()
     group = industry_group(group_id) or {}
-    picks = ["claims", *group.get("suggest", [])]
+    picks = [b.id for b in load_rule_pack().rulebooks if b.default_on]
+    picks += group.get("suggest", [])
     picks += group.get("special", {}).get(industry or "", {}).get("suggest", [])
-    for area in load_catalog()["focus_areas"]:
+    picks += next((t.get("suggest", []) for t in catalog["org_types"] if t["id"] == org_type), [])
+    for area in catalog["focus_areas"]:
         if area["id"] in focus:
             picks += area["suggest"]
     return complete(picks)
+
+
+def restricted_claims(group_id: str | None) -> tuple[str, list[str]]:
+    """The industry's name and the claims its ads may never make (LEGAL-02)."""
+    group = industry_group(group_id) or {}
+    return group.get("name", ""), group.get("restricted", [])
 
 
 class ProfileError(ValueError):

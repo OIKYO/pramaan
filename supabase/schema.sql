@@ -26,7 +26,7 @@ create table public.organisations (
   industry text check (industry is null or char_length(industry) between 2 and 80),
   org_type text,
   focus text[] not null default '{}',
-  rulebooks text[] not null default '{brand,contacts,claims,offerings,figures,people}',
+  rulebooks text[] not null default '{brand,contacts,claims,people,rights,dates,offers,legal}',
   created_by uuid references auth.users (id) on delete set null,
   created_at timestamptz not null default now()
 );
@@ -80,6 +80,8 @@ create table public.brand_kit (
   logo_path text,                                     -- object path in the public 'brand' bucket
   banned_phrases text[] not null default '{}',        -- added to the built-in CCPA-01 list
   tone_notes text not null default '',
+  required_disclaimers text[] not null default '{}',  -- LEGAL-01: every poster must carry each one
+  approved_partners text[] not null default '{}',     -- RIGHTS-02: other organisations allowed on posters
   updated_at timestamptz not null default now()
 );
 

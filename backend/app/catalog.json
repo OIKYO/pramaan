@@ -91,7 +91,13 @@
       "rankings"
      ]
     }
-   }
+   },
+   "restricted": [
+    "guaranteed placement",
+    "assured placement",
+    "100% placement",
+    "placement guaranteed"
+   ]
   },
   {
    "id": "marketing",
@@ -219,6 +225,15 @@
     "Taxation",
     "Auditing",
     "Risk Management"
+   ],
+   "restricted": [
+    "guaranteed returns",
+    "assured returns",
+    "risk-free returns",
+    "risk free returns",
+    "double your money",
+    "sure-shot returns",
+    "no risk"
    ]
   },
   {
@@ -253,6 +268,15 @@
     "Medical Education",
     "Wellness Centres",
     "Rehabilitation Centres"
+   ],
+   "restricted": [
+    "100% cure",
+    "permanent cure",
+    "guaranteed cure",
+    "miracle cure",
+    "no side effects",
+    "cures cancer",
+    "cures diabetes"
    ]
   },
   {
@@ -362,6 +386,11 @@
     "Agriculture-based Food Businesses",
     "Culinary Organisations",
     "Food Blogging & Media"
+   ],
+   "restricted": [
+    "cures",
+    "prevents cancer",
+    "guaranteed weight loss"
    ]
   },
   {
@@ -449,6 +478,10 @@
     "Personal Training",
     "Fitness Communities",
     "Sports Events"
+   ],
+   "restricted": [
+    "guaranteed weight loss",
+    "guaranteed results"
    ]
   },
   {
@@ -638,6 +671,13 @@
     "Facility Management",
     "Smart Cities",
     "Urban Planning"
+   ],
+   "restricted": [
+    "guaranteed appreciation",
+    "assured rental",
+    "assured returns",
+    "guaranteed returns",
+    "100% safe investment"
    ]
   },
   {
@@ -835,6 +875,11 @@
     "Childcare",
     "Elderly Care",
     "Professional Training"
+   ],
+   "restricted": [
+    "guaranteed weight loss",
+    "permanent results guaranteed",
+    "100% cure"
    ]
   },
   {
@@ -865,51 +910,80 @@
  "org_types": [
   {
    "id": "company",
-   "name": "Company"
+   "name": "Company",
+   "suggest": [
+    "offerings"
+   ]
   },
   {
    "id": "chain",
-   "name": "Chain or franchise"
+   "name": "Chain or franchise",
+   "suggest": [
+    "offerings"
+   ]
   },
   {
    "id": "institution",
-   "name": "School, college or university"
+   "name": "School, college or university",
+   "suggest": [
+    "offerings",
+    "figures"
+   ]
   },
   {
    "id": "coaching",
-   "name": "Coaching or training institute"
+   "name": "Coaching or training institute",
+   "suggest": [
+    "offerings",
+    "figures",
+    "rankings"
+   ]
   },
   {
    "id": "club",
-   "name": "Club, team or society"
+   "name": "Club, team or society",
+   "suggest": []
   },
   {
    "id": "nonprofit",
-   "name": "NGO, trust or foundation"
+   "name": "NGO, trust or foundation",
+   "suggest": [
+    "figures"
+   ]
   },
   {
    "id": "community",
-   "name": "Community or association"
+   "name": "Community or association",
+   "suggest": []
   },
   {
    "id": "agency",
-   "name": "Agency or studio"
+   "name": "Agency or studio",
+   "suggest": []
   },
   {
    "id": "government",
-   "name": "Government body"
+   "name": "Government body",
+   "suggest": [
+    "figures"
+   ]
   },
   {
    "id": "political",
-   "name": "Political organisation"
+   "name": "Political organisation",
+   "suggest": [
+    "figures"
+   ]
   },
   {
    "id": "religious",
-   "name": "Religious organisation"
+   "name": "Religious organisation",
+   "suggest": []
   },
   {
    "id": "other",
-   "name": "Something else"
+   "name": "Something else",
+   "suggest": []
   }
  ],
  "focus_areas": [

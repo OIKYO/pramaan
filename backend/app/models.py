@@ -73,6 +73,16 @@ class PosterReading(BaseModel):
     registered_name_seen: bool = False
     helpline_seen: bool = False
     wording_flags: list[WordingFlag] = []
+    other_brands: list["BrandSeen"] = []
+
+
+class BrandSeen(_Boxed):
+    """Another organisation's name or logo on the poster: a partner, sponsor, university or company."""
+
+    name: str
+
+
+PosterReading.model_rebuild()
 
 
 # ============================================================ reference data (head office's rulebook)
@@ -85,6 +95,8 @@ class BrandKit(BaseModel):
     logo_path: str | None = None
     banned_phrases: list[str] = []
     tone_notes: str = ""
+    required_disclaimers: list[str] = []  # LEGAL-01: every poster must carry each one
+    approved_partners: list[str] = []  # RIGHTS-02: other organisations allowed on posters
 
 
 class Course(BaseModel):
@@ -188,7 +200,12 @@ class RulebookDef(BaseModel):
     id: str
     name: str
     about: str
-    required: bool = Field(default=False, description="Every organisation keeps it")
+    behaviour: Literal["always", "conditional", "domain"] = Field(
+        default="conditional",
+        description="always: every organisation keeps it. conditional: its checks act only when a poster shows "
+                    "what they check. domain: for particular industries, e.g. coaching ads")
+    default_on: bool = Field(default=False, description="Kept by every new organisation, whatever its industry")
+    required: bool = Field(default=False, description="Every organisation keeps it (behaviour 'always')")
     requires: list[str] = Field(default=[], description="Rulebooks that must be on for this one to work")
 
 
@@ -369,11 +386,13 @@ class Industry(BaseModel):
     suggest: list[str]
     subdomains: list[str]
     special: dict[str, SubdomainSpecial] = {}
+    restricted: list[str] = Field(default=[], description="Claims ads in this industry may never make (LEGAL-02)")
 
 
 class OrgType(BaseModel):
     id: str
     name: str
+    suggest: list[str] = []
 
 
 class FocusArea(BaseModel):

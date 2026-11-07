@@ -26,24 +26,24 @@ def add_number(reading, kind: str, raw: str, value=None):
 # ---------------------------------------------------------------- engine
 
 
-def test_rule_pack_has_17_checks_all_with_code():
+def test_rule_pack_has_27_checks_all_with_code():
     pack = load_rule_pack()
-    assert len(pack.rules) == 17
+    assert len(pack.rules) == 27
     assert {r.id for r in pack.rules} == set(_RULES)
-    assert sum(r.kind == "code" for r in pack.rules) == 15
+    assert sum(r.kind == "code" for r in pack.rules) == 25
     assert all(r.reason for r in pack.rules)
 
 
-def test_clean_poster_passes_all_17():
+def test_clean_poster_passes_all_27():
     findings = run_rules(make_ctx())
-    assert len(findings) == 17
+    assert len(findings) == 27
     assert [f for f in findings if f.severity != "pass"] == []
 
 
 def test_disabled_rules_are_skipped():
     findings = run_rules(make_ctx(), enabled={"ACC-01": False})
     assert "ACC-01" not in {f.rule_id for f in findings}
-    assert len(findings) == 16
+    assert len(findings) == 26
 
 
 # ---------------------------------------------------------------- claims

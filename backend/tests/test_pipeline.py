@@ -52,7 +52,7 @@ def test_each_poster_fails_exactly_its_planted_checks(entry):
     assert result.ai_call is None  # fixture mode never calls an AI
     # 17 checks + 3 reader checks, each with at least one row (passes included).
     assert {f.rule_id for f in result.findings} >= {"READ-01", "READ-02", "READ-03"}
-    assert len({f.rule_id for f in result.findings}) == 20
+    assert len({f.rule_id for f in result.findings}) == 30
 
 
 def test_fixtures_are_found_by_image_hash_not_file_name():

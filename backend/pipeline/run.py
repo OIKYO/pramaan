@@ -51,6 +51,8 @@ class Reference:
     rulebooks: set[str] | None = None
     words: Words = field(default_factory=Words)
     about: str = ""  # what the organisation does, for the AI reader, e.g. "Coaching Institutes"
+    industry: str = ""  # the industry group's name
+    restricted: list[str] = field(default_factory=list)  # claims its ads may never make (LEGAL-02)
 
     def keeps(self, rulebook: str) -> bool:
         return self.rulebooks is None or rulebook in self.rulebooks
@@ -142,7 +144,7 @@ def check_poster(
         result_stats=ref.result_stats if ref.keeps("figures") else [],
         toppers=ref.toppers if ref.keeps("people") else {}, branch=ref.branch,
         channel=poster.channel, caption=poster.caption, alt_text=poster.alt_text, visual=report, today=today,
-        words=ref.words,
+        words=ref.words, industry=ref.industry, restricted=ref.restricted,
     )
     findings = [_passed("READ-01", read_note), *findings, *run_rules(ctx, ref.enabled, ref.rulebooks)]
     return CheckResult(sha, reading, model, findings, ai_call)
@@ -177,7 +179,7 @@ def _logo(db_url: str, path: str) -> Image.Image | None:
 
 def load_reference(db, branch_id: str, org_id: str) -> Reference:
     """The poster's organisation's rulebooks, and its branch. Nothing from other organisations."""
-    from app.catalog import complete, words
+    from app.catalog import complete, restricted_claims, words
 
     org = db.table("organisations").select("industry_group, industry, rulebooks").eq("id", org_id).single().execute().data
     brand = db.table("brand_kit").select("*").eq("org_id", org_id).single().execute().data
@@ -195,6 +197,8 @@ def load_reference(db, branch_id: str, org_id: str) -> Reference:
         rulebooks=set(complete(org.get("rulebooks") or [])),
         words=words(org.get("industry_group"), org.get("industry")),
         about=org.get("industry") or "",
+        industry=restricted_claims(org.get("industry_group"))[0],
+        restricted=restricted_claims(org.get("industry_group"))[1],
     )
 
 

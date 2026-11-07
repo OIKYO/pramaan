@@ -52,6 +52,8 @@ class RuleContext:
     visual: VisualReport | None = None
     today: date = field(default_factory=date.today)
     words: Words = field(default_factory=Words)
+    industry: str = ""  # the industry group's name, e.g. "Finance & Banking"
+    restricted: list[str] = field(default_factory=list)  # claims this industry may never make (LEGAL-02)
 
     def matched(self):
         """(person, topper) pairs for people confidently matched to the register."""
@@ -105,7 +107,7 @@ def load_rule_pack() -> RulePack:
 
 
 def _import_rule_modules() -> None:
-    from rules import access, brand, claims, facts  # noqa: F401  (importing registers the rules)
+    from rules import access, brand, claims, dates, facts, legal, offers, rights  # noqa: F401  (importing registers the rules)
 
 
 def rule_def(rule_id: str) -> RuleDef:

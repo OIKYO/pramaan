@@ -1,14 +1,18 @@
 {
-  "version": "2026.11-r3",
+  "version": "2026.11-r4",
   "source": "Each organisation's rulebooks, with the CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024 for coaching ads",
   "rulebooks": [
-    {"id": "brand", "name": "Brand kit", "required": true, "about": "Registered name, helpline, logo, colours and tone of voice, plus readable text and alt text."},
-    {"id": "contacts", "name": "Branch contact details", "required": true, "about": "Phone numbers and addresses on a poster must be the branch's own or the helpline."},
-    {"id": "claims", "name": "Honest claims", "about": "Blocks promised results such as “100% selection” or “guaranteed job”, in English, Hindi and Bengali, and flags disguised ones."},
-    {"id": "offerings", "name": "Offerings and prices", "about": "What you sell, with its approved price and, where it applies, its duration. Posters must match it."},
-    {"id": "figures", "name": "Approved figures", "about": "Statistics you are allowed to quote, such as results or people served. Any other figure is blocked."},
-    {"id": "people", "name": "People and consent", "about": "Everyone who appears on a poster, with their signed consent and the channels it covers."},
-    {"id": "rankings", "name": "Exam results (coaching ads)", "requires": ["people", "offerings"], "about": "For coaching institutes in India: ranks must match the register, and each topper needs their course, its duration and paid or free beside them (CCPA, 2024)."}
+    {"id": "brand", "name": "Brand kit", "behaviour": "always", "about": "Registered name, helpline, logo, colours and tone of voice, plus readable text and alt text.", "required": true},
+    {"id": "contacts", "name": "Branch contact details", "behaviour": "always", "about": "Phone numbers and addresses on a poster must be the branch's own or the helpline.", "required": true},
+    {"id": "claims", "name": "Honest claims", "behaviour": "always", "about": "Blocks promised results such as “100% selection” or “guaranteed job”, in English, Hindi and Bengali, and flags disguised ones.", "required": true},
+    {"id": "people", "name": "People and consent", "behaviour": "always", "about": "Everyone who appears on a poster, with their signed consent and the channels it covers.", "required": true},
+    {"id": "rights", "name": "Copyright and asset permissions", "behaviour": "always", "about": "No stock-photo watermarks, and other organisations' names and logos only when head office has approved them.", "required": true},
+    {"id": "offerings", "name": "Offerings and prices", "behaviour": "conditional", "about": "What you sell, with its approved price and, where it applies, its duration. Checked whenever a poster names one or shows a price.", "required": false},
+    {"id": "figures", "name": "Approved figures", "behaviour": "conditional", "about": "Statistics you are allowed to quote, such as results or people served. Checked whenever a poster quotes a figure.", "required": false},
+    {"id": "dates", "name": "Dates, deadlines and availability", "behaviour": "conditional", "default_on": true, "about": "Dates must exist, match their weekday, and not have passed. Checked whenever a poster shows a date.", "required": false},
+    {"id": "offers", "name": "Offers, discounts and terms", "behaviour": "conditional", "default_on": true, "about": "Discounts, scholarships and limited-time deals must say how long they last, point to their conditions, and add up.", "required": false},
+    {"id": "legal", "name": "Legal and regulatory compliance", "behaviour": "conditional", "default_on": true, "about": "The disclaimers head office requires on every poster, and no claims your industry may never make.", "required": false},
+    {"id": "rankings", "name": "Exam results (coaching ads)", "behaviour": "domain", "requires": ["people", "offerings"], "about": "For coaching institutes in India: ranks must match the register, and each topper needs their course, its duration and paid or free beside them (CCPA, 2024).", "required": false}
   ],
   "rules": [
     {
@@ -78,6 +82,46 @@
     {
       "id": "AI-01", "name": "Disguised guarantees", "rulebooks": ["claims"], "kind": "ai", "severity": "warn",
       "reason": "Phrases like 'selection pakka' or 'seat confirmed' promise a result without saying 'guarantee'. The AI flags them; a person decides."
+    },
+    {
+      "id": "EVENT-01", "name": "Dates are real dates", "rulebooks": ["dates"], "kind": "code", "severity": "block",
+      "reason": "A date that doesn't exist, like 31 February, sends people to the wrong day and makes the poster look careless."
+    },
+    {
+      "id": "EVENT-02", "name": "Day matches the date", "rulebooks": ["dates"], "kind": "code", "severity": "block",
+      "reason": "When the weekday and the date disagree, readers can't tell which one is right."
+    },
+    {
+      "id": "EVENT-03", "name": "No deadlines that have passed", "rulebooks": ["dates"], "kind": "code", "severity": "block",
+      "reason": "A poster whose last date or start date has passed invites people to something they can no longer join."
+    },
+    {
+      "id": "OFFER-01", "name": "Offers say how long they last", "rulebooks": ["offers"], "kind": "code", "severity": "warn",
+      "reason": "A discount or scholarship with no end date can be claimed long after it was meant to stop."
+    },
+    {
+      "id": "OFFER-02", "name": "Offers point to their conditions", "rulebooks": ["offers"], "kind": "code", "severity": "warn",
+      "reason": "Readers must be able to find who qualifies and what's excluded before they rely on an offer."
+    },
+    {
+      "id": "OFFER-03", "name": "Discounts add up", "rulebooks": ["offers"], "kind": "code", "severity": "block",
+      "reason": "If the percentage doesn't match the prices shown, the offer misleads, whichever number is right."
+    },
+    {
+      "id": "RIGHTS-01", "name": "No stock-photo watermarks", "rulebooks": ["rights"], "kind": "code", "severity": "block",
+      "reason": "A watermark means the image is an unpaid preview. Publishing it breaks the stock library's licence."
+    },
+    {
+      "id": "RIGHTS-02", "name": "Other organisations are approved partners", "rulebooks": ["rights"], "kind": "code", "severity": "warn",
+      "reason": "Showing a partner's, sponsor's or university's name or logo needs their permission. Head office lists approved partners in the brand kit."
+    },
+    {
+      "id": "LEGAL-01", "name": "Required disclaimers are present", "rulebooks": ["legal"], "kind": "code", "severity": "block",
+      "reason": "Head office lists the disclaimers every poster must carry. A missing one can make an ad unlawful."
+    },
+    {
+      "id": "LEGAL-02", "name": "No claims your industry forbids", "rulebooks": ["legal"], "kind": "code", "severity": "block",
+      "reason": "Some industries have claims they may never make, such as guaranteed returns in finance or a guaranteed cure in healthcare."
     }
   ],
   "reader_checks": [

@@ -529,6 +529,16 @@ export interface components {
             /** File */
             file: string;
         };
+        /**
+         * BrandSeen
+         * @description Another organisation's name or logo on the poster: a partner, sponsor, university or company.
+         */
+        BrandSeen: {
+            /** Box 2D */
+            box_2d: number[];
+            /** Name */
+            name: string;
+        };
         /** Catalog */
         Catalog: {
             /** Industries */
@@ -756,6 +766,12 @@ export interface components {
             special: {
                 [key: string]: components["schemas"]["SubdomainSpecial"];
             };
+            /**
+             * Restricted
+             * @description Claims ads in this industry may never make (LEGAL-02)
+             * @default []
+             */
+            restricted: string[];
         };
         /** Insights */
         Insights: {
@@ -862,6 +878,11 @@ export interface components {
             id: string;
             /** Name */
             name: string;
+            /**
+             * Suggest
+             * @default []
+             */
+            suggest: string[];
         };
         /** OrganisationOut */
         OrganisationOut: {
@@ -1039,6 +1060,11 @@ export interface components {
              * @default []
              */
             wording_flags: components["schemas"]["WordingFlag"][];
+            /**
+             * Other Brands
+             * @default []
+             */
+            other_brands: components["schemas"]["BrandSeen"][];
         };
         /** ReviewOut */
         ReviewOut: {
@@ -1158,8 +1184,21 @@ export interface components {
             /** About */
             about: string;
             /**
+             * Behaviour
+             * @description always: every organisation keeps it. conditional: its checks act only when a poster shows what they check. domain: for particular industries, e.g. coaching ads
+             * @default conditional
+             * @enum {string}
+             */
+            behaviour: "always" | "conditional" | "domain";
+            /**
+             * Default On
+             * @description Kept by every new organisation, whatever its industry
+             * @default false
+             */
+            default_on: boolean;
+            /**
              * Required
-             * @description Every organisation keeps it
+             * @description Every organisation keeps it (behaviour 'always')
              * @default false
              */
             required: boolean;
@@ -1179,8 +1218,21 @@ export interface components {
             /** About */
             about: string;
             /**
+             * Behaviour
+             * @description always: every organisation keeps it. conditional: its checks act only when a poster shows what they check. domain: for particular industries, e.g. coaching ads
+             * @default conditional
+             * @enum {string}
+             */
+            behaviour: "always" | "conditional" | "domain";
+            /**
+             * Default On
+             * @description Kept by every new organisation, whatever its industry
+             * @default false
+             */
+            default_on: boolean;
+            /**
              * Required
-             * @description Every organisation keeps it
+             * @description Every organisation keeps it (behaviour 'always')
              * @default false
              */
             required: boolean;

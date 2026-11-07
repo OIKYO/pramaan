@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 FIXTURES_DIR = BACKEND_DIR / "tests" / "fixtures" / "readings"
 AI_RULE_IDS = ("BRAND-04", "AI-01")
-PROMPT_VERSION = "2026-11-08"
+PROMPT_VERSION = "2026-11-08b"
 MAX_ATTEMPTS = 3  # the first try plus 2 retries
 TEMPORARY = ("503", "UNAVAILABLE")  # the service says "try again later"
 SERVICE_RETRY_SECONDS = 3
@@ -53,6 +53,7 @@ Fill in:
 - claims: promotional statements about results, selections, ranks, success rates or jobs.
 - people: every person shown or named on the poster (for this organisation, usually {person}). Give the name as printed (and romanised_name if it isn't in Latin script), rank_text exactly as printed and rank_value as a number, and the course name, duration and paid/free wording printed next to that person. Leave a field empty if it isn't printed next to them.
 - numbers: every rank, fee, phone number and results figure. kind is one of rank, fee, phone, stat, other. raw_text exactly as printed. value as a number (fees in rupees); leave value empty for phone numbers. The box should cover just the number.
+- other_brands: the name or logo of any other organisation shown, such as a partner, sponsor, university or company. Not exam names, and not {brand_kit.registered_name} itself. Give the name and a box.
 - registered_name_seen: true only if "{brand_kit.registered_name}" is printed.
 - helpline_seen: true only if the helpline {brand_kit.helpline} is printed.
 - wording_flags: wording that breaks one of these two rules. Use ONLY these rule ids:

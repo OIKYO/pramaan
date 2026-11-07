@@ -26,17 +26,22 @@ def test_the_catalog_only_names_things_that_exist():
     assert len(catalog["industries"]) == 30
 
 
-def test_every_organisation_keeps_the_brand_kit_and_contacts_and_dependencies_come_along():
-    assert complete([]) == ["brand", "contacts"]
-    assert set(complete(["rankings"])) == {"brand", "contacts", "offerings", "people", "rankings"}
+ALWAYS = {"brand", "contacts", "claims", "people", "rights"}
 
 
-def test_a_coaching_institute_is_offered_the_coaching_rules_and_a_restaurant_is_not():
-    coaching = suggested_rulebooks("education", "Coaching Institutes", [])
-    assert {"rankings", "people", "offerings", "figures", "claims"} <= set(coaching)
-    restaurant = suggested_rulebooks("food", "Restaurants", [])
-    assert "offerings" in restaurant and "rankings" not in restaurant and "people" not in restaurant
-    assert "people" in suggested_rulebooks("food", "Restaurants", ["testimonials"])
+def test_every_organisation_keeps_the_always_on_rulebooks_and_dependencies_come_along():
+    assert set(complete([])) == ALWAYS
+    assert set(complete(["rankings"])) == ALWAYS | {"offerings", "rankings"}
+
+
+def test_new_organisations_start_with_rulebooks_for_their_industry_and_kind():
+    general = {"dates", "offers", "legal"}  # conditional rulebooks every organisation starts with
+    coaching = set(suggested_rulebooks("education", "Coaching Institutes", "coaching", []))
+    assert ALWAYS | general | {"rankings", "offerings", "figures"} == coaching
+    restaurant = set(suggested_rulebooks("food", "Restaurants", "chain", []))
+    assert restaurant == ALWAYS | general | {"offerings"}
+    assert "figures" in suggested_rulebooks("food", "Restaurants", "chain", ["campaigns"])
+    assert "rankings" in suggested_rulebooks("other", "Something new", "coaching", [])  # the kind alone can call for it
 
 
 def test_words_follow_the_industry_and_its_subdomain():
