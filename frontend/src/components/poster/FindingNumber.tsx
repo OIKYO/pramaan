@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 const TONE: Record<Severity, string> = {
   block: "bg-blocked text-on-tone",
   needs_human: "bg-info text-on-tone",
-  warn: "bg-warning-mark text-on-warning-mark",
+  warn: "bg-warning-mark text-on-accent",
   pass: "bg-passed text-on-tone",
 };
 

@@ -6,13 +6,6 @@ import { toast } from "@/components/ui/Toast";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { KIND_LABEL, SEVERITY } from "@/lib/labels";
 
-const FAMILIES = [
-  { prefix: "CCPA", title: "CCPA coaching guidelines", note: "Claims, toppers, consent and results." },
-  { prefix: "FACT", title: "Approved facts", note: "Courses, fees, contact details and expiry dates." },
-  { prefix: "BRAND", title: "Brand", note: "Logo, colours, name and tone." },
-  { prefix: "ACC", title: "Accessibility", note: "Contrast and alt text." },
-  { prefix: "AI", title: "AI wording", note: "Only ever warns; a person decides." },
-];
 
 /** The checks grouped by where they come from, each with why it exists and an on/off switch.
  * Switching shows at once; it goes back if the database refuses (only head office may). */
@@ -23,7 +16,7 @@ export function RuleList({ pack, canEdit }: { pack: RulePack; canEdit: boolean }
       header: "Check",
       cell: (r) => (
         <div className="flex flex-col gap-0.5">
-          <span className="font-semibold text-ink-strong">{r.name}</span>
+          <span className="font-medium text-ink-strong">{r.name}</span>
           <span className="font-mono text-xs text-muted-text">{r.id}</span>
         </div>
       ),
@@ -51,18 +44,19 @@ export function RuleList({ pack, canEdit }: { pack: RulePack; canEdit: boolean }
     },
   ];
 
+  // Groups and their names come from the rule pack (backend/rules/rule_pack.json), in pack order.
+  const categories = [...new Set(pack.rules.map((r) => r.category))];
   return (
     <div className="flex flex-col gap-8">
-      {FAMILIES.map((family) => {
-        const rules = pack.rules.filter((r) => r.id.startsWith(`${family.prefix}-`));
-        if (rules.length === 0) return null;
+      {categories.map((category) => {
+        const rules = pack.rules.filter((r) => r.category === category);
+        const title = pack.categories[category] ?? category;
         return (
-          <section key={family.prefix} className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-baseline gap-x-3">
-              <h2 className="text-lg">{family.title}</h2>
-              <p className="text-sm text-muted-text">{family.note}</p>
-            </div>
-            <DataTable caption={family.title} columns={columns} rows={rules} rowKey={(r) => r.id} />
+          <section key={category} className="flex flex-col gap-3">
+            <h2 className="text-sm">
+              {title} <span className="font-normal text-muted-text tabular-nums">· {rules.length}</span>
+            </h2>
+            <DataTable caption={title} columns={columns} rows={rules} rowKey={(r) => r.id} />
           </section>
         );
       })}

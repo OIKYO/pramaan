@@ -23,7 +23,7 @@ export function PosterTable({ posters, showBranch = false }: { posters: PosterLi
       header: "Poster",
       cell: (p) => (
         <div className="flex flex-col gap-0.5">
-          <span className="font-semibold text-ink-strong">{p.title}</span>
+          <span className="font-medium text-ink-strong">{p.title}</span>
           <span className="text-xs text-muted-text">
             {CHANNEL_LABEL[p.channel]} · version {p.current_version} · {p.created_by_name}
           </span>

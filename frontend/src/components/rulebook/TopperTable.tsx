@@ -18,7 +18,7 @@ export function TopperTable({ toppers, courses, onEdit }: TopperTableProps) {
       header: "Student",
       cell: (t) => (
         <div className="flex flex-col gap-0.5">
-          <span className="font-semibold text-ink-strong">{t.full_name}</span>
+          <span className="font-medium text-ink-strong">{t.full_name}</span>
           {t.is_minor && <span className="text-xs text-muted-text">Under 18 · {t.guardian_signed ? "guardian signed" : "no guardian signature"}</span>}
         </div>
       ),

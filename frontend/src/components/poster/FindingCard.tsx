@@ -34,7 +34,7 @@ export function FindingCard({ problem, ruleName, selected, onSelect, canResolve,
       onClick={box ? onSelect : undefined}
       className={cn(
         "flex scroll-mt-24 flex-col gap-3 rounded-md border bg-surface p-4 text-sm",
-        selected ? "border-action ring-1 ring-action" : "border-line",
+        selected ? "border-accent ring-1 ring-accent" : "border-line",
         box && !selected && "cursor-pointer hover:border-line-strong",
       )}
     >

@@ -10,7 +10,7 @@ export function CourseTable({ courses, onEdit }: { courses: Course[]; onEdit?: (
       header: "Course",
       cell: (c) => (
         <div className="flex flex-col gap-0.5">
-          <span className="font-semibold text-ink-strong">{c.name}</span>
+          <span className="font-medium text-ink-strong">{c.name}</span>
           {c.aliases.length > 0 && <span className="text-xs text-muted-text">Also written as {c.aliases.join(", ")}</span>}
         </div>
       ),

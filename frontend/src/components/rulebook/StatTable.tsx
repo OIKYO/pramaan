@@ -6,12 +6,12 @@ import { formatDate } from "@/lib/labels";
 /** The only results figures a poster may claim, with their source. */
 export function StatTable({ stats, onEdit }: { stats: ResultStat[]; onEdit?: (stat: ResultStat) => void }) {
   const columns: Column<ResultStat>[] = [
-    { header: "Figure", shrink: true, cell: (s) => <span className="font-heading text-2xl font-semibold text-ink-strong tabular-nums">{s.value}</span> },
+    { header: "Figure", shrink: true, cell: (s) => <span className=" text-2xl font-medium text-ink-strong tabular-nums">{s.value}</span> },
     {
       header: "What it counts",
       cell: (s) => (
         <div className="flex flex-col gap-0.5">
-          <span className="font-semibold text-ink-strong">{s.label}</span>
+          <span className="font-medium text-ink-strong">{s.label}</span>
           <span className="text-xs text-muted-text">
             {s.exam} {s.year}
           </span>

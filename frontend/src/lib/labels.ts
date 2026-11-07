@@ -52,3 +52,29 @@ export const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso));
 
 export const formatInr = (amount: number) => `₹${new Intl.NumberFormat("en-IN").format(amount)}`;
+
+/** Audit log actions in words. Anything new falls back to its name with spaces. */
+const AUDIT_ACTION: Record<string, string> = {
+  ai_call: "AI read a poster",
+  poster_created: "uploaded a poster",
+  poster_checked: "checks finished",
+  poster_new_version: "uploaded a new version",
+  poster_submitted: "submitted a poster",
+  poster_approved: "approved a poster (regional)",
+  poster_final_approved: "gave final approval",
+  poster_sent_back: "sent a poster back",
+  finding_resolved: "confirmed a reading",
+  finding_overridden: "overrode a finding",
+  consent_uploaded: "uploaded a consent form",
+  consent_viewed: "opened a consent form",
+  organisation_created: "created the organisation",
+  member_added: "added a team member",
+  member_changed: "changed a team member",
+  member_password_reset: "reset a password",
+  member_removed: "removed someone's access",
+  member_restored: "restored someone's access",
+  password_changed: "changed their password",
+  data_imported: "imported data",
+};
+
+export const auditLabel = (action: string) => AUDIT_ACTION[action] ?? action.replaceAll("_", " ");

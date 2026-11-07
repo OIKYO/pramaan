@@ -12,7 +12,7 @@ export function AppShell() {
       <NavProgress />
       <a
         href="#main"
-        className="sr-only z-50 rounded-md bg-action px-3 py-2 font-semibold text-on-action focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+        className="sr-only z-50 rounded-md bg-primary px-3 py-2 font-medium text-on-primary focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
       >
         Skip to the page
       </a>

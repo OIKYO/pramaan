@@ -61,7 +61,7 @@ export function PosterCanvas({ imageUrl, title, problems, selected, onSelect }: 
               BOX_TONE[top.severity],
               settled && "border-dashed",
               selected !== null && at === -1 && "opacity-35",
-              at !== -1 && "z-10 outline-2 outline-offset-2 outline-action",
+              at !== -1 && "z-10 outline-2 outline-offset-2 outline-accent",
             )}
             style={{
               top: `calc(${ymin / 10}% - 4px)`,

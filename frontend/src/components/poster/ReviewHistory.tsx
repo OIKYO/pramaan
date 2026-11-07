@@ -11,7 +11,7 @@ export function ReviewHistory({ reviews }: { reviews: Review[] }) {
         return (
           <li key={review.id} className="group grid grid-cols-[auto_minmax(0,1fr)] gap-x-4">
             <div aria-hidden className="flex flex-col items-center pt-1.5">
-              <span className={cn("size-3 shrink-0 rounded-full border-2", saving ? "border-action bg-surface" : "border-ink-strong bg-ink-strong")} />
+              <span className={cn("size-3 shrink-0 rounded-full border-2", saving ? "border-accent bg-surface" : "border-ink-strong bg-ink-strong")} />
               <span className="w-px flex-1 bg-line group-last:hidden" />
             </div>
             <div className="flex min-w-0 flex-col gap-1.5 pb-5 text-sm group-last:pb-0">

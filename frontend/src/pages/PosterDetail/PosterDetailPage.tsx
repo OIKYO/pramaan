@@ -34,13 +34,13 @@ export function PosterDetailPage() {
         return (
           <div className="flex flex-col gap-6">
             <PageHeader
-              eyebrow={`${detail.branch_name} branch`}
+              crumbs={[{ label: profile.role === "branch_staff" ? "My posters" : "All posters", to: profile.role === "branch_staff" ? "/branch" : "/posters" }, { label: detail.title }]}
               title={detail.title}
               meta={
                 <>
                   <StatusPill status={detail.status} stage={detail.review_stage} />
                   <span>
-                    {CHANNEL_LABEL[detail.channel]} · uploaded by {detail.created_by_name} · version {detail.current_version}
+                    {detail.branch_name} · {CHANNEL_LABEL[detail.channel]} · uploaded by {detail.created_by_name} · version {detail.current_version}
                   </span>
                 </>
               }

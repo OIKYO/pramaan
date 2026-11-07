@@ -27,7 +27,7 @@ function stepsFor(status: PosterStatus, stage: ReviewStage | null): { states: St
 
 const BAR: Record<StepState, string> = {
   done: "bg-ink-strong",
-  current: "bg-action",
+  current: "bg-accent",
   returned: "bg-blocked",
   todo: "bg-line",
 };

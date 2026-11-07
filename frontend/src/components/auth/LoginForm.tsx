@@ -1,19 +1,14 @@
-import { ArrowRight } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router";
 import { useSession } from "@/api/hooks/useSession";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner";
+import { DEMO_PASSWORD } from "@/lib/demo";
+import { DemoAccounts } from "./DemoAccounts";
 
-const DEMO_ACCOUNTS = [
-  { email: "staff.siliguri@pramaan.demo", label: "Branch staff", who: "Tara Ghosh, Siliguri branch" },
-  { email: "regional.east@pramaan.demo", label: "Regional manager", who: "Vikram Bose, East region" },
-  { email: "hq@pramaan.demo", label: "Head office", who: "Meera Iyer" },
-];
-const DEMO_PASSWORD = import.meta.env.VITE_DEMO_PASSWORD ?? "";
-
-/** One-click demo accounts for each role, plus email and password. */
+/** Email and password, a way to create an organisation, and the demo accounts. */
 export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
   const { signIn } = useSession();
   const [email, setEmail] = useState("");
@@ -42,32 +37,16 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-1.5">
-        <h2 className="text-2xl">Sign in</h2>
-        <p className="text-sm text-muted-text">{DEMO_PASSWORD ? "Pick a demo role to look around, or use your account." : "Use your Pramaan account."}</p>
+      <div className="flex flex-col gap-1">
+        <h1 className="text-xl">Sign in to Pramaan</h1>
+        <p className="text-muted-text">
+          New here?{" "}
+          <Link to="/signup" className="font-medium text-ink-strong underline decoration-line-strong underline-offset-4 hover:decoration-ink-strong">
+            Create an organisation
+          </Link>
+        </p>
       </div>
-      {DEMO_PASSWORD && (
-        <ul className="flex flex-col divide-y divide-line rounded-md border border-line bg-surface">
-          {DEMO_ACCOUNTS.map((account) => (
-            <li key={account.email}>
-              <button
-                type="button"
-                disabled={pending !== null}
-                onClick={() => void attempt(account.email, account.email, DEMO_PASSWORD)}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-surface-sunken disabled:opacity-60"
-              >
-                <span className="flex min-w-0 flex-1 flex-col">
-                  <span className="font-semibold text-ink-strong">Sign in as {account.label.toLowerCase()}</span>
-                  <span className="text-sm text-muted-text">{account.who}</span>
-                </span>
-                {pending === account.email ? <Spinner /> : <ArrowRight className="size-4 text-muted-text" aria-hidden />}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
       <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-        {DEMO_PASSWORD && <p className="text-sm font-semibold text-muted-text">Or with email</p>}
         <Field label="Email">
           <Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </Field>
@@ -79,11 +58,13 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
             {error}
           </p>
         )}
-        <Button type="submit" size="lg" disabled={pending !== null}>
+        <Button type="submit" disabled={pending !== null}>
           {pending === "form" && <Spinner />}
           Sign in
         </Button>
+        <p className="text-xs text-muted-text">Forgot your password? Ask your head office to reset it from the Team page.</p>
       </form>
+      {DEMO_PASSWORD && <DemoAccounts pending={pending} onPick={(email) => void attempt(email, email, DEMO_PASSWORD)} />}
     </div>
   );
 }

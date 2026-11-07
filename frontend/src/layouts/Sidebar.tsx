@@ -1,20 +1,20 @@
-import { Link } from "react-router";
 import type { Role } from "@/api/types";
-import { BrandLogo } from "@/components/ui/BrandLogo";
-import { AccountBlock } from "./AccountBlock";
+import { AccountMenu } from "./AccountMenu";
 import { NavList } from "./NavList";
+import { OrgHeader } from "./OrgHeader";
 
-/** The menu on wide screens: logo, the role's pages, the rulebook, and the account at the foot. */
+/** The menu on wide screens: the organisation at the top, the role's pages, and the account at the foot. */
 export function Sidebar({ role }: { role: Role }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh flex-col gap-7 overflow-y-auto border-r border-line bg-surface px-3 py-5 lg:flex">
-      <Link to="/" className="flex flex-col gap-1 rounded-md px-3" aria-label="Pramaan, go to your home page">
-        <BrandLogo className="w-40 text-ink-strong" />
-        <span className="text-xs text-muted-text">Northfield Academy · demo</span>
-      </Link>
-      <NavList role={role} />
-      <div className="mt-auto px-3">
-        <AccountBlock />
+    <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line bg-surface lg:flex">
+      <div className="px-2 pt-3 pb-2">
+        <OrgHeader />
+      </div>
+      <div className="flex-1 overflow-y-auto px-4 py-3">
+        <NavList role={role} />
+      </div>
+      <div className="border-t border-line p-2">
+        <AccountMenu />
       </div>
     </aside>
   );

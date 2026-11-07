@@ -1,19 +1,25 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { LoginHero } from "./LoginHero";
 
-/** The sign-in screen: the brand panel on one side, the way in on the other. Stacked on phones. */
-export function AuthLayout({ children }: { children: ReactNode }) {
+/** Sign in, sign up and choosing a password: one narrow column, nothing else to read. */
+export function AuthLayout({ children, aside }: { children: ReactNode; aside?: ReactNode }) {
   return (
-    <div className="grid min-h-dvh bg-canvas lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-      <LoginHero />
-      <main className="flex flex-col px-5 py-8 sm:px-10 lg:px-16">
-        <div className="flex justify-end">
-          <ThemeToggle />
-        </div>
-        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">{children}</div>
-        <p className="text-center text-xs text-muted-text">Demo data: Northfield Academy is fictional, and so is everyone in it.</p>
+    <div className="flex min-h-dvh flex-col bg-canvas">
+      <header className="flex items-center justify-between gap-4 px-5 py-4 sm:px-8">
+        <Link to="/" aria-label="Pramaan home">
+          <BrandLogo className="w-32 text-ink-strong" />
+        </Link>
+        <div className="flex items-center gap-3 text-sm">{aside}</div>
+      </header>
+      <main className="flex flex-1 justify-center px-4 pt-10 pb-16 sm:pt-20">
+        <div className="w-full max-w-sm">{children}</div>
       </main>
+      <footer className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 text-xs text-muted-text sm:px-8">
+        <span>Pramaan checks posters before they're published. People approve; the AI never does.</span>
+        <ThemeToggle />
+      </footer>
     </div>
   );
 }
