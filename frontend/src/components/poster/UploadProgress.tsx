@@ -12,7 +12,7 @@ export function UploadProgress({ canLeave }: { canLeave: boolean }) {
       <ol className="flex list-decimal flex-col gap-1 pl-5 text-muted-text">
         <li>The AI reads the text, people and numbers on the poster.</li>
         <li>A second reader checks every rank, fee and phone number.</li>
-        <li>17 checks compare the poster with head office's rulebook.</li>
+        <li>The checks in your rulebooks compare it with head office's records.</li>
       </ol>
       <p className="text-muted-text">
         This usually takes 10 to 30 seconds.

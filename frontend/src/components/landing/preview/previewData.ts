@@ -1,4 +1,5 @@
 /** What Pramaan found on test-posters/03-wrong-rank.png (fictional), for the product page's example.
+ * The passed list is every other check in a coaching institute's rulebooks.
  * Boxes come from its fixture reading, as top, left, height and width in % of the poster. */
 import type { Severity } from "@/api/types";
 
@@ -47,4 +48,14 @@ export const PASSED = [
   "Text contrast at least 4.5:1",
   "Alt text on social posts",
   "Disguised guarantees",
+  "Dates are real dates",
+  "Day matches the date",
+  "No deadlines that have passed",
+  "Offers say how long they last",
+  "Offers point to their conditions",
+  "Discounts add up",
+  "No stock-photo watermarks",
+  "Other organisations are approved partners",
+  "Required disclaimers are present",
+  "No claims your industry forbids",
 ];

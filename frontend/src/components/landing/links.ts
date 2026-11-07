@@ -5,7 +5,6 @@ import {
   Library,
   ListChecks,
   Network,
-  PlayCircle,
   ScrollText,
   Workflow,
   type LucideIcon,
@@ -22,9 +21,9 @@ export const REPO = "https://github.com/OIKYO/pramaan";
 
 export const PRODUCT: LandingLink[] = [
   { to: "/#how", label: "How it works", text: "Upload, read, check, review, approve", icon: Workflow },
-  { to: "/#why", label: "The checks", text: "Up to 17 checks, in rulebooks you choose", icon: ListChecks },
+  { to: "/#why", label: "The checks", text: "27 checks, in rulebooks you choose", icon: ListChecks },
   { to: "/#why", label: "Rulebooks", text: "Set up for your industry, changed any time", icon: Library },
-  { to: "/login", label: "Demo", text: "Sign in to a fictional coaching chain", icon: PlayCircle },
+  { to: "/#branches", label: "Reviews", text: "Branch, region, then head office", icon: BadgeCheck },
 ];
 
 export const ENTERPRISE: LandingLink[] = [

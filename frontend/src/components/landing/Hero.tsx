@@ -19,7 +19,7 @@ export function Hero() {
             <Link to="/signup">Create organisation</Link>
           </Button>
           <Button size="lg" variant="secondary" asChild>
-            <Link to="/login">Explore the demo</Link>
+            <Link to="/#why">See how it works</Link>
           </Button>
         </div>
       </div>
