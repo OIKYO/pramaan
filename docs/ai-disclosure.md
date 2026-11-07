@@ -17,6 +17,7 @@ The CodeNexus rules ask us to say where AI tools wrote significant parts of the 
 | 2026-11-07 | Test poster generator scaffold `tools/make_test_posters.py`, the 11 posters in `test-posters/` and their fixture readings (Zihan Sirat owns the test posters) | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 | 2026-11-07 | API and status machine: `backend/app/auth.py`, `app/state.py`, `app/routers/` (posters, findings, toppers, rules, insights), `tests/test_state.py`, `scripts/e2e_flow.py` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 | 2026-11-07 | Temporary frontend (until Rudrapriyo Chatterjee's final UI arrives): `frontend/src/api/` (client, hooks), theme tokens, `components/ui` additions, `components/poster`, `components/rulebook`, `components/insights`, all pages, `routes.tsx`, `layouts/` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
+| 2026-11-07 | Docs: `README.md`, `docs/architecture.md`, `docs/decisions.md`, the developer-testing section of `docs/user-testing.md`, and the templates for `docs/contributions.md` and classmate sessions | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 | 2026-11-07 | Rule wording: the plain-language `reason` for each rule and the built-in Hindi and Bengali banned-phrase examples are first drafts by Claude Code, to be reviewed by Rishav Nandi (rule pack owner) | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 
 ## AI inside the product
