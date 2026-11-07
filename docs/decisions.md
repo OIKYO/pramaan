@@ -84,6 +84,8 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 ## Deployment
 
 - **The API deploys through a Render deploy hook, triggered by GitHub Actions after the backend tests pass** (`.github/workflows/backend.yml`). The Render service deploys the public repo by URL rather than through Render's GitHub app, so the repo can stay on the main GitHub account while the service runs on a different Render account. A push that breaks a test never reaches the live API.
+- **Render's Root Directory is `backend`.** The Dockerfile lives in `backend/`; without that setting Render looks for one at the repo root and the build fails.
+- **`ALLOWED_ORIGINS` forgives a bare domain** (`pramaanapp.vercel.app` is read as `https://pramaanapp.vercel.app`), spaces, quotes and a trailing slash, and the API logs the origins it allows at startup. A missing origin is the most likely deploy mistake, and the browser's CORS error doesn't say which origin the server expected.
 
 ## Demo data
 

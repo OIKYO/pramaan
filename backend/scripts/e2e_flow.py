@@ -31,12 +31,21 @@ def check(label: str, ok: bool, extra: str = "") -> None:
     print(("PASS " if ok else "FAIL ") + label + (f"  ({extra})" if extra and not ok else ""))
 
 
+def report_non_json(response: httpx.Response) -> None:
+    """A crashed or restarting server answers with a proxy page, not JSON. Say so plainly."""
+    if "application/json" not in response.headers.get("content-type", ""):
+        response.read()
+        print(f"NOTE {response.request.method} {response.request.url.path} answered HTTP "
+              f"{response.status_code}, not JSON: {response.text[:200]!r}")
+
+
 class User:
     def __init__(self, api: str, email: str):
         token = httpx.post(f"{settings.supabase_url}/auth/v1/token?grant_type=password",
                            headers={"apikey": PUBLISHABLE},
                            json={"email": email, "password": settings.demo_password}).json()["access_token"]
-        self.client = httpx.Client(base_url=api, headers={"Authorization": f"Bearer {token}"}, timeout=180)
+        self.client = httpx.Client(base_url=api, headers={"Authorization": f"Bearer {token}"}, timeout=180,
+                                   event_hooks={"response": [report_non_json]})
 
     def upload(self, path: str, file: str, **form) -> httpx.Response:
         data = {k: v for k, v in form.items() if k != "tagged_topper_ids"}

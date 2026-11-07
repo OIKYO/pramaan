@@ -8,8 +8,10 @@ Team **HEISEN-DE-BUG** · CodeNexus India 2026 (We Code Coders) · problem state
 
 ## Live demo
 
-- App: _added once deployed on Vercel_
-- API: _added once deployed on Render_ (the free instance sleeps; open `/health` a minute before a demo)
+- App: **https://pramaanapp.vercel.app**
+- API: https://pramaan-api-6p3b.onrender.com ([`/health`](https://pramaan-api-6p3b.onrender.com/health), [API docs](https://pramaan-api-6p3b.onrender.com/docs))
+
+The API runs on Render's free tier, which sleeps when idle: the first request after a quiet spell takes up to a minute. Open `/health` a minute before a demo.
 
 ### Demo accounts (all fictional)
 
