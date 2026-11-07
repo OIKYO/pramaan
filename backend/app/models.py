@@ -270,6 +270,43 @@ class PosterDetail(BaseModel):
         description="What the signed-in user may do next, e.g. ['submit'] or ['approve', 'send_back']")
 
 
+class RuleOut(RuleDef):
+    """A rule as the Rules page shows it: the pack entry, with on/off from rule_settings."""
+
+
+class RulePackOut(BaseModel):
+    version: str
+    source: str
+    rules: list[RuleOut]
+    reader_checks: list[RuleDef]
+
+
+class CountItem(BaseModel):
+    key: str
+    label: str
+    count: int
+
+
+class Insights(BaseModel):
+    posters_by_status: list[CountItem]
+    issues_by_branch: list[CountItem]
+    issues_by_rule: list[CountItem]
+    most_overridden: list[CountItem]
+    total_posters: int
+    open_blocking: int
+    ai_calls: int
+
+
+class ConsentUrl(BaseModel):
+    url: str
+    expires_in: int
+
+
+class ConsentUploaded(BaseModel):
+    topper_id: str
+    has_consent: bool
+
+
 class ReviewRequest(BaseModel):
     action: Literal["approve", "send_back"]
     comment: str | None = Field(default=None, max_length=2000)

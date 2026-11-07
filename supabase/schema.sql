@@ -166,7 +166,7 @@ create table public.reviews (
   version_id uuid references public.poster_versions (id) on delete set null,
   actor_id uuid not null references public.profiles (id),
   action text not null check (action in (
-    'created', 'new_version', 'submitted', 'approved', 'final_approved', 'sent_back',
+    'created', 'new_version', 'checked', 'submitted', 'approved', 'final_approved', 'sent_back',
     'finding_resolved', 'finding_overridden'
   )),
   comment text,
