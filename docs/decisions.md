@@ -91,7 +91,7 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Motion is used twice:** a short pulse on the finding or box you click, and a fade when you open the passed checks. Both live in `lib/motion.ts` and `components/ui/Highlight.tsx`; `MotionProvider` respects "reduce motion". shadcn's drawer and dialog animations stay inside `components/ui`.
 - **Fonts:** Source Serif 4 (bold, headings) and Source Sans 3 (body), from Google Fonts, replacing the Geist font shadcn installs by default.
 - **Checkboxes use a separate `<label htmlFor>`.** Wrapping a Radix checkbox in a `<label>` toggled it twice, so tags silently didn't stick (found while testing the upload page in a real browser).
-- **The demo-account buttons on the login page need `VITE_DEMO_PASSWORD`.** It's the same password the README lists for the judges; leave it empty to hide the buttons.
+- **The demo-account buttons on the login page needed `VITE_DEMO_PASSWORD`.** Removed on 8 Nov (see below): the password was built into the browser bundle, and the public pages no longer point at the demo.
 
 ## Deployment
 
@@ -147,3 +147,16 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Switches use their own token, `--control-on`:** a deeper amber in light (#c77c06, over 3:1 against white) and a vivid amber in midnight with a dark thumb, so on and off are obvious. Locked switches stay in full colour.
 - **The product page runs edge to edge.** No centred column: every section shares one side margin, and the two-column sections use the full width. The example poster page is interactive (pick a problem or its box, open the passed checks, try Approve) without touching a server. The top-bar menus open on hover.
 - **Privacy, terms and cookies pages** say plainly that Pramaan is a hackathon pilot, what is stored, what goes to the AI, and that there is no tracking.
+
+## General rulebooks and the organisation profile (8 Nov, later)
+
+- **Four general rulebooks, ten checks, all in code.** Following the suggestion Oikyo gathered (with ChatGPT), the rulebooks list stays short (11) but each holds several checks:
+  - *Dates, deadlines and availability:* dates that don't exist (EVENT-01), a weekday that doesn't match its date (EVENT-02), a last date or start date that has passed (EVENT-03).
+  - *Offers, discounts and terms:* an offer with no end date (OFFER-01) or no pointer to its conditions (OFFER-02), and a percentage or saving that doesn't match the prices shown (OFFER-03).
+  - *Copyright and asset permissions:* stock-library watermarks (RIGHTS-01), and other organisations' names or logos that head office hasn't approved (RIGHTS-02). The reader now lists other organisations it sees.
+  - *Legal and regulatory compliance:* disclaimers head office requires on every poster (LEGAL-01), and claims an industry may never make, such as guaranteed returns in finance (LEGAL-02, lists in `catalog.json`).
+  Checks that would need records we don't keep (event calendars, licences) or the Round 3 disclaimer size check were left out rather than faked.
+- **Three behaviours instead of eleven switches.** *Always on* (brand kit, branch contacts, honest claims, people and consent, copyright) can't be switched off. *Conditional* rulebooks act only when a poster shows a price, figure, date, offer or claim; dates, offers and legal start on for everyone, offerings and figures when the industry or kind of organisation calls for them. *Domain-specific* (exam results for coaching ads) comes with the industry or with "Coaching or training institute". Head office can still switch off any conditional or domain rulebook.
+- **The organisation has its own page.** Organisation › Profile holds the name, what it does and the rulebooks it keeps; Settings is only about the person. Until the industry and kind of organisation are filled in, the Profile menu item and the account menu's Organisation carry a marker, and the page explains why.
+- **The demo is no longer advertised.** Northfield Academy and its accounts stay in the database (for judges, who get the logins from the README), but the product page, its menus and the sign-in page no longer link to it. The product page's example is labelled as an example with a fictional poster.
+- **Migration:** `supabase/migrations/2026-11-08b_general_rulebooks.sql` (two brand-kit lists, and the general rulebooks switched on for existing organisations), rehearsed on an in-memory Postgres.

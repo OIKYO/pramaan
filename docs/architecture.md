@@ -1,6 +1,6 @@
 # Architecture
 
-Pramaan checks every poster made by Northfield Academy's branches before it is published. Branch staff upload a poster; Pramaan reads it, runs 17 checks against head office's rulebook and the CCPA coaching-advertising guidelines, and shows each problem on the poster with a suggested fix. A regional manager reviews it, then head office gives final approval. **The AI reads; plain code decides; people approve.**
+Pramaan checks every poster made by Northfield Academy's branches before it is published. Branch staff upload a poster; Pramaan reads it, runs the checks in the rulebooks head office keeps (up to 27, including the CCPA coaching-advertising guidelines), and shows each problem on the poster with a suggested fix. A regional manager reviews it, then head office gives final approval. **The AI reads; plain code decides; people approve.**
 
 ## The parts
 

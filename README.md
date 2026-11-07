@@ -7,7 +7,7 @@
 
 Pramaan checks every poster made by the branches of a multi-branch organisation before it is published. Any organisation can sign up and gets its own private workspace; our demo is a fictional coaching institute chain, **Northfield Academy**.
 
-Branch staff upload a poster. Pramaan reads it, runs **17 checks** (15 in plain code, 2 by AI) against head office's brand kit, approved facts, a consent-backed toppers register and a rule pack based on the **CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024**, and shows each problem on the poster with the rule it breaks and a suggested fix. A regional manager reviews it, then head office gives final approval. **The AI never approves anything.**
+Branch staff upload a poster. Pramaan reads it, runs up to **27 checks** (25 in plain code, 2 by AI) in the rulebooks the organisation keeps: its brand kit, approved facts, a consent-backed register of people, dates, offers, permissions and disclaimers, and for coaching institutes the **CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024**, and shows each problem on the poster with the rule it breaks and a suggested fix. A regional manager reviews it, then head office gives final approval. **The AI never approves anything.**
 
 Team **HEISEN-DE-BUG** · CodeNexus India 2026 (We Code Coders) · problem statement: Brand Governance by Inkloom AI.
 
@@ -20,7 +20,7 @@ The API runs on Render's free tier, which sleeps when idle. A scheduled GitHub A
 
 ### Demo accounts (all fictional)
 
-Password for every account: `Northfield-demo-2026`. The login page also has one-click buttons.
+Password for every account: `Northfield-demo-2026`. Sign in with these on the login page; the public pages no longer link to the demo.
 
 | Email | Role | Who |
 |---|---|---|
@@ -55,7 +55,7 @@ The AI reads; plain code decides; people approve. Details in [docs/architecture.
 
 ```
 frontend/   React + Vite + Tailwind + shadcn/ui; src/api/ is the contract every screen is built on
-backend/    FastAPI: app/ (API, auth, status machine), pipeline/ (read, second read, match, visuals), rules/ (17 checks)
+backend/    FastAPI: app/ (API, auth, status machine), pipeline/ (read, second read, match, visuals), rules/ (27 checks in 11 rulebooks)
 supabase/   schema.sql, policies.sql, migrations/ (for databases created before organisations)
 tools/      make_test_posters.py, make_logo.py
 docs/       architecture, decisions, AI disclosure, user testing, contributions
