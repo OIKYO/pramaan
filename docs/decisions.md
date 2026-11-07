@@ -69,7 +69,19 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Contrast is measured only where a box holds text.** In live mode a reader's box sometimes slips onto plain background; k=2 then splits one flat colour into two and reports 1:1 "contrast", a false warning (seen on the clean poster read by Groq). A box is measured only if its second cluster covers at least 2% of the box and is at least ΔE 5 from the first. Genuinely faint text still counts: the pale test disclaimer has its text cluster at 19.5% of the box and ΔE 13.7.
 - **`scripts/e2e_flow.py` runs the whole Round 2 flow over HTTP as the demo users** (25 steps, including the forbidden moves). Point it at the deployed API before a demo.
 
-## Temporary frontend
+## Final frontend (revamp, 7 Nov)
+
+- **The temporary frontend became the final one.** The separate frontend isn't coming, so we revamped the in-repo one instead of starting again: `src/api/` stayed the contract, and only components and pages changed.
+- **Palette: Black & Gold.** Prussian blue #14213D is the ink, black the midnight canvas, alabaster #E5E5E5 the lines, white the light surface. Orange #FCA311 has one job, the action to take and what's selected, so it always means "here". Severity colours stay separate (red blocks, blue needs a person, amber warns, green passed) because they carry meaning; each has a light and a midnight value with at least 4.5:1 contrast on its tint.
+- **Themes are CSS variables only.** `data-theme` on `<html>` picks the light or midnight set in `styles/tokens.css`; switching changes one attribute, so nothing re-renders, and the browser cross-fades it (View Transitions) unless the person asked for reduced motion. A tiny script in `index.html` sets the theme before the first paint, so midnight users never see a white flash. The sign-in brand panel sets `data-theme="dark"` on itself, so it is midnight in both themes.
+- **No decoration.** No gradients, shadows only on overlays, no hover lifts or scaling, skeletons that don't shimmer (and appear only after 150 ms, so fast loads don't flicker). Motion only answers an action: the theme cross-fade, the passed-checks reveal, scrolling to the finding you picked on the poster, the page-loading bar.
+- **Optimistic updates** (`api/hooks/optimistic.ts`). Submit, approve, send back, confirm a reading, override, rule switches and every rulebook edit show their result at once, everywhere the data is cached (the poster page and every list it's in), and go back exactly as they were if the server refuses. Uploads and new versions can't be predicted (the checks decide), so instead a new poster appears in My posters as "running checks" straight away.
+- **Honest progress.** The server doesn't report progress during the checks, so the upload screen says what is happening and counts the seconds, instead of a fake progress bar.
+- **Pages load on demand** (route-level `lazy` in `routes.tsx`). Recharts (about 360 KB) now loads only on Insights, and the bundle warning is gone. Pointing at a poster row starts loading that poster, so it opens without a wait.
+- **Pages do layout only, enforced.** A local ESLint rule (`pramaan/layout-only`) fails the build if a page uses any class that isn't flex, grid or gap; `fetch` and the Supabase or API clients can only be used inside `src/api`. Tables, panels and states live in components, so pages stay short and readable.
+- **Phones:** tables turn into labelled stacked rows (`ui/DataTable`), the menu slides in from the left, and a poster's next action stays fixed at the bottom of the screen.
+
+## Temporary frontend (first version)
 
 - **`src/api/` is the contract for the final UI.** `client.ts` signs every backend call with the Supabase session; `schema.d.ts` is generated from the backend's OpenAPI; `types.ts` gives friendly names; `hooks/` holds every read and write. Pages never touch `fetch` or `supabase`.
 - **Lists and rulebook edits go straight to Supabase; checks and review actions go to the backend.** Row-level security scopes each list (a branch sees its own posters, a region its branches), so the list pages have no permission logic of their own.
