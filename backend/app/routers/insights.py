@@ -22,16 +22,21 @@ def _items(counter: Counter, labels: dict[str, str]) -> list[CountItem]:
 @router.get("/insights", response_model=Insights)
 def insights(user: Annotated[Profile, Depends(require("head_office"))]) -> Insights:
     db = get_db()
-    posters = db.table("posters").select("id, status, current_version, branches(name)").execute().data
-    versions = db.table("poster_versions").select("id, poster_id, version").execute().data
-    current = {v["id"]: v["poster_id"] for v in versions
-               if any(p["id"] == v["poster_id"] and p["current_version"] == v["version"] for p in posters)}
-    findings = db.table("findings").select("version_id, rule_id, severity, status").execute().data
+    posters = (db.table("posters").select("id, status, current_version, branches(name)")
+               .eq("org_id", user.org_id).execute().data)
+    ids = [p["id"] for p in posters]
+    versions = db.table("poster_versions").select("id, poster_id, version").in_("poster_id", ids).execute().data if ids else []
+    latest = {p["id"]: p["current_version"] for p in posters}
+    current = {v["id"]: v["poster_id"] for v in versions if latest[v["poster_id"]] == v["version"]}
+    version_ids = [v["id"] for v in versions]
+    findings = (db.table("findings").select("version_id, rule_id, severity, status").in_("version_id", version_ids)
+                .execute().data if version_ids else [])
     branch_of = {p["id"]: p["branches"]["name"] for p in posters}
     names = {r.id: f"{r.id} {r.name}" for r in [*load_rule_pack().rules, *load_rule_pack().reader_checks]}
 
     problems = [f for f in findings if f["version_id"] in current and f["severity"] != "pass"]
-    ai_calls = db.table("audit_log").select("id", count="exact").eq("action", "ai_call").execute().count or 0
+    ai_calls = (db.table("audit_log").select("id", count="exact").eq("org_id", user.org_id)
+                .eq("action", "ai_call").execute().count or 0)
     return Insights(
         posters_by_status=_items(Counter(p["status"] for p in posters), STATUS_LABELS),
         issues_by_branch=_items(Counter(branch_of[current[f["version_id"]]] for f in problems), {}),

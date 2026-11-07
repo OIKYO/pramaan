@@ -15,8 +15,9 @@ router = APIRouter(tags=["rules"])
 @router.get("/rules", response_model=RulePackOut)
 def rules(user: Annotated[Profile, Depends(current_user)]) -> RulePackOut:
     pack = load_rule_pack()
-    enabled = {r["rule_id"]: r["enabled"] for r in get_db().table("rule_settings").select("*").execute().data}
+    rows = get_db().table("rule_settings").select("rule_id, enabled").eq("org_id", user.org_id).execute().data
+    enabled = {r["rule_id"]: r["enabled"] for r in rows}
     return RulePackOut(
-        version=pack.version, source=pack.source, reader_checks=pack.reader_checks,
+        version=pack.version, source=pack.source, categories=pack.categories, reader_checks=pack.reader_checks,
         rules=[RuleOut(**{**r.model_dump(), "enabled": enabled.get(r.id, r.enabled)}) for r in pack.rules],
     )

@@ -22,7 +22,10 @@ def current_user(authorization: str | None = Header(default=None)) -> Profile:
     rows = db.table("profiles").select("*").eq("id", claims["sub"]).limit(1).execute().data
     if not rows:
         raise HTTPException(403, "Your account has no Pramaan profile yet. Ask head office to set one up.")
-    return Profile(**rows[0])
+    profile = Profile(**rows[0])
+    if profile.deactivated_at:
+        raise HTTPException(403, "Head office has removed your access to Pramaan. Ask them if you need it back.")
+    return profile
 
 
 def require(*roles: Role):

@@ -161,15 +161,16 @@ def _logo(db_url: str, path: str) -> Image.Image | None:
         return None
 
 
-def load_reference(db, branch_id: str) -> Reference:
-    brand = db.table("brand_kit").select("*").eq("id", 1).single().execute().data
-    toppers = db.table("toppers").select("*").execute().data
-    branch = db.table("branches").select("*").eq("id", branch_id).single().execute().data
-    settings_rows = db.table("rule_settings").select("rule_id, enabled").execute().data
+def load_reference(db, branch_id: str, org_id: str) -> Reference:
+    """The poster's organisation's rulebook, and its branch. Nothing from other organisations."""
+    brand = db.table("brand_kit").select("*").eq("org_id", org_id).single().execute().data
+    toppers = db.table("toppers").select("*").eq("org_id", org_id).execute().data
+    branch = db.table("branches").select("*").eq("id", branch_id).eq("org_id", org_id).single().execute().data
+    settings_rows = db.table("rule_settings").select("rule_id, enabled").eq("org_id", org_id).execute().data
     return Reference(
         brand_kit=BrandKit(**brand),
-        courses=[Course(**c) for c in db.table("courses").select("*").execute().data],
-        result_stats=[ResultStat(**s) for s in db.table("result_stats").select("*").execute().data],
+        courses=[Course(**c) for c in db.table("courses").select("*").eq("org_id", org_id).execute().data],
+        result_stats=[ResultStat(**s) for s in db.table("result_stats").select("*").eq("org_id", org_id).execute().data],
         toppers={t["id"]: Topper(**t) for t in toppers},
         branch=Branch(**branch),
         logo=_logo(str(db.supabase_url), brand["logo_path"]) if brand.get("logo_path") else None,
@@ -177,9 +178,11 @@ def load_reference(db, branch_id: str) -> Reference:
     )
 
 
-def cached_reading(db, sha: str, caption: str, live: bool) -> tuple[PosterReading, str] | None:
-    """A saved reading of the same image and caption, so the same poster isn't sent to the AI twice."""
-    rows = (db.table("poster_versions").select("reading, reader_model")
+def cached_reading(db, sha: str, caption: str, live: bool, org_id: str) -> tuple[PosterReading, str] | None:
+    """A saved reading of the same image and caption in the same organisation, so the same poster
+    isn't sent to the AI twice."""
+    rows = (db.table("poster_versions").select("reading, reader_model, posters!inner(org_id)")
+            .eq("posters.org_id", org_id)
             .eq("image_sha256", sha).eq("caption", caption).not_.is_("reading", "null")
             .order("created_at", desc=True).limit(5).execute().data)
     for row in rows:
@@ -189,7 +192,7 @@ def cached_reading(db, sha: str, caption: str, live: bool) -> tuple[PosterReadin
     return None
 
 
-def save_result(db, version_id: str, result: CheckResult, actor_id: str | None) -> None:
+def save_result(db, version_id: str, result: CheckResult, actor_id: str | None, org_id: str) -> None:
     """Store the reading and every finding (passes too), and log any AI call."""
     db.table("findings").delete().eq("version_id", version_id).execute()
     db.table("poster_versions").update({
@@ -202,6 +205,6 @@ def save_result(db, version_id: str, result: CheckResult, actor_id: str | None) 
         db.table("findings").insert(rows).execute()
     if result.ai_call:
         db.table("audit_log").insert({
-            "actor_id": actor_id, "action": "ai_call", "target_type": "poster_version",
+            "org_id": org_id, "actor_id": actor_id, "action": "ai_call", "target_type": "poster_version",
             "target_id": version_id, "details": result.ai_call,
         }).execute()

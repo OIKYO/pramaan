@@ -34,6 +34,7 @@ class Refused(Exception):
 @dataclass(frozen=True)
 class PosterState:
     id: str
+    org_id: str
     branch_id: str
     region_id: str
     created_by: str
@@ -56,6 +57,8 @@ class Transition:
 
 
 def can_view(user: Profile, poster: PosterState) -> bool:
+    if user.org_id != poster.org_id:  # another organisation's poster doesn't exist for this user
+        return False
     if user.role == "head_office":
         return True
     if user.role == "branch_staff":

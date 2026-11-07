@@ -2,7 +2,7 @@
 the findings they produce. API request/response models live at the bottom."""
 
 from datetime import date, datetime
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -195,6 +195,7 @@ class RuleDef(BaseModel):
 class RulePack(BaseModel):
     version: str
     source: str
+    categories: dict[str, str] = Field(default={}, description="Display name for each rule category")
     rules: list[RuleDef]
     reader_checks: list[RuleDef]
 
@@ -209,10 +210,14 @@ ReviewStage = Literal["regional", "head_office"]
 
 class Profile(BaseModel):
     id: str
+    org_id: str
     full_name: str
     role: Role
     branch_id: str | None = None
     region_id: str | None = None
+    email: str | None = None
+    needs_password_change: bool = False
+    deactivated_at: datetime | None = None
 
 
 class FindingOut(Finding):
@@ -277,6 +282,7 @@ class RuleOut(RuleDef):
 class RulePackOut(BaseModel):
     version: str
     source: str
+    categories: dict[str, str]
     rules: list[RuleOut]
     reader_checks: list[RuleDef]
 
@@ -314,3 +320,102 @@ class ReviewRequest(BaseModel):
 
 class NoteRequest(BaseModel):
     note: str = Field(min_length=1, max_length=2000)
+
+
+# ============================================================ organisations, team and imports
+
+Password = Annotated[str, Field(min_length=8, max_length=72, description="At least 8 characters")]
+# A plain check, not full RFC 5322: Supabase validates the address again when it creates the sign-in.
+Email = Annotated[str, Field(pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$", max_length=254)]
+
+
+class SignupRequest(BaseModel):
+    organisation_name: str = Field(min_length=2, max_length=120)
+    full_name: str = Field(min_length=2, max_length=120)
+    email: Email
+    password: Password
+
+
+class SignupResult(BaseModel):
+    org_id: str
+    user_id: str
+    email: str
+
+
+class MemberCreate(BaseModel):
+    full_name: str = Field(min_length=2, max_length=120)
+    email: Email
+    role: Role
+    branch_id: str | None = None
+    region_id: str | None = None
+
+
+class MemberUpdate(BaseModel):
+    full_name: str | None = Field(default=None, min_length=2, max_length=120)
+    role: Role | None = None
+    branch_id: str | None = None
+    region_id: str | None = None
+
+
+class MemberOut(BaseModel):
+    id: str
+    full_name: str
+    email: str | None
+    role: Role
+    branch_id: str | None
+    region_id: str | None
+    needs_password_change: bool
+    deactivated_at: datetime | None
+
+
+class MemberCreated(BaseModel):
+    member: MemberOut
+    temporary_password: str = Field(description="Shown once. The member chooses their own when they first sign in.")
+
+
+class PasswordChange(BaseModel):
+    password: Password
+
+
+Dataset = Literal["branches", "courses", "results", "toppers", "members"]
+
+
+class ImportIssue(BaseModel):
+    row: int = Field(description="Line number in the file (the header is line 1)")
+    column: str | None = None
+    message: str
+
+
+class ImportRow(BaseModel):
+    row: int
+    key: str = Field(description="What identifies the row, e.g. the course name")
+    action: Literal["create", "update", "skip"]
+    values: dict[str, str] = Field(description="The row as read from the file")
+
+
+class ImportPreview(BaseModel):
+    dataset: Dataset
+    columns: list[str]
+    rows: list[ImportRow]
+    issues: list[ImportIssue]
+    committed: bool = False
+    created: int = 0
+    updated: int = 0
+    credentials: list[dict[str, str]] = Field(
+        default=[], description="For imported team members: email and temporary password, shown once")
+
+
+class ImportColumn(BaseModel):
+    name: str
+    required: bool
+    help: str
+    example: str
+
+
+class DatasetSpecOut(BaseModel):
+    dataset: Dataset
+    title: str
+    description: str
+    key: str
+    columns: list[ImportColumn]
+    template: str = Field(description="A CSV with the header and one example row")

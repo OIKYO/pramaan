@@ -22,6 +22,10 @@ RULE_PACK = BACKEND_DIR / "rules" / "rule_pack.json"
 
 HELPLINE = "+91 10000 10000"
 
+# The demo organisation. Its id is fixed so the migration and the seed agree on it.
+ORG_ID = "00000000-0000-4000-8000-000000000001"
+ORG_NAME = "Northfield Academy"
+
 BRANCHES = [
     {"name": "Northfield Kolkata", "city": "Kolkata", "phone": "+91 10000 22101",
      "address": "3rd floor, 21 Lake Terrace, Kolkata 700029"},
@@ -85,7 +89,7 @@ TOPPERS = [
 ]
 
 BRAND_KIT = {
-    "id": 1,
+    "org_id": ORG_ID,
     "registered_name": "Northfield Academy Pvt. Ltd.",
     "helpline": HELPLINE,
     "palette": ["#1F3354", "#F8F6F1", "#FFFFFF", "#238A7D", "#E0A526", "#111827"],
@@ -145,10 +149,12 @@ def main() -> None:
         raise SystemExit("Set DEMO_PASSWORD in backend/.env first.")
     db = get_db()
 
-    region = db.table("regions").upsert({"name": "East"}, on_conflict="name").execute().data[0]
+    db.table("organisations").upsert({"id": ORG_ID, "name": ORG_NAME}).execute()
+    region = db.table("regions").upsert({"org_id": ORG_ID, "name": "East"}, on_conflict="org_id,name").execute().data[0]
     branches = {}
     for branch in BRANCHES:
-        row = db.table("branches").upsert({**branch, "region_id": region["id"]}, on_conflict="name").execute()
+        row = db.table("branches").upsert({**branch, "org_id": ORG_ID, "region_id": region["id"]},
+                                          on_conflict="org_id,name").execute()
         branches[branch["name"]] = row.data[0]["id"]
     print(f"region East with {len(branches)} branches")
 
@@ -156,6 +162,8 @@ def main() -> None:
         user_id = ensure_user(db, user["email"], settings.demo_password, user["full_name"])
         db.table("profiles").upsert({
             "id": user_id,
+            "org_id": ORG_ID,
+            "email": user["email"],
             "full_name": user["full_name"],
             "role": user["role"],
             "branch_id": branches.get(user.get("branch", "")),
@@ -163,24 +171,27 @@ def main() -> None:
         }).execute()
         print(f"user {user['email']} ({user['role']})")
 
-    logo_path = upload(db, "brand", "northfield-logo.png", LOGO.read_bytes(), "image/png")
+    logo_path = upload(db, "brand", f"{ORG_ID}/northfield-logo.png", LOGO.read_bytes(), "image/png")
     db.table("brand_kit").upsert({**BRAND_KIT, "logo_path": logo_path}).execute()
     print("brand kit")
 
     courses = {}
     for course in COURSES:
         row = db.table("courses").upsert(
-            {**course, "valid_until": FACTS_VALID_UNTIL, "source": SOURCE}, on_conflict="name").execute()
+            {**course, "org_id": ORG_ID, "valid_until": FACTS_VALID_UNTIL, "source": SOURCE},
+            on_conflict="org_id,name").execute()
         courses[course["name"]] = row.data[0]["id"]
     for stat in RESULT_STATS:
         db.table("result_stats").upsert(
-            {**stat, "valid_until": FACTS_VALID_UNTIL, "source": SOURCE}, on_conflict="label").execute()
+            {**stat, "org_id": ORG_ID, "valid_until": FACTS_VALID_UNTIL, "source": SOURCE},
+            on_conflict="org_id,label").execute()
     print(f"{len(courses)} courses, {len(RESULT_STATS)} result figure")
 
     hq_id = next(u.id for u in db.auth.admin.list_users() if u.email == "hq@pramaan.demo")
     for topper in TOPPERS:
         has_consent = "consent_date" in topper
         row = {
+            "org_id": ORG_ID,
             "full_name": topper["full_name"],
             "name_variants": topper["name_variants"],
             "exam": "JEE Main",
@@ -199,15 +210,15 @@ def main() -> None:
         }
         if has_consent:
             slug = topper["full_name"].lower().replace(" ", "-")
-            row["consent_path"] = upload(db, "consent", f"{slug}.pdf", consent_pdf(topper), "application/pdf")
-        db.table("toppers").upsert(row, on_conflict="full_name").execute()
+            row["consent_path"] = upload(db, "consent", f"{ORG_ID}/{slug}.pdf", consent_pdf(topper), "application/pdf")
+        db.table("toppers").upsert(row, on_conflict="org_id,full_name").execute()
     print(f"{len(TOPPERS)} toppers")
 
     if RULE_PACK.exists():
         rules = json.loads(RULE_PACK.read_text(encoding="utf-8"))["rules"]
         db.table("rule_settings").upsert(
-            [{"rule_id": r["id"], "enabled": r.get("enabled", True)} for r in rules],
-            on_conflict="rule_id", ignore_duplicates=True,
+            [{"org_id": ORG_ID, "rule_id": r["id"], "enabled": r.get("enabled", True)} for r in rules],
+            on_conflict="org_id,rule_id", ignore_duplicates=True,
         ).execute()
         print(f"{len(rules)} rule settings")
 

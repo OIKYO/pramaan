@@ -33,7 +33,7 @@ def _close(finding: dict, poster: state.PosterState, user: Profile, new_status: 
     }).eq("id", finding["id"]).execute()
     db.table("reviews").insert({"poster_id": poster.id, "version_id": finding["version_id"], "actor_id": user.id,
                                 "action": action, "comment": f"{finding['rule_id']}: {text.strip()}"}).execute()
-    audit(user.id, action, "finding", finding["id"],
+    audit(user.org_id, user.id, action, "finding", finding["id"],
           {"rule_id": finding["rule_id"], "poster_id": poster.id, "note": text.strip()})
 
 

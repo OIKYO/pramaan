@@ -1,6 +1,13 @@
 {
   "version": "2026.11-r2",
-  "source": "CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024, plus Northfield Academy's brand kit",
+  "source": "CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024, plus each organisation's brand kit",
+  "categories": {
+    "claims": "CCPA coaching guidelines",
+    "facts": "Approved facts",
+    "brand": "Brand",
+    "access": "Accessibility",
+    "reader": "Reading checks"
+  },
   "rules": [
     {
       "id": "CCPA-01", "name": "No banned claims", "category": "claims", "kind": "code", "severity": "block",
@@ -44,7 +51,7 @@
     },
     {
       "id": "BRAND-01", "name": "Logo present", "category": "brand", "kind": "code", "severity": "warn",
-      "reason": "Every poster carries the Northfield Academy logo, so readers know who published it."
+      "reason": "Every poster carries the organisation's logo, so readers know who published it."
     },
     {
       "id": "BRAND-02", "name": "Colours within palette", "category": "brand", "kind": "code", "severity": "warn",

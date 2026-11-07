@@ -21,7 +21,7 @@ def logo_present(ctx: RuleContext) -> list[Problem]:
         return _not_checked("logo")
     if ctx.visual.logo_score is None or ctx.visual.logo_score < LOGO_MIN_SCORE:
         return [Problem(
-            "The Northfield Academy logo wasn't found on the poster.",
+            f"The {ctx.brand_kit.registered_name} logo from the brand kit wasn't found on the poster.",
             evidence(None, None, logo_score=ctx.visual.logo_score),
             "Place the logo from the brand kit, unaltered and at a readable size.",
         )]

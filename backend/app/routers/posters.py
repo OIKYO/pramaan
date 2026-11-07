@@ -35,7 +35,7 @@ def load_state(poster_id: str) -> state.PosterState:
     if not rows:
         raise HTTPException(404, "Poster not found.")
     p = rows[0]
-    return state.PosterState(id=p["id"], branch_id=p["branch_id"], region_id=p["branches"]["region_id"],
+    return state.PosterState(id=p["id"], org_id=p["org_id"], branch_id=p["branch_id"], region_id=p["branches"]["region_id"],
                              created_by=p["created_by"], status=p["status"], review_stage=p["review_stage"])
 
 
@@ -58,7 +58,7 @@ def apply(poster: state.PosterState, transition: state.Transition, actor: Profil
     db.table("posters").update({"status": transition.status, "review_stage": transition.review_stage}).eq("id", poster.id).execute()
     db.table("reviews").insert({"poster_id": poster.id, "version_id": version_id, "actor_id": actor.id,
                                 "action": transition.action, "comment": comment}).execute()
-    audit(actor.id, f"poster_{transition.action}", "poster", poster.id,
+    audit(poster.org_id, actor.id, f"poster_{transition.action}", "poster", poster.id,
           {"from": poster.status, "to": transition.status, "review_stage": transition.review_stage, **(details or {})})
 
 
@@ -127,10 +127,10 @@ def read_image(upload: UploadFile) -> tuple[bytes, str, str]:
     return data, mime, ext
 
 
-def valid_tags(tagged: list[str]) -> list[str]:
+def valid_tags(tagged: list[str], org_id: str) -> list[str]:
     ids = [t for t in (tag.strip() for tag in tagged) if t]
     if ids:
-        known = {r["id"] for r in get_db().table("toppers").select("id").in_("id", ids).execute().data}
+        known = {r["id"] for r in get_db().table("toppers").select("id").in_("id", ids).eq("org_id", org_id).execute().data}
         if unknown := set(ids) - known:
             raise HTTPException(422, f"{len(unknown)} tagged student(s) aren't in the toppers register. Refresh and tag again.")
     return ids
@@ -150,8 +150,8 @@ def add_version(poster: state.PosterState, version: int, data: bytes, mime: str,
 
     settings = get_settings()
     try:
-        ref = load_reference(db, poster.branch_id)
-        cached = cached_reading(db, sha, caption, settings.reader_mode == "live")
+        ref = load_reference(db, poster.branch_id, poster.org_id)
+        cached = cached_reading(db, sha, caption, settings.reader_mode == "live", poster.org_id)
         result = check_poster(PosterInput(image=data, mime_type=mime, channel=_channel(poster.id), caption=caption,
                                           alt_text=alt_text, tagged_topper_ids=tags, filename=filename),
                               ref, settings, cached=cached)
@@ -161,7 +161,7 @@ def add_version(poster: state.PosterState, version: int, data: bytes, mime: str,
             "The checks crashed before finishing, so this version wasn't fully checked.",
             {"error": f"{type(exc).__name__}: {str(exc)[:300]}"},
             "Upload the version again. If it keeps failing, tell the Pramaan team."))])
-    save_result(db, version_id, result, actor.id)
+    save_result(db, version_id, result, actor.id, poster.org_id)
     counts = {s: sum(f.severity == s for f in result.findings) for s in ("block", "needs_human", "warn", "pass")}
     apply(poster, state.checked(), actor, version_id=version_id,
           details={"version": version, "reader_model": result.reader_model, "findings": counts})
@@ -191,14 +191,14 @@ def create_poster(
     except state.Refused as error:
         raise refuse(error) from None
     data, mime, ext = read_image(image)
-    tags = valid_tags(tagged_topper_ids)
+    tags = valid_tags(tagged_topper_ids, user.org_id)
     db = get_db()
     row = db.table("posters").insert({
-        "branch_id": user.branch_id, "created_by": user.id, "title": title.strip(), "channel": channel,
+        "org_id": user.org_id, "branch_id": user.branch_id, "created_by": user.id, "title": title.strip(), "channel": channel,
         "status": "draft", "current_version": 1,
     }).execute().data[0]
     db.table("reviews").insert({"poster_id": row["id"], "actor_id": user.id, "action": "created"}).execute()
-    audit(user.id, "poster_created", "poster", row["id"], {"title": row["title"], "channel": channel})
+    audit(user.org_id, user.id, "poster_created", "poster", row["id"], {"title": row["title"], "channel": channel})
     poster = load_state(row["id"])
     add_version(poster, 1, data, mime, ext, image.filename or "", caption, alt_text, tags, user)
     return build_detail(row["id"], user)
@@ -220,7 +220,7 @@ def new_version(
     except state.Refused as error:
         raise refuse(error) from None
     data, mime, ext = read_image(image)
-    tags = valid_tags(tagged_topper_ids)
+    tags = valid_tags(tagged_topper_ids, user.org_id)
     db = get_db()
     version = db.table("posters").select("current_version").eq("id", poster_id).single().execute().data["current_version"] + 1
     db.table("posters").update({"current_version": version}).eq("id", poster_id).execute()

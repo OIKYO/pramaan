@@ -6,15 +6,16 @@ from app import state
 from app.models import Profile
 from app.state import FindingState, PosterState, Refused
 
-STAFF = Profile(id="u-staff", full_name="Tara Ghosh", role="branch_staff", branch_id="b-siliguri")
-OTHER_STAFF = Profile(id="u-staff2", full_name="Rahul Sarkar", role="branch_staff", branch_id="b-kolkata")
-REGIONAL = Profile(id="u-regional", full_name="Vikram Bose", role="regional_manager", region_id="r-east")
-OTHER_REGIONAL = Profile(id="u-regional2", full_name="Someone", role="regional_manager", region_id="r-west")
-HQ = Profile(id="u-hq", full_name="Meera Iyer", role="head_office")
+STAFF = Profile(id="u-staff", org_id="org-1", full_name="Tara Ghosh", role="branch_staff", branch_id="b-siliguri")
+OTHER_STAFF = Profile(id="u-staff2", org_id="org-1", full_name="Rahul Sarkar", role="branch_staff", branch_id="b-kolkata")
+REGIONAL = Profile(id="u-regional", org_id="org-1", full_name="Vikram Bose", role="regional_manager", region_id="r-east")
+OTHER_REGIONAL = Profile(id="u-regional2", org_id="org-1", full_name="Someone", role="regional_manager", region_id="r-west")
+HQ = Profile(id="u-hq", org_id="org-1", full_name="Meera Iyer", role="head_office")
+OTHER_ORG_HQ = Profile(id="u-hq2", org_id="org-2", full_name="Asha Rao", role="head_office")
 
 
 def poster(status="checked", stage=None, created_by="u-staff") -> PosterState:
-    return PosterState(id="p1", branch_id="b-siliguri", region_id="r-east", created_by=created_by,
+    return PosterState(id="p1", org_id="org-1", branch_id="b-siliguri", region_id="r-east", created_by=created_by,
                        status=status, review_stage=stage)
 
 
@@ -117,3 +118,11 @@ def test_allowed_actions_follow_the_rules():
     assert "approve" not in regional_view and {"send_back", "resolve"} <= set(regional_view)
     assert "override" in state.allowed_actions(HQ, poster("in_review", "head_office"), BLOCKED)
     assert state.allowed_actions(STAFF, poster("approved"), CLEAN) == []
+
+
+def test_another_organisations_head_office_cant_see_or_act_on_a_poster():
+    target = poster(status="in_review", stage="head_office")
+    assert not state.can_view(OTHER_ORG_HQ, target)
+    with pytest.raises(state.Refused) as refused:
+        state.review(OTHER_ORG_HQ, target, "approve", [], None)
+    assert refused.value.status == 404

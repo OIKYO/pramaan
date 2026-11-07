@@ -43,7 +43,7 @@ class ReadResult:
 
 
 def build_prompt(brand_kit: BrandKit, caption: str) -> str:
-    return f"""You read posters for Northfield Academy, a coaching institute, so that plain code can check them.
+    return f"""You read advertising posters for {brand_kit.registered_name} so that plain code can check them.
 
 Report only what is visibly printed on the poster image. Never guess, infer or fill in anything that isn't printed. If something isn't visible, leave the field empty.
 
