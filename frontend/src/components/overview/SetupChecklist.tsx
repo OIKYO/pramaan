@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import { Link } from "react-router";
-import { useBranches } from "@/api/hooks/useOrganisation";
+import { useKeeps, useVocabulary } from "@/api/hooks/useCatalog";
+import { useBranches, useOrganisation } from "@/api/hooks/useOrganisation";
 import { useBrandKit, useCourses, useResultStats, useToppers } from "@/api/hooks/useRulebook";
 import { useMembers } from "@/api/hooks/useTeam";
 import type { Dataset } from "@/api/types";
@@ -17,27 +18,33 @@ interface Step {
   importable?: Dataset;
 }
 
-/** A new organisation's setup, worked out from what it has added so far. Gone once it's all done. */
+/** A new organisation's setup, worked out from what it has added so far and the rulebooks it
+ * keeps. Gone once it's all done. */
 export function SetupChecklist() {
+  const org = useOrganisation().data;
   const kit = useBrandKit().data;
   const branches = useBranches().data;
   const courses = useCourses().data;
   const toppers = useToppers().data;
   const stats = useResultStats().data;
   const members = useMembers().data;
-  if (!kit || !branches || !courses || !toppers || !stats || !members) return null;
+  const keeps = useKeeps();
+  const words = useVocabulary();
+  if (!org || !kit || !branches || !courses || !toppers || !stats || !members) return null;
 
   const steps: Step[] = [
+    { title: "Say what your organisation does", text: "Your industry picks the words Pramaan uses and suggests rulebooks.",
+      done: Boolean(org.industry_group), to: "/settings#organisation", action: "Choose industry" },
     { title: "Complete your brand kit", text: "Registered name, helpline, logo and colours. The brand checks need all four.",
       done: Boolean(kit.registered_name && kit.helpline && kit.logo_path && kit.palette.length), to: "/rulebook/brand", action: "Open brand kit" },
     { title: "Add your branches", text: "Each branch's phone and address are checked on its posters.",
       done: branches.length > 0, to: "/organisation/branches", action: "Add branches", importable: "branches" },
-    { title: "Add courses and fees", text: "Posters must name and price courses exactly as approved.",
-      done: courses.length > 0, to: "/rulebook/courses", action: "Add courses", importable: "courses" },
-    { title: "Add your toppers", text: "Students posters may show, with their verified rank and consent.",
-      done: toppers.length > 0, to: "/rulebook/toppers", action: "Add toppers", importable: "toppers" },
-    { title: "Add results figures", text: "The only success numbers a poster may claim.",
-      done: stats.length > 0, to: "/rulebook/results", action: "Add figures", importable: "results" },
+    ...(keeps("offerings") ? [{ title: `Add ${words.offerings.toLowerCase()}`, text: `Posters must name and price your ${words.offering_plural} exactly as approved.`,
+      done: courses.length > 0, to: "/rulebook/offerings", action: `Add ${words.offering_plural}`, importable: "courses" as const }] : []),
+    ...(keeps("people") ? [{ title: `Add your ${words.person_plural}`, text: "The people posters may show, with their signed consent.",
+      done: toppers.length > 0, to: "/rulebook/people", action: `Add ${words.person_plural}`, importable: "toppers" as const }] : []),
+    ...(keeps("figures") ? [{ title: `Add ${words.figures.toLowerCase()}`, text: "The only figures a poster may quote.",
+      done: stats.length > 0, to: "/rulebook/figures", action: "Add figures", importable: "results" as const }] : []),
     { title: "Add your team", text: "Branch staff upload posters; regional managers review them.",
       done: members.length > 1, to: "/organisation/team", action: "Add people", importable: "members" },
   ];
@@ -47,9 +54,9 @@ export function SetupChecklist() {
   return (
     <Panel title="Set up your organisation" description={`${done} of ${steps.length} done. Posters are checked against what you add here.`}>
       <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-6 gap-1" aria-hidden>
+        <div className="flex gap-1" aria-hidden>
           {steps.map((s) => (
-            <span key={s.title} className={cn("h-1 rounded-full", s.done ? "bg-passed" : "bg-line")} />
+            <span key={s.title} className={cn("h-1 flex-1 rounded-full", s.done ? "bg-passed" : "bg-line")} />
           ))}
         </div>
         <ol className="flex flex-col divide-y divide-line">

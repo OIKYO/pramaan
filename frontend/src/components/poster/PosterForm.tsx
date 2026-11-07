@@ -49,7 +49,7 @@ export function PosterForm({ mode, channel: fixedChannel, defaults, pending, onS
           {mode === "new" && (
             <>
               <Field label="Poster title" error={tried && titleMissing ? "Give the poster a title reviewers will recognise." : null}>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} placeholder="e.g. JEE Main 2026 toppers" />
+                <Input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} placeholder="e.g. Admissions open for 2027" />
               </Field>
               <div className="flex flex-col gap-1.5">
                 <span className="text-sm font-semibold text-ink-strong">Where it will be published</span>

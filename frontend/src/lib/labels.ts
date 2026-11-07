@@ -51,6 +51,9 @@ export const formatDateTime = (iso: string) =>
 export const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso));
 
+/** "fee" -> "Fee", for headings built from an organisation's own words. */
+export const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
 export const formatInr = (amount: number) => `₹${new Intl.NumberFormat("en-IN").format(amount)}`;
 
 /** Audit log actions in words. Anything new falls back to its name with spaces. */
@@ -75,6 +78,8 @@ const AUDIT_ACTION: Record<string, string> = {
   member_restored: "restored someone's access",
   password_changed: "changed their password",
   data_imported: "imported data",
+  organisation_updated: "changed the organisation's industry or rulebooks",
+  name_changed: "changed their name",
 };
 
 export const auditLabel = (action: string) => AUDIT_ACTION[action] ?? action.replaceAll("_", " ");

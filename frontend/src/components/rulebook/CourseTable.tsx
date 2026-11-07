@@ -1,13 +1,17 @@
+import { useVocabulary } from "@/api/hooks/useCatalog";
 import type { Course } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { DataTable, type Column } from "@/components/ui/DataTable";
-import { formatDate, formatInr } from "@/lib/labels";
+import { capitalise, formatDate, formatInr } from "@/lib/labels";
 
-/** Approved courses with duration, fee and expiry. Head office can edit each one. */
+/** What the organisation offers (courses, menu items, memberships), with price and expiry, in its
+ * own words. Durations show where the industry uses them. Head office can edit each one. */
 export function CourseTable({ courses, onEdit }: { courses: Course[]; onEdit?: (course: Course) => void }) {
+  const words = useVocabulary();
+  const showDuration = words.durations || courses.some((c) => c.duration_label);
   const columns: Column<Course>[] = [
     {
-      header: "Course",
+      header: capitalise(words.offering),
       cell: (c) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-ink-strong">{c.name}</span>
@@ -15,12 +19,12 @@ export function CourseTable({ courses, onEdit }: { courses: Course[]; onEdit?: (
         </div>
       ),
     },
-    { header: "Duration", cell: (c) => c.duration_label },
-    { header: "Fee", cell: (c) => <span className="tabular-nums">{c.is_paid && c.fee_inr ? formatInr(c.fee_inr) : "Free"}</span> },
+    ...(showDuration ? [{ header: "Duration", cell: (c: Course) => c.duration_label ?? <span className="text-muted-text">None</span> }] : []),
+    { header: capitalise(words.price), cell: (c) => <span className="tabular-nums">{c.is_paid && c.fee_inr ? formatInr(c.fee_inr) : "Free"}</span> },
     { header: "Approved until", cell: (c) => (c.valid_until ? formatDate(c.valid_until) : <span className="text-muted-text">No end date</span>) },
     ...(onEdit
       ? [{ header: "Edit", align: "end" as const, shrink: true, cell: (c: Course) => <Button variant="ghost" size="sm" onClick={() => onEdit(c)} aria-label={`Edit ${c.name}`}>Edit</Button> }]
       : []),
   ];
-  return <DataTable caption="Approved courses and fees" columns={columns} rows={courses} rowKey={(c) => c.id} />;
+  return <DataTable caption={words.offerings} columns={columns} rows={courses} rowKey={(c) => c.id} />;
 }

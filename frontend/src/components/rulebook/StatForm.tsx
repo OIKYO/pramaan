@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { useVocabulary } from "@/api/hooks/useCatalog";
 import { useDeleteResultStat, useSaveResultStat } from "@/api/hooks/useRulebook";
 import type { ResultStat } from "@/api/types";
 import { Field } from "@/components/ui/Field";
@@ -7,12 +8,14 @@ import { toast } from "@/components/ui/Toast";
 import { dateOrNull } from "@/lib/lists";
 import { FormFooter } from "./FormFooter";
 
-/** Add or edit an approved results figure. CCPA-06 only accepts figures listed here. */
+/** Add or edit an approved figure. CCPA-06 only accepts figures listed here. The exam is asked
+ * only of education. */
 export function StatForm({ stat, onDone }: { stat: ResultStat | null; onDone: () => void }) {
   const save = useSaveResultStat();
   const remove = useDeleteResultStat();
+  const askExam = useVocabulary().exams || Boolean(stat?.exam);
   const [form, setForm] = useState({
-    label: stat?.label ?? "", value: String(stat?.value ?? ""), exam: stat?.exam ?? "JEE Main",
+    label: stat?.label ?? "", value: String(stat?.value ?? ""), exam: stat?.exam ?? "",
     year: String(stat?.year ?? new Date().getFullYear()), valid_until: stat?.valid_until ?? "", source: stat?.source ?? "",
   });
   const set = (patch: Partial<typeof form>) => setForm({ ...form, ...patch });
@@ -21,7 +24,7 @@ export function StatForm({ stat, onDone }: { stat: ResultStat | null; onDone: ()
   const submit = (event: FormEvent) => {
     event.preventDefault();
     save.mutate(
-      { id: stat?.id, label: form.label.trim(), value: Number(form.value), exam: form.exam.trim(), year: Number(form.year),
+      { id: stat?.id, label: form.label.trim(), value: Number(form.value), exam: form.exam.trim() || null, year: form.year ? Number(form.year) : null,
         valid_until: dateOrNull(form.valid_until), source: form.source.trim() },
       { onSuccess: () => toast.success("Figure saved."), onError },
     );
@@ -30,13 +33,13 @@ export function StatForm({ stat, onDone }: { stat: ResultStat | null; onDone: ()
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
-      <Field label="What it counts" hint="e.g. Classroom students who qualified JEE Main 2026">
+      <Field label="What it counts" hint="Written the way posters say it.">
         <Input value={form.label} onChange={(e) => set({ label: e.target.value })} required />
       </Field>
-      <div className="grid grid-cols-3 gap-4">
+      <div className={askExam ? "grid grid-cols-3 gap-4" : "grid grid-cols-2 gap-4"}>
         <Field label="Figure"><Input type="number" value={form.value} onChange={(e) => set({ value: e.target.value })} required /></Field>
-        <Field label="Exam"><Input value={form.exam} onChange={(e) => set({ exam: e.target.value })} required /></Field>
-        <Field label="Year"><Input type="number" value={form.year} onChange={(e) => set({ year: e.target.value })} required /></Field>
+        {askExam && <Field label="Exam"><Input value={form.exam} onChange={(e) => set({ exam: e.target.value })} /></Field>}
+        <Field label="Year"><Input type="number" value={form.year} onChange={(e) => set({ year: e.target.value })} /></Field>
       </div>
       <Field label="Approved until"><Input type="date" value={form.valid_until} onChange={(e) => set({ valid_until: e.target.value })} /></Field>
       <Field label="Source" hint="Where the figure can be verified."><Input value={form.source} onChange={(e) => set({ source: e.target.value })} /></Field>

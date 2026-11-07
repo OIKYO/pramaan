@@ -1,3 +1,4 @@
+import { useVocabulary } from "@/api/hooks/useCatalog";
 import { useToggleRule } from "@/api/hooks/useRulebook";
 import type { Rule, RulePack } from "@/api/types";
 import { DataTable, type Column } from "@/components/ui/DataTable";
@@ -6,18 +7,19 @@ import { toast } from "@/components/ui/Toast";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { KIND_LABEL, SEVERITY } from "@/lib/labels";
 
-
-/** The checks grouped by where they come from, each with why it exists and an on/off switch.
+/** The checks in the organisation's rulebooks, each with why it exists and an on/off switch.
  * Switching shows at once; it goes back if the database refuses (only head office may). */
 export function RuleList({ pack, canEdit }: { pack: RulePack; canEdit: boolean }) {
   const toggle = useToggleRule();
+  const words = useVocabulary();
+  const names: Record<string, string> = { offerings: words.offerings, figures: words.figures, people: words.people };
   const columns: Column<Rule>[] = [
     {
       header: "Check",
       cell: (r) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-ink-strong">{r.name}</span>
-          <span className="font-mono text-xs text-muted-text">{r.id}</span>
+          <span className="text-xs text-muted-text">{r.id}</span>
         </div>
       ),
     },
@@ -44,22 +46,25 @@ export function RuleList({ pack, canEdit }: { pack: RulePack; canEdit: boolean }
     },
   ];
 
-  // Groups and their names come from the rule pack (backend/rules/rule_pack.json), in pack order.
-  const categories = [...new Set(pack.rules.map((r) => r.category))];
+  // One section per rulebook the organisation keeps, in rule pack order. A rule in two rulebooks
+  // (FACT-04) shows under the first one that is kept.
+  const kept = pack.rulebooks.filter((b) => b.enabled);
+  const placed = new Set<string>();
+  const sections = kept.map((book) => {
+    const rules = pack.rules.filter((r) => r.rulebooks.includes(book.id) && !placed.has(r.id));
+    rules.forEach((r) => placed.add(r.id));
+    return { book, rules };
+  });
   return (
     <div className="flex flex-col gap-8">
-      {categories.map((category) => {
-        const rules = pack.rules.filter((r) => r.category === category);
-        const title = pack.categories[category] ?? category;
-        return (
-          <section key={category} className="flex flex-col gap-3">
-            <h2 className="text-sm">
-              {title} <span className="font-normal text-muted-text tabular-nums">· {rules.length}</span>
-            </h2>
-            <DataTable caption={title} columns={columns} rows={rules} rowKey={(r) => r.id} />
-          </section>
-        );
-      })}
+      {sections.filter((s) => s.rules.length > 0).map(({ book, rules }) => (
+        <section key={book.id} className="flex flex-col gap-3">
+          <h2 className="text-sm">
+            {names[book.id] ?? book.name} <span className="font-normal text-muted-text tabular-nums">· {rules.length}</span>
+          </h2>
+          <DataTable caption={book.name} columns={columns} rows={rules} rowKey={(r) => r.id} />
+        </section>
+      ))}
     </div>
   );
 }

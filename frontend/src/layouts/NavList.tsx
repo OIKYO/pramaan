@@ -1,14 +1,18 @@
 import { NavLink } from "react-router";
+import { useKeeps, useVocabulary } from "@/api/hooks/useCatalog";
 import type { Role } from "@/api/types";
 import { cn } from "@/lib/utils";
 import { navFor } from "./nav";
 import { QueueCount } from "./QueueCount";
 
-/** The menu for a role. The current page is marked with a bar in the accent colour. */
+/** The menu for a role, with the rulebooks the organisation keeps. The current page is marked
+ * with a bar in the accent colour. */
 export function NavList({ role, onNavigate }: { role: Role; onNavigate?: () => void }) {
+  const keeps = useKeeps();
+  const words = useVocabulary();
   return (
     <nav aria-label="Main" className="flex flex-col gap-5">
-      {navFor(role).map((group, i) => (
+      {navFor(role, keeps, words).map((group, i) => (
         <div key={group.title ?? i} className="flex flex-col gap-px">
           {group.title && <p className="px-2 pb-1.5 text-xs font-medium text-muted-text">{group.title}</p>}
           {group.items.map(({ to, label, icon: Icon, queue }) => (

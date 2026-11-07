@@ -1,4 +1,5 @@
-/** Where each role can go, grouped as the menu shows it, and each role's home page. */
+/** Where each role can go, grouped as the menu shows it, and each role's home page. The rulebook
+ * pages follow the organisation: only the rulebooks it keeps, named in its own words. */
 import {
   BadgeCheck,
   BookOpen,
@@ -9,6 +10,7 @@ import {
   ImageUp,
   Inbox,
   LayoutDashboard,
+  Library,
   ListChecks,
   MapPin,
   Palette,
@@ -19,7 +21,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { PosterScope } from "@/api/hooks/usePosters";
-import type { Role } from "@/api/types";
+import type { Role, Vocabulary } from "@/api/types";
 
 export interface NavItem {
   to: string;
@@ -34,28 +36,31 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-const RULEBOOK: NavGroup = {
-  title: "Rulebook",
-  items: [
-    { to: "/rulebook/brand", label: "Brand kit", icon: Palette },
-    { to: "/rulebook/courses", label: "Courses and fees", icon: BookOpen },
-    { to: "/rulebook/results", label: "Results figures", icon: Sigma },
-    { to: "/rulebook/toppers", label: "Toppers register", icon: Users },
-    { to: "/rulebook/rules", label: "Rules", icon: ListChecks },
-  ],
-};
+function rulebook(keeps: (id: string) => boolean, words: Vocabulary): NavGroup {
+  const items: (NavItem & { book: string })[] = [
+    { book: "brand", to: "/rulebook/brand", label: "Brand kit", icon: Palette },
+    { book: "offerings", to: "/rulebook/offerings", label: words.offerings, icon: BookOpen },
+    { book: "figures", to: "/rulebook/figures", label: words.figures, icon: Sigma },
+    { book: "people", to: "/rulebook/people", label: words.people, icon: Users },
+  ];
+  return {
+    title: "Rulebook",
+    items: [...items.filter((i) => keeps(i.book)), { to: "/rulebook/rules", label: "Rules", icon: ListChecks }],
+  };
+}
 
 const ALL_POSTERS: NavItem = { to: "/posters", label: "All posters", icon: Files };
 
-export function navFor(role: Role): NavGroup[] {
+export function navFor(role: Role, keeps: (id: string) => boolean, words: Vocabulary): NavGroup[] {
+  const book = rulebook(keeps, words);
   if (role === "branch_staff") {
     return [
       { items: [{ to: "/branch", label: "My posters", icon: FileImage }, { to: "/branch/new", label: "New poster", icon: ImageUp }] },
-      RULEBOOK,
+      book,
     ];
   }
   if (role === "regional_manager") {
-    return [{ items: [{ to: "/review", label: "Review queue", icon: Inbox, queue: "regional_review" }, ALL_POSTERS] }, RULEBOOK];
+    return [{ items: [{ to: "/review", label: "Review queue", icon: Inbox, queue: "regional_review" }, ALL_POSTERS] }, book];
   }
   return [
     {
@@ -66,10 +71,11 @@ export function navFor(role: Role): NavGroup[] {
         ALL_POSTERS,
       ],
     },
-    RULEBOOK,
+    book,
     {
       title: "Organisation",
       items: [
+        { to: "/organisation/rulebooks", label: "Rulebooks", icon: Library },
         { to: "/organisation/team", label: "Team", icon: UsersRound },
         { to: "/organisation/branches", label: "Branches", icon: MapPin },
         { to: "/organisation/import", label: "Import data", icon: FileUp },
