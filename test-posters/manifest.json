@@ -1,0 +1,177 @@
+[
+  {
+    "name": "01-clean",
+    "file": "01-clean.png",
+    "title": "JEE Main 2026 toppers",
+    "channel": "instagram",
+    "caption": "Congratulations to Riya and Ananya on their JEE Main 2026 results!",
+    "alt_text": "Northfield Academy Siliguri poster: Riya Sen (AIR 73) and Ananya Roy (AIR 58) in JEE Main 2026, both from the 2-Year Classroom Programme, with the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen",
+      "Ananya Roy"
+    ],
+    "expect": [],
+    "plants": "nothing: every check should pass",
+    "sha256": "565f9749dbc8d908c9ee96921a87e9e2bf8d7a291f054477682260efbf4cf1e5"
+  },
+  {
+    "name": "02-banned-claim",
+    "file": "02-banned-claim.png",
+    "title": "Admissions open",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster: Riya Sen, AIR 73 in JEE Main 2026, from the 2-Year Classroom Programme, with the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-01"
+    ],
+    "plants": "the banned claim “100% selection guaranteed”",
+    "sha256": "a6028fd1a79a95a8fc1384f9f92e09a9c791bf8b120292b8c712cc7ffb6f2f68"
+  },
+  {
+    "name": "03-wrong-rank",
+    "file": "03-wrong-rank.png",
+    "title": "Riya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster: Riya Sen, AIR 73 in JEE Main 2026, from the 2-Year Classroom Programme, with the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-04"
+    ],
+    "plants": "Riya Sen shown as AIR 37 (the register says AIR 73)",
+    "sha256": "a4a3d1d14af041a503017c3c9af16c60b856eab98c2ea7e6d835d2ff70902430"
+  },
+  {
+    "name": "04-no-consent",
+    "file": "04-no-consent.png",
+    "title": "Arjun's result",
+    "channel": "print",
+    "caption": "",
+    "alt_text": "",
+    "tags": [
+      "Arjun Das"
+    ],
+    "expect": [
+      "CCPA-02"
+    ],
+    "plants": "Arjun Das, who has no consent on file",
+    "sha256": "da2383b64ec2fc41588f3591a463695651f042e515d15d7ed152af9ed43f7433"
+  },
+  {
+    "name": "05-wrong-course",
+    "file": "05-wrong-course.png",
+    "title": "Priya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster celebrating Priya Mondal's JEE Main 2026 rank, with fee and phone.",
+    "tags": [
+      "Priya Mondal"
+    ],
+    "expect": [
+      "CCPA-05"
+    ],
+    "plants": "Priya Mondal presented as a paid classroom student (she took the free test series)",
+    "sha256": "de7fe48cbe8b305297980e01b73c854eae7c1d624b219312dc20a46c67398249"
+  },
+  {
+    "name": "06-wrong-fee",
+    "file": "06-wrong-fee.png",
+    "title": "Classroom fees",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster: Riya Sen, AIR 73 in JEE Main 2026, from the 2-Year Classroom Programme, with the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "FACT-02"
+    ],
+    "plants": "a fee of ₹45,000 (approved: ₹48,000)",
+    "sha256": "1773cd82095a83a8a53035e966884f24c9b8d0ab88398bd05d252fa6d3dbece5"
+  },
+  {
+    "name": "07-wrong-phone",
+    "file": "07-wrong-phone.png",
+    "title": "Call us",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster: Riya Sen, AIR 73 in JEE Main 2026, from the 2-Year Classroom Programme, with the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "FACT-03"
+    ],
+    "plants": "a phone number that isn't the Siliguri branch's",
+    "sha256": "1cddf390531ab32ffa1d0d52cb846acd670d2ea4bc55641183deb6ff0bc612c4"
+  },
+  {
+    "name": "08-off-palette",
+    "file": "08-off-palette.png",
+    "title": "Summer batch",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster: Riya Sen, AIR 73 in JEE Main 2026, from the 2-Year Classroom Programme, with the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "BRAND-02"
+    ],
+    "plants": "a lime-green background outside the brand palette",
+    "sha256": "a1b805ceaf36689808f6cdc9f743dcdb6c6df49dc135d52bdfb1bbcd27ebd325"
+  },
+  {
+    "name": "09-low-contrast",
+    "file": "09-low-contrast.png",
+    "title": "Results poster",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster: Riya Sen, AIR 73 in JEE Main 2026, from the 2-Year Classroom Programme, with the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "ACC-01"
+    ],
+    "plants": "a pale grey disclaimer on the off-white background",
+    "sha256": "c6679558f99b6a32c033d6690a349f56af3ef3767d18b6d2ec6c233b0aae75f4"
+  },
+  {
+    "name": "10-hindi",
+    "file": "10-hindi.png",
+    "title": "Naya batch",
+    "channel": "whatsapp",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster in Hindi announcing a new batch, with Riya Sen's JEE Main 2026 rank.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "AI-01"
+    ],
+    "plants": "Hindi text with the disguised guarantee “सीट तय है!” (your seat is fixed)",
+    "sha256": "863bcd21ed70e15bfd62eb9d3030be42189ebada328b6c11a08c1e39b94cf0a3"
+  },
+  {
+    "name": "11-old-consent",
+    "file": "11-old-consent.png",
+    "title": "Karan's result",
+    "channel": "print",
+    "caption": "",
+    "alt_text": "",
+    "tags": [
+      "Karan Thapa"
+    ],
+    "expect": [
+      "CCPA-03"
+    ],
+    "plants": "Karan Thapa, whose consent is dated before the result",
+    "sha256": "9c2061433fe43157c937e6a772dfd2fe2068f5473f56f1b59bef55c409f9bae8"
+  }
+]

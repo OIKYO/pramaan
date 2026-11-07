@@ -1,0 +1,202 @@
+{
+  "text_blocks": [
+    {
+      "box_2d": [
+        47,
+        222,
+        89,
+        715
+      ],
+      "text": "Northfield Academy",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        100,
+        222,
+        122,
+        396
+      ],
+      "text": "Siliguri branch",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        196,
+        74,
+        238,
+        754
+      ],
+      "text": "Our JEE Main 2026 toppers",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        285,
+        250,
+        319,
+        421
+      ],
+      "text": "Riya Sen",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        329,
+        250,
+        346,
+        544
+      ],
+      "text": "AIR 73 · JEE Main 2026",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        361,
+        250,
+        381,
+        763
+      ],
+      "text": "2-Year Classroom Programme · 2 years · Paid",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        439,
+        74,
+        464,
+        803
+      ],
+      "text": "42 classroom students qualified JEE Main 2026",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        490,
+        74,
+        515,
+        609
+      ],
+      "text": "2-Year Classroom Programme: ₹48,000",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        534,
+        74,
+        559,
+        524
+      ],
+      "text": "Siliguri branch: +91 10000 22102",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        843,
+        74,
+        861,
+        842
+      ],
+      "text": "Ranks as declared in the official results. Students shown gave written consent.",
+      "romanised": ""
+    },
+    {
+      "box_2d": [
+        930,
+        74,
+        952,
+        766
+      ],
+      "text": "Northfield Academy Pvt. Ltd. · Helpline +91 10000 10000",
+      "romanised": ""
+    }
+  ],
+  "claims": [
+    {
+      "box_2d": [
+        439,
+        74,
+        464,
+        803
+      ],
+      "text": "42 classroom students qualified JEE Main 2026"
+    }
+  ],
+  "people": [
+    {
+      "box_2d": [
+        274,
+        74,
+        385,
+        763
+      ],
+      "name": "Riya Sen",
+      "romanised_name": "",
+      "rank_text": "AIR 73",
+      "rank_value": 73,
+      "course_text": "2-Year Classroom Programme",
+      "duration_text": "2 years",
+      "paid_text": "Paid"
+    }
+  ],
+  "numbers": [
+    {
+      "box_2d": [
+        329,
+        304,
+        346,
+        335
+      ],
+      "kind": "rank",
+      "raw_text": "73",
+      "value": 73.0
+    },
+    {
+      "box_2d": [
+        439,
+        74,
+        459,
+        113
+      ],
+      "kind": "stat",
+      "raw_text": "42",
+      "value": 42.0
+    },
+    {
+      "box_2d": [
+        490,
+        503,
+        512,
+        609
+      ],
+      "kind": "fee",
+      "raw_text": "₹48,000",
+      "value": 48000.0
+    },
+    {
+      "box_2d": [
+        536,
+        286,
+        553,
+        524
+      ],
+      "kind": "phone",
+      "raw_text": "+91 10000 22102",
+      "value": null
+    },
+    {
+      "box_2d": [
+        931,
+        554,
+        947,
+        766
+      ],
+      "kind": "phone",
+      "raw_text": "+91 10000 10000",
+      "value": null
+    }
+  ],
+  "registered_name_seen": true,
+  "helpline_seen": true,
+  "wording_flags": []
+}
