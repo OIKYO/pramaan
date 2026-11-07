@@ -1,27 +1,29 @@
+/** Every page and who may open it. Pages load on demand, so the first screen downloads only what
+ * it needs; while the next page loads, the current one stays put and a thin bar shows progress. */
 import { createBrowserRouter } from "react-router";
 import { AppShell } from "@/layouts/AppShell";
 import { RequireRole, RequireSignIn, RoleHome } from "@/layouts/Guards";
-import { ApprovalsPage } from "@/pages/Approvals/ApprovalsPage";
-import { AuditPage } from "@/pages/Audit/AuditPage";
-import { MyPostersPage } from "@/pages/Branch/MyPostersPage";
-import { NewPosterPage } from "@/pages/Branch/NewPosterPage";
-import { InsightsPage } from "@/pages/Insights/InsightsPage";
-import { LoginPage } from "@/pages/Login/LoginPage";
-import { ErrorPage, NotFoundPage } from "@/pages/NotFound/NotFoundPage";
-import { PosterDetailPage } from "@/pages/PosterDetail/PosterDetailPage";
-import { ReviewQueuePage } from "@/pages/Review/ReviewQueuePage";
-import { BrandKitPage } from "@/pages/Rulebook/BrandKitPage";
-import { CoursesPage } from "@/pages/Rulebook/CoursesPage";
-import { ResultsPage } from "@/pages/Rulebook/ResultsPage";
-import { RulesPage } from "@/pages/Rulebook/RulesPage";
-import { ToppersPage } from "@/pages/Rulebook/ToppersPage";
+import { ErrorPage } from "@/pages/NotFound/ErrorPage";
+import { NotFoundPage } from "@/pages/NotFound/NotFoundPage";
+import { LoadingRows, ScreenMessage } from "@/components/ui/States";
 
 const staff = ["branch_staff"] as const;
 const reviewers = ["regional_manager", "head_office"] as const;
 const headOffice = ["head_office"] as const;
 
+const firstLoad = (
+  <ScreenMessage>
+    <LoadingRows rows={3} />
+  </ScreenMessage>
+);
+
 export const router = createBrowserRouter([
-  { path: "/login", element: <LoginPage />, errorElement: <ErrorPage /> },
+  {
+    path: "/login",
+    lazy: () => import("@/pages/Login/LoginPage").then((m) => ({ Component: m.LoginPage })),
+    errorElement: <ErrorPage />,
+    hydrateFallbackElement: firstLoad,
+  },
   {
     path: "/",
     element: (
@@ -30,20 +32,34 @@ export const router = createBrowserRouter([
       </RequireSignIn>
     ),
     errorElement: <ErrorPage />,
+    hydrateFallbackElement: firstLoad,
     children: [
       { index: true, element: <RoleHome /> },
-      { path: "branch", element: <RequireRole roles={[...staff]}><MyPostersPage /></RequireRole> },
-      { path: "branch/new", element: <RequireRole roles={[...staff]}><NewPosterPage /></RequireRole> },
-      { path: "posters/:id", element: <PosterDetailPage /> },
-      { path: "review", element: <RequireRole roles={[...reviewers]}><ReviewQueuePage /></RequireRole> },
-      { path: "approvals", element: <RequireRole roles={[...headOffice]}><ApprovalsPage /></RequireRole> },
-      { path: "rulebook/brand", element: <BrandKitPage /> },
-      { path: "rulebook/courses", element: <CoursesPage /> },
-      { path: "rulebook/results", element: <ResultsPage /> },
-      { path: "rulebook/toppers", element: <ToppersPage /> },
-      { path: "rulebook/rules", element: <RulesPage /> },
-      { path: "insights", element: <RequireRole roles={[...headOffice]}><InsightsPage /></RequireRole> },
-      { path: "audit", element: <RequireRole roles={[...headOffice]}><AuditPage /></RequireRole> },
+      {
+        element: <RequireRole roles={staff} />,
+        children: [
+          { path: "branch", lazy: () => import("@/pages/Branch/MyPostersPage").then((m) => ({ Component: m.MyPostersPage })) },
+          { path: "branch/new", lazy: () => import("@/pages/Upload/UploadPage").then((m) => ({ Component: m.UploadPage })) },
+        ],
+      },
+      { path: "posters/:id", lazy: () => import("@/pages/PosterDetail/PosterDetailPage").then((m) => ({ Component: m.PosterDetailPage })) },
+      {
+        element: <RequireRole roles={reviewers} />,
+        children: [{ path: "review", lazy: () => import("@/pages/Review/ReviewQueuePage").then((m) => ({ Component: m.ReviewQueuePage })) }],
+      },
+      {
+        element: <RequireRole roles={headOffice} />,
+        children: [
+          { path: "approvals", lazy: () => import("@/pages/Approvals/ApprovalsPage").then((m) => ({ Component: m.ApprovalsPage })) },
+          { path: "insights", lazy: () => import("@/pages/Insights/InsightsPage").then((m) => ({ Component: m.InsightsPage })) },
+          { path: "audit", lazy: () => import("@/pages/Audit/AuditPage").then((m) => ({ Component: m.AuditPage })) },
+        ],
+      },
+      { path: "rulebook/brand", lazy: () => import("@/pages/Rulebook/BrandKitPage").then((m) => ({ Component: m.BrandKitPage })) },
+      { path: "rulebook/courses", lazy: () => import("@/pages/Rulebook/CoursesPage").then((m) => ({ Component: m.CoursesPage })) },
+      { path: "rulebook/results", lazy: () => import("@/pages/Rulebook/ResultsPage").then((m) => ({ Component: m.ResultsPage })) },
+      { path: "rulebook/toppers", lazy: () => import("@/pages/Rulebook/ToppersPage").then((m) => ({ Component: m.ToppersPage })) },
+      { path: "rulebook/rules", lazy: () => import("@/pages/Rulebook/RulesPage").then((m) => ({ Component: m.RulesPage })) },
       { path: "*", element: <NotFoundPage /> },
     ],
   },

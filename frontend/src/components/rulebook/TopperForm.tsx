@@ -35,8 +35,9 @@ export function TopperForm({ topper, onDone }: { topper: Topper | null; onDone: 
         is_minor: f.is_minor, guardian_signed: f.guardian_signed, consent_date: dateOrNull(f.consent_date),
         consent_valid_until: dateOrNull(f.consent_valid_until), consent_channels: f.consent_channels,
       },
-      { onSuccess: () => { toast.success("Topper saved."); onDone(); }, onError: (e) => toast.error(e.message) },
+      { onSuccess: () => toast.success("Topper saved."), onError: (e) => toast.error(`The topper wasn't saved: ${e.message}`) },
     );
+    onDone();
   };
 
   return (

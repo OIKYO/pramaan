@@ -21,7 +21,7 @@ export function CourseForm({ course, onDone }: { course: Course | null; onDone: 
     is_paid: course?.is_paid ?? true, fee_inr: String(course?.fee_inr ?? ""), valid_until: course?.valid_until ?? "", source: course?.source ?? "",
   });
   const set = (patch: Partial<typeof form>) => setForm({ ...form, ...patch });
-  const onError = (e: Error) => toast.error(e.message);
+  const onError = (e: Error) => toast.error(`That change wasn't saved: ${e.message}`);
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
@@ -31,8 +31,9 @@ export function CourseForm({ course, onDone }: { course: Course | null; onDone: 
         duration_label: form.duration_label.trim(), duration_months: Number(form.duration_months),
         is_paid: form.is_paid, fee_inr: form.is_paid ? Number(form.fee_inr) : 0, valid_until: dateOrNull(form.valid_until), source: form.source.trim(),
       },
-      { onSuccess: () => { toast.success("Course saved."); onDone(); }, onError },
+      { onSuccess: () => toast.success("Course saved."), onError },
     );
+    onDone();
   };
 
   return (
@@ -58,7 +59,7 @@ export function CourseForm({ course, onDone }: { course: Course | null; onDone: 
       <FormFooter
         pending={save.isPending || remove.isPending}
         onCancel={onDone}
-        onDelete={course ? () => remove.mutate(course.id, { onSuccess: () => { toast.success("Course deleted."); onDone(); }, onError }) : undefined}
+        onDelete={course ? () => { remove.mutate(course.id, { onSuccess: () => toast.success("Course deleted."), onError }); onDone(); } : undefined}
       />
     </form>
   );

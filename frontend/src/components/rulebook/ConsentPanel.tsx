@@ -1,3 +1,4 @@
+import { FileLock2 } from "lucide-react";
 import { useState } from "react";
 import { useConsentLink, useUploadConsent } from "@/api/hooks/useRulebook";
 import type { Topper } from "@/api/types";
@@ -15,15 +16,18 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
   const onError = (e: Error) => toast.error(e.message);
 
   return (
-    <section className="flex flex-col gap-3 rounded-lg border border-line bg-paper p-4">
+    <section className="flex flex-col gap-3 rounded-md border border-line bg-surface-sunken/50 p-4">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="text-base">Signed consent</h3>
+        <h3 className="flex items-center gap-2 text-sm">
+          <FileLock2 className="size-4 text-muted-text" aria-hidden /> Signed consent
+        </h3>
         {topper.has_consent ? <ToneBadge tone="passed">On file</ToneBadge> : <ToneBadge tone="blocked">Missing</ToneBadge>}
       </div>
+      <p className="text-sm text-muted-text">Private to head office. Never sent to the AI.</p>
       {topper.has_consent && (
         <Button
           type="button"
-          variant="outline"
+          variant="secondary"
           disabled={link.isPending}
           onClick={() => link.mutate(topper.id, { onSuccess: ({ url }) => window.open(url, "_blank", "noopener"), onError })}
         >
@@ -31,16 +35,14 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
         </Button>
       )}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium" htmlFor="consent-file">
+        <label className="text-sm font-semibold text-ink-strong" htmlFor="consent-file">
           {topper.has_consent ? "Replace with a new signed form (PDF)" : "Upload the signed form (PDF)"}
         </label>
         <Input id="consent-file" type="file" accept="application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
         <Button
           type="button"
           disabled={!file || upload.isPending}
-          onClick={() =>
-            file && upload.mutate({ topperId: topper.id, file }, { onSuccess: () => toast.success("Consent uploaded."), onError })
-          }
+          onClick={() => file && upload.mutate({ topperId: topper.id, file }, { onSuccess: () => toast.success("Consent uploaded."), onError })}
         >
           {upload.isPending ? "Uploading…" : "Upload consent"}
         </Button>

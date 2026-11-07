@@ -1,53 +1,58 @@
-import { Link } from "react-router";
+import { usePrefetchPoster } from "@/api/hooks/usePoster";
 import type { PosterListItem } from "@/api/types";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DataTable, type Column } from "@/components/ui/DataTable";
+import { Spinner } from "@/components/ui/Spinner";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { CHANNEL_LABEL, formatDateTime } from "@/lib/labels";
 import { StatusPill } from "./StatusPill";
 
-/** A list of posters with status and open issues. Titles link to the poster. */
+/** What's still open on a poster, as one tag. */
+function issues(poster: PosterListItem) {
+  if (poster.pending) return <span className="text-muted-text">Not known yet</span>;
+  if (poster.blocking > 0) return <ToneBadge tone="blocked">{poster.blocking} blocking</ToneBadge>;
+  if (poster.open_issues > 0) return <ToneBadge tone="warning">{poster.open_issues} to weigh</ToneBadge>;
+  return <ToneBadge tone="passed">None open</ToneBadge>;
+}
+
+/** Posters with where they are in review and what's still open. A row opens the poster; pointing
+ * at it starts loading the poster, so it opens without a wait. */
 export function PosterTable({ posters, showBranch = false }: { posters: PosterListItem[]; showBranch?: boolean }) {
+  const prefetch = usePrefetchPoster();
+  const columns: Column<PosterListItem>[] = [
+    {
+      header: "Poster",
+      cell: (p) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="font-semibold text-ink-strong">{p.title}</span>
+          <span className="text-xs text-muted-text">
+            {CHANNEL_LABEL[p.channel]} · version {p.current_version} · {p.created_by_name}
+          </span>
+        </div>
+      ),
+    },
+    ...(showBranch ? [{ header: "Branch", cell: (p: PosterListItem) => p.branch_name }] : []),
+    {
+      header: "Status",
+      cell: (p) =>
+        p.pending ? (
+          <span className="inline-flex items-center gap-2 text-muted-text">
+            <Spinner /> Running checks
+          </span>
+        ) : (
+          <StatusPill status={p.status} stage={p.review_stage} />
+        ),
+    },
+    { header: "Open issues", cell: issues },
+    { header: "Updated", align: "end", shrink: true, cell: (p) => <span className="text-muted-text tabular-nums">{formatDateTime(p.updated_at)}</span> },
+  ];
   return (
-    <div className="overflow-x-auto rounded-lg border border-line bg-surface">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Poster</TableHead>
-            {showBranch && <TableHead>Branch</TableHead>}
-            <TableHead>Status</TableHead>
-            <TableHead>Open issues</TableHead>
-            <TableHead className="text-right">Updated</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {posters.map((p) => (
-            <TableRow key={p.id}>
-              <TableCell>
-                <Link to={`/posters/${p.id}`} className="font-medium text-ink underline-offset-4 hover:underline">
-                  {p.title}
-                </Link>
-                <div className="text-xs text-muted-text">
-                  {CHANNEL_LABEL[p.channel]} · version {p.current_version} · {p.created_by_name}
-                </div>
-              </TableCell>
-              {showBranch && <TableCell>{p.branch_name}</TableCell>}
-              <TableCell>
-                <StatusPill status={p.status} stage={p.review_stage} />
-              </TableCell>
-              <TableCell>
-                {p.blocking > 0 ? (
-                  <ToneBadge tone="blocked">{p.blocking} blocking</ToneBadge>
-                ) : p.open_issues > 0 ? (
-                  <ToneBadge tone="warning">{p.open_issues} warnings</ToneBadge>
-                ) : (
-                  <ToneBadge tone="passed">None</ToneBadge>
-                )}
-              </TableCell>
-              <TableCell className="text-right text-muted-text">{formatDateTime(p.updated_at)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <DataTable
+      caption="Posters"
+      columns={columns}
+      rows={posters}
+      rowKey={(p) => p.id}
+      rowLink={(p) => (p.pending ? null : { to: `/posters/${p.id}`, label: `Open ${p.title}` })}
+      onRowIntent={(p) => !p.pending && prefetch(p.id)}
+    />
   );
 }

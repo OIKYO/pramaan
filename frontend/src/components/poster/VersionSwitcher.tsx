@@ -2,17 +2,21 @@ import type { Version } from "@/api/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatDateTime } from "@/lib/labels";
 
-/** Pick which version's findings to show. Hidden when there is only one version. */
-export function VersionSwitcher({ versions, value, current, onChange }: {
+interface VersionSwitcherProps {
   versions: Version[];
   value: number;
-  current: number;
   onChange: (version: number) => void;
-}) {
+  /** The poster's current version, marked in the list. */
+  current?: number;
+  label?: string;
+}
+
+/** Pick a version of the poster, newest first. Hidden when there is only one version. */
+export function VersionSwitcher({ versions, value, onChange, current, label = "Show version" }: VersionSwitcherProps) {
   if (versions.length < 2) return null;
   return (
     <Select value={String(value)} onValueChange={(v) => onChange(Number(v))}>
-      <SelectTrigger className="w-full sm:w-80" aria-label="Show version">
+      <SelectTrigger className="w-full sm:w-72" aria-label={label}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

@@ -16,15 +16,16 @@ export function StatForm({ stat, onDone }: { stat: ResultStat | null; onDone: ()
     year: String(stat?.year ?? new Date().getFullYear()), valid_until: stat?.valid_until ?? "", source: stat?.source ?? "",
   });
   const set = (patch: Partial<typeof form>) => setForm({ ...form, ...patch });
-  const onError = (e: Error) => toast.error(e.message);
+  const onError = (e: Error) => toast.error(`That change wasn't saved: ${e.message}`);
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
     save.mutate(
       { id: stat?.id, label: form.label.trim(), value: Number(form.value), exam: form.exam.trim(), year: Number(form.year),
         valid_until: dateOrNull(form.valid_until), source: form.source.trim() },
-      { onSuccess: () => { toast.success("Figure saved."); onDone(); }, onError },
+      { onSuccess: () => toast.success("Figure saved."), onError },
     );
+    onDone();
   };
 
   return (
@@ -42,7 +43,7 @@ export function StatForm({ stat, onDone }: { stat: ResultStat | null; onDone: ()
       <FormFooter
         pending={save.isPending || remove.isPending}
         onCancel={onDone}
-        onDelete={stat ? () => remove.mutate(stat.id, { onSuccess: () => { toast.success("Figure deleted."); onDone(); }, onError }) : undefined}
+        onDelete={stat ? () => { remove.mutate(stat.id, { onSuccess: () => toast.success("Figure deleted."), onError }); onDone(); } : undefined}
       />
     </form>
   );

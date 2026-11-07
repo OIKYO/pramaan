@@ -26,8 +26,9 @@ export function BrandKitForm({ kit, onDone }: { kit: BrandKit; onDone: () => voi
     if (badColour) return;
     save.mutate(
       { registered_name: name.trim(), helpline: helpline.trim(), palette: colours.map((c) => c.toUpperCase()), banned_phrases: splitList(banned, /\n/), tone_notes: tone.trim() },
-      { onSuccess: () => { toast.success("Brand kit saved."); onDone(); }, onError: (e) => toast.error(e.message) },
+      { onSuccess: () => toast.success("Brand kit saved."), onError: (e) => toast.error(`The brand kit wasn't saved: ${e.message}`) },
     );
+    onDone();
   };
 
   return (
@@ -38,7 +39,7 @@ export function BrandKitForm({ kit, onDone }: { kit: BrandKit; onDone: () => voi
       <Field label="Helpline">
         <Input value={helpline} onChange={(e) => setHelpline(e.target.value)} required />
       </Field>
-      <Field label="Palette" hint="Hex colours separated by commas, e.g. #1F3354, #F8F6F1" error={badColour ? `“${badColour}” isn't a hex colour like #1F3354.` : null}>
+      <Field label="Palette" hint="Hex colours separated by commas, e.g. #14213D, #FCA311" error={badColour ? `“${badColour}” isn't a hex colour like #14213D.` : null}>
         <Input value={palette} onChange={(e) => setPalette(e.target.value)} />
       </Field>
       <Field label="Extra banned phrases" hint="One per line. Added to the built-in English, Hindi and Bengali list (CCPA-01).">

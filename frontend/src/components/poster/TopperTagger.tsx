@@ -13,25 +13,33 @@ interface TopperTaggerProps {
 export function TopperTagger({ value, onChange }: TopperTaggerProps) {
   const toppers = useToppers();
   const prefix = useId();
-  if (toppers.isPending) return <Skeleton className="h-24 w-full" />;
-  if (toppers.isError) return <p className="text-sm text-blocked">{toppers.error.message}</p>;
-
   const toggle = (id: string, on: boolean) => onChange(on ? [...value, id] : value.filter((v) => v !== id));
+
   return (
-    <fieldset className="flex flex-col gap-2">
-      <legend className="mb-1 text-sm font-medium">Students shown on the poster</legend>
-      {toppers.data.map((t) => {
-        const id = `${prefix}-${t.id}`;
-        return (
-          <div key={t.id} className="flex items-center gap-3 rounded-md border border-line bg-surface px-3 py-2 text-sm">
-            <Checkbox id={id} checked={value.includes(t.id)} onCheckedChange={(on) => toggle(t.id, on === true)} />
-            <label htmlFor={id} className="flex-1 cursor-pointer">
-              {t.full_name} <span className="text-muted-text">· AIR {t.rank}</span>
-            </label>
-            {!t.has_consent && <ToneBadge tone="blocked">No consent on file</ToneBadge>}
-          </div>
-        );
-      })}
+    <fieldset className="flex flex-col gap-1.5">
+      <legend className="pb-1.5 text-sm font-semibold text-ink-strong">Students shown on the poster</legend>
+      <p className="pb-1 text-sm text-muted-text">Tick everyone pictured or named. Pramaan matches names, not faces.</p>
+      {toppers.isPending ? (
+        <Skeleton className="h-28 w-full" />
+      ) : toppers.isError ? (
+        <p className="text-sm text-blocked">{toppers.error.message}</p>
+      ) : (
+        <ul className="divide-y divide-line rounded-md border border-line bg-surface">
+          {toppers.data.map((t) => {
+            const id = `${prefix}-${t.id}`;
+            return (
+              <li key={t.id} className="flex items-center gap-3 px-3 py-2.5 text-sm has-checked:bg-surface-sunken/60">
+                <Checkbox id={id} checked={value.includes(t.id)} onCheckedChange={(on) => toggle(t.id, on === true)} />
+                <label htmlFor={id} className="flex flex-1 cursor-pointer flex-wrap items-baseline gap-x-2">
+                  <span className="font-semibold text-ink-strong">{t.full_name}</span>
+                  <span className="text-muted-text tabular-nums">AIR {t.rank}</span>
+                </label>
+                {!t.has_consent && <ToneBadge tone="blocked">No consent on file</ToneBadge>}
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </fieldset>
   );
 }
