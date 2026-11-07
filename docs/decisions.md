@@ -37,6 +37,25 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Course mentions use fuzzy matching (RapidFuzz `partial_ratio` ≥ 90).** That is what catches "2-Year Crash Course": it matches "1-Year Crash Course" closely, and the duration then disagrees. Aliases of five letters or fewer (such as "AITS") must match as a whole word.
 - **Name matching uses RapidFuzz `WRatio`: 85 or more is a match, 70 to 85 goes to a person** (as the brief sets out), against the full name and every listed variant.
 
+## Pipeline
+
+- **Model: `gemini-3.5-flash`.** `gemini-2.5-flash` (the first choice) returns "no longer available to new users" on our free-tier key. 3.5 Flash returned correct JSON for an image in 4–21 s; 3.8 Flash also worked but took 79 s.
+- **The schema goes to Gemini as JSON Schema** (`response_json_schema=PosterReading.model_json_schema()`, google-genai 3.0), and the reply is validated again with Pydantic. Invalid output is retried up to 2 times.
+- **Backup reader on Groq (`qwen/qwen3.8-27b`, a vision model, JSON mode).** If Gemini itself fails (quota, outage), the same prompt and schema go to Groq. This happened in our first live test: Gemini returned 503 "high demand" and Groq read the Hindi test poster correctly, including the disguised guarantee. A failing service isn't retried (that rarely helps); only invalid output is. If every reader fails, the version gets one `READ-01` finding for a person and no checks run.
+- **Readings are reused by image hash and caption.** The brief says image hash; including the caption matters because the AI also judges caption wording. Live readings are never reused in fixture mode and vice versa.
+- **Second read tolerance.** Tesseract may only answer in digits, so it turns the "AIR" in "AIR 73" or the "₹" in "₹48,000" into stray digits. The readings agree if Tesseract's digits end with Gemini's and have at most 3 extra leading digits; phone numbers compare their last 10 digits. Anything else, or nothing read, goes to a person.
+- **Without Tesseract (e.g. on a laptop that hasn't installed it), the second read is reported as not done** (`READ-02`, needs a person), never skipped silently.
+- **Visual thresholds**, tuned on the 11 test posters (`tools/make_test_posters.py`):
+
+  | Check | Threshold | Clean posters | Planted problem |
+  |---|---|---|---|
+  | Logo (`matchTemplate`, 16 sizes from 5% to 35% of the width) | ≥ 0.7 | 0.93 (blank page: 0.00) | — |
+  | Palette (k=6 in Lab, ignore < 5%, flag ≥ 10% of the area) | ΔE > 20 | max 0.3 | lime background: 57.9 |
+  | Contrast (k=2 per text box, WCAG ratio) | < 4.5:1 | lowest 8.5:1 | pale disclaimer: 1.43:1 |
+
+  OpenCV's random seed is fixed before every k-means, so results are repeatable.
+- **Test posters use the Nirmala UI font** (ships with Windows), which covers Latin, ₹ and Devanagari. This Pillow build has no text shaping (no libraqm), so Devanagari conjuncts and Bengali vowel signs render wrongly; the Hindi test poster uses phrases without them ("नया बैच शुरू", "सीट तय है!"). Bengali is covered by unit tests instead.
+
 ## Demo data
 
 - **Fictional phone numbers start with `+91 1`.** India doesn't give numbers in that range to subscribers, so no demo number can belong to a real person.
