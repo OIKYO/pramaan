@@ -27,6 +27,7 @@ create table public.organisations (
   org_type text,
   focus text[] not null default '{}',
   rulebooks text[] not null default '{brand,contacts,claims,people,rights,dates,offers,legal}',
+  join_code text unique,                              -- for joining while creating an account; API only
   created_by uuid references auth.users (id) on delete set null,
   created_at timestamptz not null default now()
 );
@@ -259,3 +260,23 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
   ('consent', 'consent', false, 10485760, array['application/pdf']),
   ('brand', 'brand', true, 2097152, array['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'])
 on conflict (id) do nothing;
+
+-- Single-use invite links (backend only; see backend/app/invites.py). Only a hash of each token is kept.
+create table public.invites (
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  token_hash text not null unique,
+  role public.user_role not null,
+  branch_id uuid,
+  region_id uuid,
+  email text,
+  created_by uuid references public.profiles (id) on delete set null,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null,
+  used_at timestamptz,
+  used_by uuid references auth.users (id) on delete set null,
+  revoked_at timestamptz,
+  constraint invites_branch_same_org foreign key (branch_id, org_id) references public.branches (id, org_id) on delete cascade,
+  constraint invites_region_same_org foreign key (region_id, org_id) references public.regions (id, org_id) on delete cascade
+);
+create index invites_org_idx on public.invites (org_id);

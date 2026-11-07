@@ -55,9 +55,14 @@ alter table public.rule_settings alter column org_id set default public.my_org()
 -- Signed-out visitors get nothing. (Signing up goes through the backend.)
 revoke all on all tables in schema public from anon;
 
--- Organisations: members read theirs; head office may rename it. Creating one is backend-only.
+-- Organisations: members read theirs (but not its join code, which comes through the API); head
+-- office may rename it. Creating one is backend-only.
 revoke all on public.organisations from authenticated;
-grant select on public.organisations to authenticated;
+grant select (id, name, industry_group, industry, org_type, focus, rulebooks, created_by, created_at)
+  on public.organisations to authenticated;
+
+-- Invites are backend-only.
+revoke all on public.invites from anon, authenticated;
 grant update (name) on public.organisations to authenticated;
 
 -- Backend-only tables: clients may read (subject to RLS) but never write.
@@ -84,6 +89,7 @@ grant update (
 -- ============================================================ row-level security
 
 alter table public.organisations enable row level security;
+alter table public.invites enable row level security;
 alter table public.regions enable row level security;
 alter table public.branches enable row level security;
 alter table public.profiles enable row level security;

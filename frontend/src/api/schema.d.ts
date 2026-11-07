@@ -194,6 +194,135 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Invites
+         * @description Invites still waiting to be used. Regional managers see the ones for their region.
+         */
+        get: operations["list_invites_invites_get"];
+        put?: never;
+        /**
+         * Create Invite
+         * @description A single-use link for one person, valid for 7 days. The link itself is shown only now.
+         */
+        post: operations["create_invite_invites_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/invites/{invite_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke Invite */
+        post: operations["revoke_invite_invites__invite_id__revoke_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/join/invite/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Preview Invite
+         * @description What an invite is for, before the person accepts it. No sign-in needed.
+         */
+        get: operations["preview_invite_join_invite__token__get"];
+        put?: never;
+        /**
+         * Accept Invite
+         * @description Create the person's account inside the organisation, with the invite's role and place.
+         */
+        post: operations["accept_invite_join_invite__token__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/join/code/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Preview Code
+         * @description The organisation a code belongs to, and its branches to choose from. No sign-in needed.
+         */
+        get: operations["preview_code_join_code__code__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/join/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Join With Code
+         * @description Join as branch staff of the chosen branch. Head office can change the role later.
+         */
+        post: operations["join_with_code_join_code_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/organisation/join-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Join Code
+         * @description The code people use to join while creating their account. Visible only inside the organisation.
+         */
+        get: operations["get_join_code_organisation_join_code_get"];
+        put?: never;
+        /**
+         * Refresh Join Code
+         * @description Replace the code, for example if it was shared outside the organisation. The old one stops working.
+         */
+        post: operations["refresh_join_code_organisation_join_code_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/imports": {
         parameters: {
             query?: never;
@@ -529,6 +658,15 @@ export interface components {
             /** File */
             file: string;
         };
+        /** BranchChoice */
+        BranchChoice: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** City */
+            city: string;
+        };
         /**
          * BrandSeen
          * @description Another organisation's name or logo on the poster: a partner, sponsor, university or company.
@@ -560,6 +698,13 @@ export interface components {
             box_2d: number[];
             /** Text */
             text: string;
+        };
+        /** CodePreview */
+        CodePreview: {
+            /** Organisation */
+            organisation: string;
+            /** Branches */
+            branches: components["schemas"]["BranchChoice"][];
         };
         /** ConsentUploaded */
         ConsentUploaded: {
@@ -790,6 +935,128 @@ export interface components {
             /** Ai Calls */
             ai_calls: number;
         };
+        /** InviteCreate */
+        InviteCreate: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "branch_staff" | "regional_manager" | "head_office";
+            /** Branch Id */
+            branch_id?: string | null;
+            /** Region Id */
+            region_id?: string | null;
+            /**
+             * Email
+             * @description If given, only this email can use the invite
+             */
+            email?: string | null;
+        };
+        /** InviteCreated */
+        InviteCreated: {
+            invite: components["schemas"]["InviteOut"];
+            /**
+             * Token
+             * @description Shown once: the link is <app>/join/<token>
+             */
+            token: string;
+        };
+        /** InviteOut */
+        InviteOut: {
+            /** Id */
+            id: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "branch_staff" | "regional_manager" | "head_office";
+            /** Branch Id */
+            branch_id?: string | null;
+            /** Region Id */
+            region_id?: string | null;
+            /** Email */
+            email?: string | null;
+            /** Created By Name */
+            created_by_name?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "used" | "revoked" | "expired";
+        };
+        /** InvitePreview */
+        InvitePreview: {
+            /** Organisation */
+            organisation: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "branch_staff" | "regional_manager" | "head_office";
+            /** Branch */
+            branch?: string | null;
+            /** Region */
+            region?: string | null;
+            /** Invited By */
+            invited_by?: string | null;
+            /** Email */
+            email?: string | null;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+        };
+        /** JoinCode */
+        JoinCode: {
+            /** Code */
+            code: string;
+        };
+        /** JoinResult */
+        JoinResult: {
+            /** Email */
+            email: string;
+            /** Organisation */
+            organisation: string;
+        };
+        /** JoinWithCode */
+        JoinWithCode: {
+            /** Full Name */
+            full_name: string;
+            /** Email */
+            email: string;
+            /**
+             * Password
+             * @description At least 8 characters, with a number and a special character
+             */
+            password: string;
+            /** Code */
+            code: string;
+            /** Branch Id */
+            branch_id: string;
+        };
+        /** JoinWithInvite */
+        JoinWithInvite: {
+            /** Full Name */
+            full_name: string;
+            /** Email */
+            email: string;
+            /**
+             * Password
+             * @description At least 8 characters, with a number and a special character
+             */
+            password: string;
+        };
         /** MeUpdate */
         MeUpdate: {
             /** Full Name */
@@ -930,7 +1197,7 @@ export interface components {
         PasswordChange: {
             /**
              * Password
-             * @description At least 8 characters
+             * @description At least 8 characters, with a number and a special character
              */
             password: string;
         };
@@ -1258,7 +1525,7 @@ export interface components {
             email: string;
             /**
              * Password
-             * @description At least 8 characters
+             * @description At least 8 characters, with a number and a special character
              */
             password: string;
             /**
@@ -1728,6 +1995,297 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MemberOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_invites_invites_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_invite_invites_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InviteCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteCreated"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_invite_invites__invite_id__revoke_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                invite_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_invite_join_invite__token__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitePreview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    accept_invite_join_invite__token__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JoinWithInvite"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JoinResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_code_join_code__code__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CodePreview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    join_with_code_join_code_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JoinWithCode"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JoinResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_join_code_organisation_join_code_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JoinCode"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_join_code_organisation_join_code_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JoinCode"];
                 };
             };
             /** @description Validation Error */

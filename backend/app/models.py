@@ -1,10 +1,11 @@
 """Pydantic models: what the reader returns, the reference data the rules check against, and
 the findings they produce. API request/response models live at the bottom."""
 
+import re
 from datetime import date, datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import AfterValidator, BaseModel, Field, field_validator
 
 # ============================================================ the reading (Gemini's output)
 
@@ -355,7 +356,17 @@ class NoteRequest(BaseModel):
 
 # ============================================================ organisations, team and imports
 
-Password = Annotated[str, Field(min_length=8, max_length=72, description="At least 8 characters")]
+def _strong_password(value: str) -> str:
+    """At least 8 characters, with a number and a special character (the frontend checks as people type)."""
+    if not re.search(r"\d", value):
+        raise ValueError("Add at least one number.")
+    if not re.search(r"[^A-Za-z0-9]", value):
+        raise ValueError("Add at least one special character, like ! or #.")
+    return value
+
+
+Password = Annotated[str, Field(min_length=8, max_length=72, description="At least 8 characters, with a number and a special character"),
+                     AfterValidator(_strong_password)]
 # A plain check, not full RFC 5322: Supabase validates the address again when it creates the sign-in.
 Email = Annotated[str, Field(pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$", max_length=254)]
 
@@ -536,3 +547,71 @@ class DatasetSpecOut(BaseModel):
     key: str
     columns: list[ImportColumn]
     template: str = Field(description="A CSV with the header and one example row")
+
+
+# ============================================================ invites and join codes
+
+
+class InviteCreate(BaseModel):
+    role: Role
+    branch_id: str | None = None
+    region_id: str | None = None
+    email: Email | None = Field(default=None, description="If given, only this email can use the invite")
+
+
+class InviteOut(BaseModel):
+    id: str
+    role: Role
+    branch_id: str | None = None
+    region_id: str | None = None
+    email: str | None = None
+    created_by_name: str | None = None
+    created_at: datetime
+    expires_at: datetime
+    status: Literal["pending", "used", "revoked", "expired"]
+
+
+class InviteCreated(BaseModel):
+    invite: InviteOut
+    token: str = Field(description="Shown once: the link is <app>/join/<token>")
+
+
+class InvitePreview(BaseModel):
+    organisation: str
+    role: Role
+    branch: str | None = None
+    region: str | None = None
+    invited_by: str | None = None
+    email: str | None = None
+    expires_at: datetime
+
+
+class JoinWithInvite(BaseModel):
+    full_name: str = Field(min_length=2, max_length=120)
+    email: Email
+    password: Password
+
+
+class BranchChoice(BaseModel):
+    id: str
+    name: str
+    city: str
+
+
+class CodePreview(BaseModel):
+    organisation: str
+    branches: list[BranchChoice]
+
+
+class JoinWithCode(JoinWithInvite):
+    code: str = Field(min_length=4, max_length=20)
+    branch_id: str
+
+
+class JoinResult(BaseModel):
+    email: str
+    organisation: str
+
+
+class JoinCode(BaseModel):
+    code: str

@@ -28,6 +28,11 @@ TOPPERS = ("full_name,exam,exam_year,rank,result_date,course,consent_date,consen
            "Riya Sen,JEE Main,2026,73,2026-04-19,2-Year Classroom Programme,2026-05-02,print; instagram\n")
 
 
+def strong_password() -> str:
+    """Random, with the number and special character every password needs."""
+    return secrets.token_urlsafe(12) + "-7"
+
+
 def check(label: str, ok: bool, extra: str = "") -> None:
     results.append((ok, label))
     print(("PASS " if ok else "FAIL ") + label + (f"  ({extra})" if extra and not ok else ""))
@@ -55,7 +60,7 @@ def upload(c: httpx.Client, dataset: str, text: str, commit: bool) -> httpx.Resp
 def main() -> None:
     api = next((a for a in sys.argv[1:] if not a.startswith("--")), "http://localhost:8000").rstrip("/")
     db = get_db()
-    email, password = f"founder-{secrets.token_hex(4)}@example.org", secrets.token_urlsafe(12)
+    email, password = f"founder-{secrets.token_hex(4)}@example.org", strong_password()
     r = httpx.get(f"{api}/catalog", timeout=60)
     check("the industry catalog is open before sign-up", r.status_code == 200 and len(r.json()["industries"]) == 30)
     r = httpx.post(f"{api}/signup", json={"organisation_name": "Brightpath Tutorials (test)", "full_name": "Asha Rao",
@@ -110,11 +115,40 @@ def main() -> None:
 
         staff_token = token(staff_email, creds[0]["temporary_password"])
         staff = client(api, staff_token)
-        new_password = secrets.token_urlsafe(12)
+        new_password = strong_password()
         check("they choose their own password", staff.post("/me/password", json={"password": new_password}).status_code == 204)
         check("branch staff can't change the rulebooks", staff.patch("/organisation", json={"rulebooks": []}).status_code == 403)
         check("...and the temporary one stops working", token(staff_email, creds[0]["temporary_password"]) is None)
         staff = client(api, token(staff_email, new_password))
+
+        # Invites and the join code
+        check("branch staff can't invite people", staff.post("/invites", json={"role": "branch_staff", "branch_id": branch["id"]}).status_code == 403)
+        r = hq.post("/invites", json={"role": "branch_staff", "branch_id": branch["id"]})
+        check("head office makes an invite link", r.status_code == 201, r.text[:200])
+        invite_token = r.json()["token"]
+        r = httpx.get(f"{api}/join/invite/{invite_token}", timeout=60)
+        check("anyone with the link sees what it's for", r.status_code == 200 and r.json()["branch"] == "Brightpath Dehradun", r.text[:200])
+        joiner_email = f"invited-{secrets.token_hex(4)}@example.org"
+        joiner = {"full_name": "Neha Bisht", "email": joiner_email, "password": strong_password()}
+        r = httpx.post(f"{api}/join/invite/{invite_token}", json=joiner, timeout=60)
+        check("they join the organisation with it", r.status_code == 201, r.text[:200])
+        joined = db.table("profiles").select("id, org_id, role, branch_id").eq("email", joiner_email).execute().data
+        users += [j["id"] for j in joined]
+        check("...as branch staff of that branch", bool(joined) and joined[0]["org_id"] == org_id and joined[0]["branch_id"] == branch["id"])
+        r = httpx.post(f"{api}/join/invite/{invite_token}", json={**joiner, "email": "again-" + joiner_email}, timeout=60)
+        check("an invite works only once", r.status_code == 410, r.text[:200])
+        code = hq.get("/organisation/join-code").json()["code"]
+        check("branch staff can't see the join code", staff.get("/organisation/join-code").status_code == 403)
+        r = httpx.get(f"{api}/join/code/{code.lower().replace('-', ' ')}", timeout=60)
+        check("the join code finds the organisation and its branches", r.status_code == 200 and r.json()["branches"][0]["id"] == branch["id"])
+        coder_email = f"coded-{secrets.token_hex(4)}@example.org"
+        r = httpx.post(f"{api}/join/code", json={"code": code, "branch_id": branch["id"], "full_name": "Kiran Rawat",
+                                                  "email": coder_email, "password": strong_password()}, timeout=60)
+        check("someone joins with the code", r.status_code == 201, r.text[:200])
+        users += [p["id"] for p in db.table("profiles").select("id").eq("email", coder_email).execute().data]
+        new_code = hq.post("/organisation/join-code").json()["code"]
+        check("head office replaces the code and the old one stops working",
+              new_code != code and httpx.get(f"{api}/join/code/{code}", timeout=60).status_code == 404)
 
         image = (REPO_DIR / "test-posters" / "01-clean.png").read_bytes()
         r = staff.post("/posters", data={"title": "First poster", "channel": "print"},
