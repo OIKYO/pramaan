@@ -11,6 +11,8 @@ export interface MenuItem {
   disabled?: boolean;
   /** Shows a dot: for picking one of a few options, like the theme. */
   checked?: boolean;
+  /** Shows a dot that asks for attention, e.g. details still to fill in. Says why to screen readers. */
+  attention?: string;
 }
 
 /** A row that opens a second menu beside it, e.g. Theme → Light, Midnight, Match this device. */
@@ -43,6 +45,7 @@ function Row({ item }: { item: MenuItem }) {
       {item.icon && <item.icon className={cn("size-4", item.danger ? "text-blocked" : "text-muted-text")} aria-hidden />}
       <span className="flex-1">{item.label}</span>
       {item.checked && <span aria-label="current" className="size-1.5 rounded-full bg-accent" />}
+      {item.attention && <span title={item.attention} aria-label={item.attention} className="size-2 rounded-full bg-control-on" />}
     </DropdownMenu.Item>
   );
 }

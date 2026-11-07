@@ -1,5 +1,6 @@
 import { Building2, ChevronsUpDown, LogOut, Monitor, Moon, Palette, Settings, Sun } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useProfileGaps } from "@/api/hooks/useOrganisation";
 import { useProfile, useSession } from "@/api/hooks/useSession";
 import { Avatar } from "@/components/ui/Avatar";
 import { Menu } from "@/components/ui/Menu";
@@ -12,6 +13,8 @@ export function AccountMenu({ side = "top" }: { side?: "top" | "bottom" }) {
   const { signOut } = useSession();
   const { choice, setTheme } = useTheme();
   const navigate = useNavigate();
+  const gaps = useProfileGaps();
+  const headOffice = profile.role === "head_office";
   return (
     <Menu
       side={side}
@@ -29,7 +32,10 @@ export function AccountMenu({ side = "top" }: { side?: "top" | "bottom" }) {
       }
       items={[
         { label: "Settings", icon: Settings, onSelect: () => navigate("/settings") },
-        { label: "Organisation", icon: Building2, onSelect: () => navigate("/settings#organisation") },
+        ...(headOffice
+          ? [{ label: "Organisation", icon: Building2, onSelect: () => navigate("/organisation/profile"),
+               attention: gaps.length ? `Add your organisation's ${gaps.join(" and ")}` : undefined }]
+          : []),
         {
           label: "Theme",
           icon: Palette,

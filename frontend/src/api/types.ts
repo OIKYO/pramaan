@@ -103,6 +103,10 @@ export interface BrandKit {
   logo_path: string | null;
   banned_phrases: string[];
   tone_notes: string;
+  /** LEGAL-01: every poster must carry each one. */
+  required_disclaimers: string[];
+  /** RIGHTS-02: other organisations allowed on posters. */
+  approved_partners: string[];
   updated_at: string;
 }
 

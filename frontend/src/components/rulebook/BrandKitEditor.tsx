@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useKeeps } from "@/api/hooks/useCatalog";
 import { useSaveBrandKit } from "@/api/hooks/useRulebook";
 import type { BrandKit } from "@/api/types";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,11 @@ const HEX = /^#[0-9a-fA-F]{6}$/;
 /** The brand kit, edited in place by head office and read by everyone else. */
 export function BrandKitEditor({ kit, canEdit }: { kit: BrandKit; canEdit: boolean }) {
   const save = useSaveBrandKit();
-  const initial = { registered_name: kit.registered_name, helpline: kit.helpline, palette: kit.palette, banned_phrases: kit.banned_phrases, tone_notes: kit.tone_notes };
+  const keeps = useKeeps();
+  const initial = {
+    registered_name: kit.registered_name, helpline: kit.helpline, palette: kit.palette, banned_phrases: kit.banned_phrases,
+    tone_notes: kit.tone_notes, required_disclaimers: kit.required_disclaimers ?? [], approved_partners: kit.approved_partners ?? [],
+  };
   const [form, setForm] = useState(initial);
   const set = (patch: Partial<typeof form>) => setForm({ ...form, ...patch });
   const dirty = JSON.stringify(form) !== JSON.stringify(initial);
@@ -51,6 +56,20 @@ export function BrandKitEditor({ kit, canEdit }: { kit: BrandKit; canEdit: boole
             <ChipInput label="Banned phrases" values={form.banned_phrases} onChange={(banned_phrases) => set({ banned_phrases })} readOnly={!canEdit}
               placeholder="e.g. rank guaranteed" />
             <p className="text-xs text-muted-text">Added to the built-in English, Hindi and Bengali list of guarantee claims.</p>
+          </div>
+        </Panel>
+        <Panel title="Permissions and disclaimers" description="Other organisations allowed on posters (RIGHTS-02), and what every poster must say (LEGAL-01).">
+          <div className="flex flex-col gap-5">
+            <ChipInput label="Approved partners" values={form.approved_partners} onChange={(approved_partners) => set({ approved_partners })}
+              readOnly={!canEdit} placeholder="e.g. Siliguri Book Fair" />
+            <p className="text-xs text-muted-text">Partners, sponsors and universities you have permission to name or show. Any other organisation on a poster is flagged.</p>
+            {(keeps("legal") || form.required_disclaimers.length > 0) && (
+              <>
+                <ChipInput label="Disclaimers every poster must carry" values={form.required_disclaimers}
+                  onChange={(required_disclaimers) => set({ required_disclaimers })} readOnly={!canEdit} placeholder="e.g. Fees once paid are not refundable." />
+                <p className="text-xs text-muted-text">Each must appear on the poster, word for word. A poster without one is blocked.</p>
+              </>
+            )}
           </div>
         </Panel>
       </div>

@@ -1,5 +1,6 @@
 import { NavLink } from "react-router";
 import { useKeeps, useVocabulary } from "@/api/hooks/useCatalog";
+import { useProfileGaps } from "@/api/hooks/useOrganisation";
 import type { Role } from "@/api/types";
 import { cn } from "@/lib/utils";
 import { navFor } from "./nav";
@@ -10,12 +11,13 @@ import { QueueCount } from "./QueueCount";
 export function NavList({ role, onNavigate }: { role: Role; onNavigate?: () => void }) {
   const keeps = useKeeps();
   const words = useVocabulary();
+  const gaps = useProfileGaps();
   return (
     <nav aria-label="Main" className="flex flex-col gap-5">
-      {navFor(role, keeps, words).map((group, i) => (
+      {navFor(role, keeps, words, gaps).map((group, i) => (
         <div key={group.title ?? i} className="flex flex-col gap-px">
           {group.title && <p className="px-2 pb-1.5 text-xs font-medium text-muted-text">{group.title}</p>}
-          {group.items.map(({ to, label, icon: Icon, queue }) => (
+          {group.items.map(({ to, label, icon: Icon, queue, attention }) => (
             <NavLink
               key={to}
               to={to}
@@ -32,6 +34,12 @@ export function NavList({ role, onNavigate }: { role: Role; onNavigate?: () => v
               <Icon className="size-4 shrink-0 text-muted-text group-hover:text-ink-strong group-aria-[current=page]:text-ink-strong" aria-hidden />
               {label}
               {queue && <QueueCount scope={queue} />}
+              {attention && (
+                <span title={attention} className="ml-auto flex items-center gap-1.5 text-xs text-muted-text">
+                  <span className="sr-only">{attention}</span>
+                  <span aria-hidden className="size-2 rounded-full bg-control-on" />
+                </span>
+              )}
             </NavLink>
           ))}
         </div>

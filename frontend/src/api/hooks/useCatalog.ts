@@ -60,12 +60,21 @@ export function useKeeps(): (rulebook: string) => boolean {
   return (rulebook: string) => kept.has(rulebook);
 }
 
-/** What an organisation like this usually needs (the same rule as the server's): honest claims for
- * everyone, then the industry's, its subdomain's and its focus areas' suggestions. */
-export function suggestedRulebooks(catalog: Catalog | undefined, group: string | null | undefined, industry: string | null | undefined, focus: string[]): string[] {
+/** What an organisation like this starts with (the same rule as the server's): the rulebooks everyone
+ * keeps, the general ones that act only when a poster shows what they check, and what its industry,
+ * subdomain, kind of organisation and focus call for. */
+export function suggestedRulebooks(
+  catalog: Catalog | undefined,
+  org: { industry_group: string | null; industry: string | null; org_type: string | null; focus: string[] },
+): string[] {
   if (!catalog) return [];
-  const found = catalog.industries.find((g) => g.id === group);
-  const picks = ["claims", ...(found?.suggest ?? []), ...((industry && found?.special?.[industry]?.suggest) || [])];
-  for (const area of catalog.focus_areas) if (focus.includes(area.id)) picks.push(...area.suggest);
+  const found = catalog.industries.find((g) => g.id === org.industry_group);
+  const picks = [
+    ...catalog.rulebooks.filter((b) => b.default_on).map((b) => b.id),
+    ...(found?.suggest ?? []),
+    ...((org.industry && found?.special?.[org.industry]?.suggest) || []),
+    ...(catalog.org_types.find((t) => t.id === org.org_type)?.suggest ?? []),
+  ];
+  for (const area of catalog.focus_areas) if ((org.focus ?? []).includes(area.id)) picks.push(...area.suggest);
   return completeRulebooks(catalog, picks);
 }

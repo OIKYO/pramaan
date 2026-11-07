@@ -34,7 +34,7 @@ export function SetupChecklist() {
 
   const steps: Step[] = [
     { title: "Say what your organisation does", text: "Your industry picks the words Pramaan uses and suggests rulebooks.",
-      done: Boolean(org.industry_group), to: "/settings#organisation", action: "Choose industry" },
+      done: Boolean(org.industry_group), to: "/organisation/profile", action: "Choose industry" },
     { title: "Complete your brand kit", text: "Registered name, helpline, logo and colours. The brand checks need all four.",
       done: Boolean(kit.registered_name && kit.helpline && kit.logo_path && kit.palette.length), to: "/rulebook/brand", action: "Open brand kit" },
     { title: "Add your branches", text: "Each branch's phone and address are checked on its posters.",

@@ -3,6 +3,7 @@
 import {
   BadgeCheck,
   BookOpen,
+  Building2,
   ChartColumn,
   FileImage,
   FileUp,
@@ -29,6 +30,8 @@ export interface NavItem {
   icon: LucideIcon;
   /** Show how many posters wait in this queue. */
   queue?: PosterScope;
+  /** Mark the item until something is done there, e.g. the organisation's details. */
+  attention?: string;
 }
 
 export interface NavGroup {
@@ -51,7 +54,8 @@ function rulebook(keeps: (id: string) => boolean, words: Vocabulary): NavGroup {
 
 const ALL_POSTERS: NavItem = { to: "/posters", label: "All posters", icon: Files };
 
-export function navFor(role: Role, keeps: (id: string) => boolean, words: Vocabulary): NavGroup[] {
+/** `gaps`: what head office hasn't yet said about the organisation; its Profile item is marked until then. */
+export function navFor(role: Role, keeps: (id: string) => boolean, words: Vocabulary, gaps: string[] = []): NavGroup[] {
   const book = rulebook(keeps, words);
   if (role === "branch_staff") {
     return [
@@ -75,6 +79,8 @@ export function navFor(role: Role, keeps: (id: string) => boolean, words: Vocabu
     {
       title: "Organisation",
       items: [
+        { to: "/organisation/profile", label: "Profile", icon: Building2,
+          attention: gaps.length ? `Add your organisation's ${gaps.join(" and ")}` : undefined },
         { to: "/organisation/rulebooks", label: "Rulebooks", icon: Library },
         { to: "/organisation/team", label: "Team", icon: UsersRound },
         { to: "/organisation/branches", label: "Branches", icon: MapPin },

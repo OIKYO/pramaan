@@ -78,3 +78,14 @@ export function useUpdateOrganisation() {
     },
   });
 }
+
+/** What head office still has to tell Pramaan about the organisation, in words ("industry", "kind
+ * of organisation"). Empty once it's complete, and while it loads, so no marker flashes. */
+export function useProfileGaps(): string[] {
+  const org = useOrganisation().data;
+  if (!org) return [];
+  const gaps: string[] = [];
+  if (!org.industry_group || !org.industry) gaps.push("industry");
+  if (!org.org_type) gaps.push("kind of organisation");
+  return gaps;
+}
