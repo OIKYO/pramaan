@@ -3,27 +3,44 @@
 @import "shadcn/tailwind.css";
 @import "./styles/tokens.css";
 
-/* Expose the tokens as Tailwind utilities (bg-paper, text-ink, border-line, ...). */
+/* dark: utilities follow the app's theme switch, not only the system setting. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Expose the tokens as Tailwind utilities (bg-surface, text-ink, border-line, bg-action, ...). */
 @theme inline {
   --font-heading: var(--font-heading);
   --font-sans: var(--font-body);
+  --font-mono: var(--font-code);
 
-  --color-paper: var(--paper);
+  --color-canvas: var(--canvas);
   --color-surface: var(--surface);
-  --color-ink: var(--ink);
-  --color-muted-text: var(--muted-text);
+  --color-surface-sunken: var(--surface-sunken);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-strong: var(--ink-strong);
+  --color-muted-text: var(--muted-text);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-on-action: var(--on-action);
+  --color-focus: var(--focus);
+  --color-inverse: var(--inverse);
+  --color-on-inverse: var(--on-inverse);
+  --color-on-inverse-muted: var(--on-inverse-muted);
   --color-blocked: var(--blocked);
-  --color-passed: var(--passed);
-  --color-warning: var(--warning);
+  --color-blocked-soft: var(--blocked-soft);
   --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-warning: var(--warning);
+  --color-warning-mark: var(--warning-mark);
+  --color-warning-soft: var(--warning-soft);
+  --color-passed: var(--passed);
+  --color-passed-soft: var(--passed-soft);
+  --color-on-tone: var(--on-tone);
+  --color-on-warning-mark: var(--on-warning-mark);
+  --color-overlay: var(--overlay);
   --color-brand-blue: var(--brand-blue);
   --color-brand-gold: var(--brand-gold);
-  --color-blocked-soft: var(--blocked-soft);
-  --color-passed-soft: var(--passed-soft);
-  --color-warning-soft: var(--warning-soft);
-  --color-info-soft: var(--info-soft);
-  --color-ink-soft: var(--ink-soft);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -49,35 +66,52 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-sm: calc(var(--radius) * 0.67);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.33);
+  --radius-xl: calc(var(--radius) * 2);
+
+  --shadow-overlay: var(--shadow-overlay);
 
   --width-sidebar: var(--sidebar-width);
   --width-content: var(--content-width);
+  --width-form: var(--form-width);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
   }
   html {
     @apply font-sans;
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-canvas text-ink antialiased;
   }
-  h1,
-  h2,
-  h3 {
+  h1 {
     font-family: var(--font-heading);
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--ink-strong);
     text-wrap: balance;
   }
+  h2,
+  h3 {
+    font-weight: 600;
+    color: var(--ink-strong);
+    text-wrap: balance;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--action) 40%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
   button:not(:disabled),
-  [role="button"]:not(:disabled) {
+  [role="button"]:not(:disabled),
+  [role="radio"]:not(:disabled) {
     cursor: pointer;
   }
 }

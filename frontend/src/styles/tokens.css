@@ -1,40 +1,105 @@
 /*
- * Design tokens: every colour, size and duration in the app comes from here.
- * The palette is from our Round 1 PDF. Pages use these through Tailwind classes such as
- * bg-paper, text-ink, text-muted-text, border-line, text-blocked, bg-passed-soft.
+ * Design tokens: every colour, size and duration in the app comes from here, for both themes.
+ * Components use them through Tailwind classes (bg-surface, text-ink, border-line, bg-action...).
  *
- * Note: the brief calls the secondary text colour "--muted". shadcn/ui already uses --muted for a
- * background tint, so ours is --muted-text.
+ * Palette ("Black & gold elegance"): black #000000, Prussian blue #14213D, orange #FCA311,
+ * alabaster #E5E5E5, white #FFFFFF. Prussian blue is the ink, black the midnight canvas,
+ * alabaster the lines, and orange is kept for one job: the action to take and what's selected.
+ * Severity colours stay distinct because they carry meaning: red blocks, blue needs a person,
+ * amber warns, green passed.
+ *
+ * The theme is chosen by data-theme on <html> (see lib/theme.ts). Switching swaps these variables
+ * only, so nothing re-renders.
  */
-:root {
-  /* Round 1 palette */
-  --paper: #f8f6f1;
-  --surface: #ffffff;
-  --ink: #1f3354;
-  --muted-text: #5b6b82;
-  --line: #d5dce6;
-  --blocked: #c8472c;
-  --passed: #238a7d;
-  --warning: #d9822a;
-  --info: #2e6a9e;
+:root,
+[data-theme="light"] {
+  color-scheme: light;
 
+  --canvas: #f4f4f4;
+  --surface: #ffffff;
+  --surface-sunken: #eeeeee;
+  --line: #e5e5e5;
+  --line-strong: #c8ccd3;
+  --ink: #14213d;
+  --ink-strong: #000000;
+  --muted-text: #5a6475;
+
+  --action: #fca311;
+  --action-hover: #e8930a;
+  --on-action: #000000;
+  --focus: #14213d;
+
+  /* The brand panel on the sign-in page: Prussian blue in both themes. */
+  --inverse: #14213d;
+  --on-inverse: #ffffff;
+  --on-inverse-muted: #b7c0d3;
+
+  --blocked: #b8321b;
+  --blocked-soft: #fbe8e4;
+  --info: #2a5db0;
+  --info-soft: #e7eefa;
+  --warning: #8a5a00;
+  --warning-mark: #fca311;
+  --warning-soft: #fff3d9;
+  --passed: #1d7a55;
+  --passed-soft: #e2f3ea;
+  /* Text on a solid severity colour (finding numbers). */
+  --on-tone: #ffffff;
+  --on-warning-mark: #000000;
+
+  --overlay: rgb(0 0 0 / 0.45);
+  --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.16);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas: #000000;
+  --surface: #0a1120;
+  --surface-sunken: #14213d;
+  --line: #1c2843;
+  --line-strong: #2d3d60;
+  --ink: #e5e5e5;
+  --ink-strong: #ffffff;
+  --muted-text: #8f9ab0;
+
+  --action: #fca311;
+  --action-hover: #ffb43a;
+  --on-action: #000000;
+  --focus: #fca311;
+
+  --inverse: #14213d;
+  --on-inverse: #ffffff;
+  --on-inverse-muted: #b7c0d3;
+
+  --blocked: #ff7a63;
+  --blocked-soft: #2b0f0a;
+  --info: #8fb2ff;
+  --info-soft: #0f1c38;
+  --warning: #fcb53b;
+  --warning-mark: #fca311;
+  --warning-soft: #2a1d05;
+  --passed: #4fd19a;
+  --passed-soft: #0a2418;
+  --on-tone: #000000;
+  --on-warning-mark: #000000;
+
+  --overlay: rgb(0 0 0 / 0.7);
+  --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.6);
+}
+
+:root {
   /* Pramaan's logo (docs/brand). Only BrandLogo uses these. */
   --brand-blue: #2c87e8;
   --brand-gold: #d8a03f;
 
-  /* Tints for badges and highlighted rows */
-  --blocked-soft: #f8e4df;
-  --passed-soft: #e0f0ed;
-  --warning-soft: #fbeedd;
-  --info-soft: #e2ecf5;
-  --ink-soft: #e8ecf2;
-
-  /* Type */
+  /* Type: a serif for page titles, a sans for everything else, the system mono for IDs. */
   --font-heading: "Source Serif 4", Georgia, serif;
   --font-body: "Source Sans 3", system-ui, sans-serif;
+  --font-code: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
 
   /* Shape and motion */
-  --radius: 0.5rem;
+  --radius: 0.375rem;
   --duration-fast: 120ms;
   --duration-base: 200ms;
   --duration-slow: 320ms;
@@ -42,29 +107,30 @@
   /* Layout */
   --sidebar-width: 15rem;
   --content-width: 80rem;
+  --form-width: 44rem;
 
-  /* shadcn/ui variables, mapped onto the palette */
-  --background: var(--paper);
+  /* shadcn/ui variables, mapped onto ours */
+  --background: var(--canvas);
   --foreground: var(--ink);
   --card: var(--surface);
   --card-foreground: var(--ink);
   --popover: var(--surface);
   --popover-foreground: var(--ink);
-  --primary: var(--ink);
-  --primary-foreground: #ffffff;
-  --secondary: var(--ink-soft);
+  --primary: var(--action);
+  --primary-foreground: var(--on-action);
+  --secondary: var(--surface-sunken);
   --secondary-foreground: var(--ink);
-  --muted: var(--ink-soft);
+  --muted: var(--surface-sunken);
   --muted-foreground: var(--muted-text);
-  --accent: var(--ink-soft);
-  --accent-foreground: var(--ink);
+  --accent: var(--surface-sunken);
+  --accent-foreground: var(--ink-strong);
   --destructive: var(--blocked);
   --border: var(--line);
-  --input: var(--line);
-  --ring: var(--info);
+  --input: var(--line-strong);
+  --ring: var(--focus);
   --chart-1: var(--blocked);
-  --chart-2: var(--warning);
+  --chart-2: var(--warning-mark);
   --chart-3: var(--info);
   --chart-4: var(--passed);
-  --chart-5: var(--muted-text);
+  --chart-5: var(--ink);
 }

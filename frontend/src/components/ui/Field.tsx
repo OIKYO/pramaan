@@ -9,14 +9,16 @@ interface FieldProps {
   children: ReactElement<{ id?: string; "aria-describedby"?: string; "aria-invalid"?: boolean }>;
 }
 
-/** A labelled form control with an optional hint or error underneath. */
+/** A labelled form control with a hint underneath, replaced by the error when there is one. */
 export function Field({ label, hint, error, children }: FieldProps) {
   const id = useId();
   const noteId = `${id}-note`;
   const note = error || hint;
   return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor={id}>{label}</Label>
+    <div className="flex min-w-0 flex-col gap-1.5">
+      <Label htmlFor={id} className="font-semibold text-ink-strong">
+        {label}
+      </Label>
       {cloneElement(children, {
         id,
         "aria-describedby": note ? noteId : undefined,

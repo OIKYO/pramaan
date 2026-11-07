@@ -2,8 +2,8 @@
 export function Swatch({ color }: { color: string }) {
   return (
     <span className="inline-flex items-center gap-2 text-sm">
-      <span aria-hidden className="size-5 rounded border border-line" style={{ background: color }} />
-      <code className="text-xs text-muted-text">{color}</code>
+      <span aria-hidden className="size-6 rounded-sm border border-line-strong" style={{ background: color }} />
+      <code className="font-mono text-xs text-ink">{color}</code>
     </span>
   );
 }
