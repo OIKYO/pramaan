@@ -456,7 +456,7 @@ _Update this as you go: what's done, what's next, known issues._
 
 - [x] Phase 1: setup (7 Nov). Repo on GitHub; `/health`; Vite + Tailwind + shadcn; `npm run check`; `render.yaml` and `vercel.json` ready. **Deploys still to do:** need Render and Vercel accounts.
 - [x] Phase 2: database (7 Nov). Schema, policies and buckets applied to the Supabase project; seed run; `scripts/check_rls.py` passes 13/13 as the demo users. Added `rule_settings` table (see decisions.md).
-- [ ] Phase 3: rule engine
+- [x] Phase 3: rule engine (7 Nov). 17 rules in `rule_pack.json` (+ 3 reader checks), registry with `@rule`, all 15 code checks and 2 AI checks, name matching. 41 tests pass, each code check with passing and failing cases. Rule `reason` wording awaits Rishav's review.
 - [ ] Phase 4: pipeline
 - [ ] Phase 5: API and status machine
 - [ ] Phase 6: temporary frontend
