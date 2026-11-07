@@ -1,14 +1,15 @@
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router";
 import { useSignup } from "@/api/hooks/useAccount";
 import { useCatalog } from "@/api/hooks/useCatalog";
 import { IndustryPicker, type IndustryValue } from "@/components/organisation/IndustryPicker";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/Spinner";
 import { LoadingRows } from "@/components/ui/States";
+import { passwordNeeds } from "@/lib/password";
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
@@ -27,7 +28,7 @@ export function SignupForm({ onCreated }: { onCreated: () => void }) {
     org_type: !form.org_type ? "Choose what kind of organisation it is." : null,
     full_name: form.full_name.trim().length < 2 ? "Enter your name." : null,
     email: !EMAIL.test(form.email.trim()) ? "Enter a work email, like you@yourcompany.com." : null,
-    password: form.password.length < 8 ? "Use at least 8 characters." : null,
+    password: passwordNeeds(form.password),
   };
   const show = (field: keyof typeof errors) => (tried ? errors[field] : null);
 
@@ -42,9 +43,9 @@ export function SignupForm({ onCreated }: { onCreated: () => void }) {
   };
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl">Create your organisation</h1>
+        <h2 className="text-xl">Create your organisation</h2>
         <p className="text-muted-text">You'll be its head office. Pramaan sets up rulebooks to suit what you do; you can change them later.</p>
       </div>
       <form onSubmit={submit} noValidate className="flex flex-col gap-4">
@@ -73,9 +74,13 @@ export function SignupForm({ onCreated }: { onCreated: () => void }) {
         <Field label="Work email" error={show("email")}>
           <Input type="email" autoComplete="email" value={form.email} onChange={(e) => set({ email: e.target.value })} />
         </Field>
-        <Field label="Password" hint="At least 8 characters." error={show("password")}>
-          <Input type="password" autoComplete="new-password" value={form.password} onChange={(e) => set({ password: e.target.value })} />
-        </Field>
+        <PasswordInput
+          label="Organisation password"
+          value={form.password}
+          onChange={(password) => set({ password })}
+          insist={tried}
+          note="Note it down somewhere safe. It isn't shown anywhere, and it can't be recovered if you forget it."
+        />
         {signup.isError && (
           <p role="alert" className="text-sm text-blocked">
             {signup.error.message}
@@ -85,12 +90,6 @@ export function SignupForm({ onCreated }: { onCreated: () => void }) {
           {signup.isPending && <Spinner />}
           Create organisation
         </Button>
-        <p className="text-muted-text">
-          Already have an account?{" "}
-          <Link to="/login" className="font-medium text-ink-strong underline decoration-line-strong underline-offset-4 hover:decoration-ink-strong">
-            Sign in
-          </Link>
-        </p>
       </form>
     </div>
   );

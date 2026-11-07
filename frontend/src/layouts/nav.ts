@@ -18,6 +18,7 @@ import {
   ScrollText,
   Sigma,
   Users,
+  UserPlus,
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
@@ -64,7 +65,11 @@ export function navFor(role: Role, keeps: (id: string) => boolean, words: Vocabu
     ];
   }
   if (role === "regional_manager") {
-    return [{ items: [{ to: "/review", label: "Review queue", icon: Inbox, queue: "regional_review" }, ALL_POSTERS] }, book];
+    return [
+      { items: [{ to: "/review", label: "Review queue", icon: Inbox, queue: "regional_review" }, ALL_POSTERS] },
+      book,
+      { title: "Your region", items: [{ to: "/invite", label: "Invite staff", icon: UserPlus }] },
+    ];
   }
   return [
     {

@@ -14,7 +14,7 @@ export function Hero() {
           Pramaan reads each poster your branches make, checks it against head office's rulebooks, and marks every problem
           with the fix. Your reviewers approve it. The AI never does.
         </p>
-        <div className="flex flex-wrap justify-center gap-3 pt-2">
+        <div className="flex w-full flex-col justify-center gap-3 pt-2 sm:w-auto sm:flex-row">
           <Button size="lg" asChild>
             <Link to="/signup">Create organisation</Link>
           </Button>

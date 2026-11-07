@@ -3,6 +3,8 @@ export const keys = {
   profile: (userId: string) => ["profile", userId] as const,
   organisation: ["organisation"] as const,
   catalog: ["catalog"] as const,
+  invites: ["organisation", "invites"] as const,
+  joinCode: ["organisation", "join-code"] as const,
   posters: ["posters"] as const,
   posterList: (scope: string) => ["posters", "list", scope] as const,
   poster: (id: string) => ["posters", "detail", id] as const,

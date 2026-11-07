@@ -23,6 +23,29 @@ export const reveal = {
   transition: { duration: durations.base, ease } satisfies Transition,
 };
 
+/** A section that opens or closes because the person asked (Collapse). */
+export const collapse = {
+  initial: { height: 0, opacity: 0 },
+  animate: { height: "auto", opacity: 1 },
+  exit: { height: 0, opacity: 0 },
+  transition: { duration: durations.base, ease } satisfies Transition,
+};
+
+/** Menus, popovers and panels that open from a trigger: a short fade and lift, in CSS (tw-animate),
+ * for Radix parts that animate on data-state. Used by components/ui and the product page's menus. */
+export const popClasses =
+  "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 " +
+  "data-[state=open]:zoom-in-[0.98] data-[state=closed]:zoom-out-[0.98] data-[side=bottom]:slide-in-from-top-1 " +
+  "data-[side=top]:slide-in-from-bottom-1 duration-150 motion-reduce:animate-none";
+
+/** A notice that slides up from the bottom of the screen when it first appears (CookieNotice). */
+export const slideUp = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: 16 },
+  transition: { duration: durations.slow, ease } satisfies Transition,
+};
+
 /** The thin bar at the top while the next page loads. It eases most of the way, then waits. */
 export const loadingBar = {
   initial: { scaleX: 0 },

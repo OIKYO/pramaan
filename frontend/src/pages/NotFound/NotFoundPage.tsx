@@ -1,20 +1,11 @@
-import { Compass } from "lucide-react";
-import { Link } from "react-router";
-import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/States";
+import { NotFoundView } from "@/components/errors/NotFoundView";
+import { PublicLayout } from "@/components/landing/PublicLayout";
 
+/** Any address Pramaan doesn't know, signed in or not. */
 export function NotFoundPage() {
   return (
-    <EmptyState
-      title="Page not found"
-      icon={Compass}
-      action={
-        <Button asChild>
-          <Link to="/">Go to your home page</Link>
-        </Button>
-      }
-    >
-      The link may be old, or the page may have moved.
-    </EmptyState>
+    <PublicLayout>
+      <NotFoundView />
+    </PublicLayout>
   );
 }

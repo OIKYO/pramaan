@@ -16,8 +16,11 @@ async function rows<T>(query: PromiseLike<{ data: unknown; error: { message: str
   return data as T;
 }
 
+/** Every column members may read. The join code isn't one: it comes from the API (useJoinCode). */
+const ORG_COLUMNS = "id, name, industry_group, industry, org_type, focus, rulebooks, created_by, created_at";
+
 export const useOrganisation = () =>
-  useQuery({ queryKey: keys.organisation, queryFn: () => rows<Organisation>(supabase.from("organisations").select("*").single()) });
+  useQuery({ queryKey: keys.organisation, queryFn: () => rows<Organisation>(supabase.from("organisations").select(ORG_COLUMNS).single()) });
 
 export function useRenameOrganisation() {
   const qc = useQueryClient();

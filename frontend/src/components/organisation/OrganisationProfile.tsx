@@ -4,6 +4,7 @@ import type { Organisation } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/Panel";
 import { formatDate } from "@/lib/labels";
+import { JoinCodePanel } from "./JoinCodePanel";
 import { OrganisationForm } from "./OrganisationForm";
 import { OrgProfileForm } from "./OrgProfileForm";
 
@@ -23,24 +24,27 @@ export function OrganisationProfile({ org, canEdit }: { org: Organisation; canEd
           <OrgProfileForm key={`${org.industry_group}-${org.industry}-${org.org_type}`} org={org} canEdit={canEdit} />
         </Panel>
       </div>
-      <Panel
-        title="Rulebooks you keep"
-        description={`${kept.length} of ${catalog?.rulebooks.length ?? "…"}. Posters are checked against these.`}
-        actions={
-          <Button variant="secondary" size="sm" asChild>
-            <Link to="/organisation/rulebooks">Choose rulebooks</Link>
-          </Button>
-        }
-      >
-        <ul className="flex flex-col gap-2">
-          {kept.map((b) => (
-            <li key={b.id} className="flex items-center gap-2.5 text-ink-strong">
-              <span aria-hidden className="size-1.5 rounded-full bg-passed" />
-              {names[b.id] ?? b.name}
-            </li>
-          ))}
-        </ul>
-      </Panel>
+      <div className="flex flex-col gap-4">
+        {canEdit && <JoinCodePanel canRefresh />}
+        <Panel
+          title="Rulebooks you keep"
+          description={`${kept.length} of ${catalog?.rulebooks.length ?? "…"}. Posters are checked against these.`}
+          actions={
+            <Button variant="secondary" size="sm" asChild>
+              <Link to="/organisation/rulebooks">Choose rulebooks</Link>
+            </Button>
+          }
+        >
+          <ul className="flex flex-col gap-2">
+            {kept.map((b) => (
+              <li key={b.id} className="flex items-center gap-2.5 text-ink-strong">
+                <span aria-hidden className="size-1.5 rounded-full bg-passed" />
+                {names[b.id] ?? b.name}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      </div>
     </div>
   );
 }

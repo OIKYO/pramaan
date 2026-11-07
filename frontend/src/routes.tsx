@@ -30,6 +30,11 @@ export const router = createBrowserRouter([
       page("/signup", () => import("@/pages/Signup/SignupPage").then((m) => ({ Component: m.SignupPage }))),
     ],
   },
+  // Any address Pramaan doesn't know, signed in or not.
+  { path: "*", element: <NotFoundPage />, errorElement: <ErrorPage /> },
+  // Invite links: open to everyone; the page itself handles someone already signed in.
+  { path: "/join/:token", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
+    lazy: () => import("@/pages/Join/JoinPage").then((m) => ({ Component: m.JoinPage })) },
   // Open to everyone, signed in or not.
   { path: "/legal/:doc", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Legal/LegalPage").then((m) => ({ Component: m.LegalPage })) },
@@ -55,6 +60,7 @@ export const router = createBrowserRouter([
         children: [
           page("/review", () => import("@/pages/Review/ReviewQueuePage").then((m) => ({ Component: m.ReviewQueuePage }))),
           page("/posters", () => import("@/pages/Posters/AllPostersPage").then((m) => ({ Component: m.AllPostersPage }))),
+          page("/invite", () => import("@/pages/Organisation/InviteStaffPage").then((m) => ({ Component: m.InviteStaffPage }))),
         ],
       },
       {
@@ -82,7 +88,6 @@ export const router = createBrowserRouter([
       { path: "/rulebook/toppers", element: <Navigate to="/rulebook/people" replace /> },
       page("/rulebook/rules", () => import("@/pages/Rulebook/RulesPage").then((m) => ({ Component: m.RulesPage }))),
       page("/settings", () => import("@/pages/Settings/SettingsPage").then((m) => ({ Component: m.SettingsPage }))),
-      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ]);

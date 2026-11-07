@@ -8,7 +8,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col">
       <LandingNav />
-      <main className="flex w-full flex-1 flex-col">{children}</main>
+      <main className="flex w-full flex-1 flex-col overflow-x-clip">{children}</main>
       <LandingFooter />
     </div>
   );

@@ -3,22 +3,24 @@ import { useChangePassword } from "@/api/hooks/useAccount";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Spinner } from "@/components/ui/Spinner";
 import { toast } from "@/components/ui/Toast";
+import { passwordNeeds } from "@/lib/password";
 
-/** Choose a new password, typed twice. */
+/** Choose a new password, checked as it's typed, then typed again. */
 export function PasswordForm({ submitLabel = "Change password", onDone }: { submitLabel?: string; onDone?: () => void }) {
   const change = useChangePassword();
   const [password, setPassword] = useState("");
   const [again, setAgain] = useState("");
   const [tried, setTried] = useState(false);
-  const tooShort = password.length < 8;
+  const weak = passwordNeeds(password);
   const mismatch = password !== again;
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
     setTried(true);
-    if (tooShort || mismatch) return;
+    if (weak || mismatch) return;
     change.mutate(password, {
       onSuccess: () => {
         toast.success("Password changed.");
@@ -33,10 +35,8 @@ export function PasswordForm({ submitLabel = "Change password", onDone }: { subm
 
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-      <Field label="New password" hint="At least 8 characters." error={tried && tooShort ? "Use at least 8 characters." : null}>
-        <Input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </Field>
-      <Field label="Type it again" error={tried && !tooShort && mismatch ? "The two passwords don't match." : null}>
+      <PasswordInput label="New password" value={password} onChange={setPassword} insist={tried} />
+      <Field label="Type it again" error={tried && !weak && mismatch ? "The two passwords don't match." : null}>
         <Input type="password" autoComplete="new-password" value={again} onChange={(e) => setAgain(e.target.value)} />
       </Field>
       <div>

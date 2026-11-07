@@ -28,8 +28,8 @@ export function LandingFooter() {
   return (
     <footer className="border-t border-line">
       <div>
-        <div className="grid gap-10 px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,2fr)_repeat(4,minmax(0,1fr))] lg:px-12">
-          <BrandLogo className="w-28 text-ink-strong" />
+        <div className="grid grid-cols-2 gap-10 px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,2fr)_repeat(4,minmax(0,1fr))] lg:px-12">
+          <BrandLogo className="col-span-2 w-28 text-ink-strong md:col-span-1" />
           {COLUMNS.map((column) => (
             <div key={column.title} className="flex flex-col gap-3">
               <h2 className="text-sm">{column.title}</h2>

@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { FindingNumber } from "@/components/poster/FindingNumber";
+import { Collapse } from "@/components/ui/Collapse";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { cn } from "@/lib/utils";
 import { FINDINGS, PASSED } from "./previewData";
@@ -8,7 +9,8 @@ import { FINDINGS, PASSED } from "./previewData";
 /** The example's findings. Clicking one picks it (and its box on the poster); the passed checks open
  * into a list. */
 export function PreviewFindings({ selected, onSelect }: { selected: number | null; onSelect: (n: number) => void }) {
-  const [showPassed, setShowPassed] = useState(true);
+  // Open on wide screens, where there's room beside the poster; closed on phones.
+  const [showPassed, setShowPassed] = useState(() => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
   return (
     <div className="flex flex-col gap-3">
       {FINDINGS.map((f) => {
@@ -46,9 +48,9 @@ export function PreviewFindings({ selected, onSelect }: { selected: number | nul
         >
           <ToneBadge tone="passed">{PASSED.length} passed</ToneBadge>
           <span className="flex-1 truncate text-muted-text">Consent, fees, course details, logo, colours, contrast, alt text…</span>
-          <ChevronDown className={cn("size-4 text-muted-text", showPassed && "rotate-180")} aria-hidden />
+          <ChevronDown className={cn("size-4 shrink-0 text-muted-text transition-transform duration-(--duration-base)", showPassed && "rotate-180")} aria-hidden />
         </button>
-        {showPassed && (
+        <Collapse open={showPassed}>
           <ul className="grid gap-x-6 gap-y-1.5 border-t border-line p-4 text-xs text-ink sm:grid-cols-2">
             {PASSED.map((name) => (
               <li key={name} className="flex items-center gap-2">
@@ -57,7 +59,7 @@ export function PreviewFindings({ selected, onSelect }: { selected: number | nul
               </li>
             ))}
           </ul>
-        )}
+        </Collapse>
       </div>
     </div>
   );

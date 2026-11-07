@@ -1,6 +1,7 @@
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import type { ReactNode } from "react";
+import { popClasses } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 export interface MenuItem {
@@ -32,7 +33,7 @@ interface MenuProps {
   side?: "top" | "bottom";
 }
 
-const PANEL = "z-50 min-w-52 rounded-md border border-line bg-surface p-1 text-sm shadow-overlay";
+const PANEL = `z-50 min-w-52 rounded-md border border-line bg-surface p-1 text-sm shadow-overlay ${popClasses}`;
 const ROW = "flex h-8 items-center gap-2 rounded-sm px-2 outline-none data-disabled:opacity-50 data-highlighted:bg-surface-sunken";
 
 function Row({ item }: { item: MenuItem }) {

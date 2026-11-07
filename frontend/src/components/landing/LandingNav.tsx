@@ -11,7 +11,7 @@ import { NavMenus } from "./NavMenus";
 export function LandingNav() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-canvas/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-canvas sm:bg-canvas/90 sm:backdrop-blur">
       <div className="flex h-16 items-center gap-6 px-5 sm:px-8 lg:px-12">
         <Link to="/" aria-label="Pramaan home" className="shrink-0">
           <BrandLogo className="w-30 text-ink-strong" />

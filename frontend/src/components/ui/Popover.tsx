@@ -1,5 +1,6 @@
 import { Popover as P } from "radix-ui";
 import type { ReactNode } from "react";
+import { popClasses } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 interface PopoverProps {
@@ -24,6 +25,7 @@ export function Popover({ open, onOpenChange, trigger, children, matchWidth = fa
           collisionPadding={12}
           className={cn(
             "z-50 rounded-md border border-line bg-surface text-sm shadow-overlay outline-none",
+            popClasses,
             matchWidth && "w-(--radix-popover-trigger-width)",
             className,
           )}

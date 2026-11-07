@@ -27,6 +27,13 @@ export type Vocabulary = Schemas["Vocabulary"];
 export type Rulebook = Schemas["RulebookOut"];
 export type RulebookDef = Schemas["RulebookDef"];
 export type OrganisationUpdate = Schemas["OrganisationUpdate"];
+export type Invite = Schemas["InviteOut"];
+export type InviteCreate = Schemas["InviteCreate"];
+export type InviteCreated = Schemas["InviteCreated"];
+export type InvitePreview = Schemas["InvitePreview"];
+export type CodePreview = Schemas["CodePreview"];
+export type JoinWithCode = Schemas["JoinWithCode"];
+export type JoinWithInvite = Schemas["JoinWithInvite"];
 
 export type Role = "branch_staff" | "regional_manager" | "head_office";
 export type Channel = PosterDetail["channel"];

@@ -5,6 +5,7 @@ import { useBranches, useRegions } from "@/api/hooks/useOrganisation";
 import { useProfile } from "@/api/hooks/useSession";
 import { useAddMember, useMembers, useResetPassword, useSetAccess, useUpdateMember } from "@/api/hooks/useTeam";
 import type { MemberCreated, Profile } from "@/api/types";
+import { InvitePanel } from "@/components/team/InvitePanel";
 import { MemberDialog } from "@/components/team/MemberDialog";
 import { PasswordIssued } from "@/components/team/PasswordIssued";
 import { TeamTable } from "@/components/team/TeamTable";
@@ -33,7 +34,7 @@ export function TeamPage() {
       <PageHeader
         crumbs={[{ label: "Organisation" }, { label: "Team" }]}
         title="Team"
-        description="Everyone who uses Pramaan in your organisation. New people get a temporary password and choose their own at first sign-in."
+        description="Everyone who uses Pramaan in your organisation. Invite people with a link, or add them yourself with a temporary password."
         actions={
           <>
             <Button variant="ghost" onClick={() => download("team.csv", membersCsv(members.data ?? [], branches, regions))}>
@@ -46,6 +47,7 @@ export function TeamPage() {
           </>
         }
       />
+      <InvitePanel />
       <QueryState query={members}>
         {(data) => (
           <TeamTable

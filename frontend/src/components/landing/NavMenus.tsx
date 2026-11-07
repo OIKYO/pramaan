@@ -3,12 +3,13 @@ import { NavigationMenu as N } from "radix-ui";
 import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
+import { popClasses } from "@/lib/motion";
 import { ENTERPRISE, PRODUCT, type LandingLink } from "./links";
 
 const TRIGGER =
   "group flex h-8 items-center gap-1 rounded-md px-3 text-sm text-ink outline-none hover:text-ink-strong focus-visible:ring-2 focus-visible:ring-focus data-[state=open]:text-ink-strong";
 /** pt-2 keeps the pointer inside the menu while it crosses the gap under the trigger. */
-const PANEL = "absolute top-full left-0 z-50 pt-2";
+const PANEL = `absolute top-full left-0 z-50 pt-2 ${popClasses}`;
 const CARD = "rounded-lg border border-line bg-surface p-2 shadow-overlay";
 
 function Menu({ label, children }: { label: string; children: ReactNode }) {

@@ -25,7 +25,7 @@ export function ProductPreview() {
           </div>
           <ToneBadge tone="blocked" dot>Can't be approved yet</ToneBadge>
         </div>
-        <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        <div className="grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <div className="border-b border-line bg-canvas p-4 sm:p-8 lg:border-r lg:border-b-0">
             <PreviewPoster selected={selected} onSelect={setSelected} />
           </div>
