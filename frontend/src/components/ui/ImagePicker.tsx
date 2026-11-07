@@ -1,5 +1,5 @@
 import { ImageUp } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 
 const ACCEPT = ["image/png", "image/jpeg", "image/webp"];
 const MAX_BYTES = 15 * 1024 * 1024;
@@ -13,15 +13,11 @@ interface ImagePickerProps {
 /** Pick a poster image, with a preview. Checks type and size before upload. */
 export function ImagePicker({ file, onChange, error }: ImagePickerProps) {
   const id = useId();
-  const [preview, setPreview] = useState<string | null>(null);
   const [rejected, setRejected] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!file) return setPreview(null);
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+  const preview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  useEffect(() => () => {
+    if (preview) URL.revokeObjectURL(preview);
+  }, [preview]);
 
   const take = (picked: File | undefined) => {
     if (!picked) return;
