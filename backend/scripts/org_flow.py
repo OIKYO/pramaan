@@ -1,5 +1,6 @@
-"""A new company's first hour, over HTTP: sign up, add a branch, import data, add the team, and check
-a first poster, while staying invisible to every other organisation. Deletes everything it made.
+"""A new company's first hour, over HTTP: sign up as a coaching institute, choose rulebooks, add a
+branch, import data, add the team, and check a first poster, while staying invisible to every other
+organisation. Deletes everything it made.
 
     cd backend
     python -m scripts.org_flow                          # against http://localhost:8000
@@ -55,9 +56,12 @@ def main() -> None:
     api = next((a for a in sys.argv[1:] if not a.startswith("--")), "http://localhost:8000").rstrip("/")
     db = get_db()
     email, password = f"founder-{secrets.token_hex(4)}@example.org", secrets.token_urlsafe(12)
+    r = httpx.get(f"{api}/catalog", timeout=60)
+    check("the industry catalog is open before sign-up", r.status_code == 200 and len(r.json()["industries"]) == 30)
     r = httpx.post(f"{api}/signup", json={"organisation_name": "Brightpath Tutorials (test)", "full_name": "Asha Rao",
-                                          "email": email, "password": password}, timeout=60)
-    check("a new company signs up", r.status_code == 201, r.text[:200])
+                                          "email": email, "password": password, "industry_group": "education",
+                                          "industry": "coaching institutes", "org_type": "coaching"}, timeout=60)
+    check("a new company signs up as a coaching institute", r.status_code == 201, r.text[:200])
     org_id = r.json()["org_id"]
     users = [r.json()["user_id"]]
     try:
@@ -66,6 +70,15 @@ def main() -> None:
         check("the same email can't sign up twice", r.status_code == 409)
         hq_token = token(email, password)
         hq = client(api, hq_token)
+        kept = {b["id"] for b in hq.get("/rules").json()["rulebooks"] if b["enabled"]}
+        check("it starts with the rulebooks a coaching institute needs",
+              kept == {"brand", "contacts", "claims", "offerings", "figures", "people", "rankings"}, str(kept))
+        r = hq.patch("/organisation", json={"rulebooks": ["claims", "offerings", "people", "rankings"]})
+        check("head office removes a rulebook", r.status_code == 200 and "figures" not in r.json()["rulebooks"], r.text[:200])
+        check("...and its data can't be imported any more", "results" not in [d["dataset"] for d in hq.get("/imports").json()])
+        check("an unknown rulebook is refused", hq.patch("/organisation", json={"rulebooks": ["astrology"]}).status_code == 400)
+        hq.patch("/organisation", json={"rulebooks": ["claims", "offerings", "figures", "people", "rankings"]})
+        check("head office renames themself", hq.patch("/me", json={"full_name": "Asha R. Rao"}).status_code == 204)
 
         region = httpx.post(f"{REST}/regions", headers=rest(hq_token), json={"name": "North"}).json()[0]
         branch = httpx.post(f"{REST}/branches", headers=rest(hq_token), json={
@@ -98,6 +111,7 @@ def main() -> None:
         staff = client(api, staff_token)
         new_password = secrets.token_urlsafe(12)
         check("they choose their own password", staff.post("/me/password", json={"password": new_password}).status_code == 204)
+        check("branch staff can't change the rulebooks", staff.patch("/organisation", json={"rulebooks": []}).status_code == 403)
         check("...and the temporary one stops working", token(staff_email, creds[0]["temporary_password"]) is None)
         staff = client(api, token(staff_email, new_password))
 
