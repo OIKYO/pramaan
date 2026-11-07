@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/pramaan-logo-dark.svg">
+  <img alt="Pramaan: trust and verification" src="docs/brand/pramaan-logo-light.svg" width="380">
+</picture>
+
 # Pramaan
 
 Pramaan checks every poster made by the branches of a multi-branch organisation before it is published. Our demo is a fictional coaching institute chain, **Northfield Academy**.
@@ -11,7 +16,7 @@ Team **HEISEN-DE-BUG** · CodeNexus India 2026 (We Code Coders) · problem state
 - App: **https://pramaanapp.vercel.app**
 - API: https://pramaan-api-6p3b.onrender.com ([`/health`](https://pramaan-api-6p3b.onrender.com/health), [API docs](https://pramaan-api-6p3b.onrender.com/docs))
 
-The API runs on Render's free tier, which sleeps when idle: the first request after a quiet spell takes up to a minute. Open `/health` a minute before a demo.
+The API runs on Render's free tier, which sleeps when idle. A scheduled GitHub Action ([keep-awake.yml](.github/workflows/keep-awake.yml)) calls it every 10 minutes to keep it awake; if a request still waits about a minute, the API was asleep. Open `/health` a minute before a demo to be sure.
 
 ### Demo accounts (all fictional)
 

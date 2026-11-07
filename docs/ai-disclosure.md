@@ -18,6 +18,8 @@ The CodeNexus rules ask us to say where AI tools wrote significant parts of the 
 | 2026-11-07 | API and status machine: `backend/app/auth.py`, `app/state.py`, `app/routers/` (posters, findings, toppers, rules, insights), `tests/test_state.py`, `scripts/e2e_flow.py` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 | 2026-11-07 | Temporary frontend (until Rudrapriyo Chatterjee's final UI arrives): `frontend/src/api/` (client, hooks), theme tokens, `components/ui` additions, `components/poster`, `components/rulebook`, `components/insights`, all pages, `routes.tsx`, `layouts/` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 | 2026-11-07 | Docs: `README.md`, `docs/architecture.md`, `docs/decisions.md`, the developer-testing section of `docs/user-testing.md`, and the templates for `docs/contributions.md` and classmate sessions | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
+| 2026-11-07 | Deployment fixes and the keep-awake job: `ALLOWED_ORIGINS` parsing, `/health?db=true`, `.github/workflows/backend.yml` and `keep-awake.yml`, `scripts/e2e_flow.py` against the live API | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
+| 2026-11-07 | Vector logo: `tools/make_brand_assets.py` measured the team's PNG logo and rebuilt it as SVG (`docs/brand/`, favicons, `og-image.png`), and `components/ui/BrandLogo.tsx`. The logo design itself is the team's. | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 | 2026-11-07 | Rule wording: the plain-language `reason` for each rule and the built-in Hindi and Bengali banned-phrase examples are first drafts by Claude Code, to be reviewed by Rishav Nandi (rule pack owner) | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 
 ## AI inside the product

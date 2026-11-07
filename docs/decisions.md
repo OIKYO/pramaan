@@ -85,9 +85,17 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 
 - **The API deploys through a Render deploy hook, triggered by GitHub Actions after the backend tests pass** (`.github/workflows/backend.yml`). The Render service deploys the public repo by URL rather than through Render's GitHub app, so the repo can stay on the main GitHub account while the service runs on a different Render account. A push that breaks a test never reaches the live API.
 - **Render's Root Directory is `backend`.** The Dockerfile lives in `backend/`; without that setting Render looks for one at the repo root and the build fails.
+- **A scheduled GitHub Action keeps the demo awake** (`.github/workflows/keep-awake.yml`, every 10 minutes). Render's free instance sleeps after 15 idle minutes and then makes the next visitor wait about a minute; Supabase pauses a free project after a week without use. The job calls `/health?db=true`, which reads one row, so one call keeps both awake. Awake all month, the API uses about 720 of Render's 750 free hours. If the API or the database is down, the run fails and GitHub emails the owner, so it doubles as an uptime alert.
 - **`ALLOWED_ORIGINS` forgives a bare domain** (`pramaanapp.vercel.app` is read as `https://pramaanapp.vercel.app`), spaces, quotes and a trailing slash, and the API logs the origins it allows at startup. A missing origin is the most likely deploy mistake, and the browser's CORS error doesn't say which origin the server expected.
 
 ## Demo data
 
 - **Fictional phone numbers start with `+91 1`.** India doesn't give numbers in that range to subscribers, so no demo number can belong to a real person.
 - **A fourth demo account, `staff.kolkata@pramaan.demo`,** exists so we can show and test that one branch can't see another branch's posters.
+
+## Brand
+
+- **Pramaan's logo is a vector rebuilt from the team's PNG** (`tools/make_brand_assets.py`). The P mark is drawn as strokes measured on the PNG: every stroke is 13.8 units wide with square ends, the two curves of the bowl are cubic Béziers fitted to the PNG within 0.4 px, and the check mark cuts the bowl (each curve is clipped on its side of the check). The lettering is Poppins Medium and Regular (SIL Open Font License), placed letter by letter where the PNG has it and turned into outlines, so the logo needs no web font. Rendered in a browser and compared with the PNG, the shapes overlap 96–98%.
+- **The logo follows the theme.** In the app, `components/ui/BrandLogo.tsx` draws it inline: the name takes the current text colour and the tagline the muted text colour. The PNG's light version had cream lettering on a light background, which was nearly invisible; the vector versions use navy on light and cream on dark (`docs/brand/`). The README picks the version that matches the reader's GitHub theme.
+- **The favicon is the P mark alone** (SVG, plus `favicon.ico` and a 180 px Apple touch icon for browsers and phones that don't use SVG). Its blue and gold read on both light and dark browser tabs.
+- **Pramaan's logo is not Northfield Academy's.** Northfield's logo (`backend/assets/northfield-logo.png`) belongs to the fictional demo institute and is what the logo check (BRAND-01) looks for on posters.
