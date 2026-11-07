@@ -52,7 +52,7 @@ def get_settings() -> Settings:
         supabase_url=os.getenv("SUPABASE_URL", "").rstrip("/"),
         supabase_secret_key=os.getenv("SUPABASE_SECRET_KEY", ""),
         gemini_api_key=os.getenv("GEMINI_API_KEY", ""),
-        gemini_model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        gemini_model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash"),
         reader_mode=reader_mode,
         allowed_origins=tuple(o.strip().rstrip("/") for o in origins.split(",") if o.strip()),
         tesseract_cmd=os.getenv("TESSERACT_CMD", ""),
