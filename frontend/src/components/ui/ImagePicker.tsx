@@ -48,7 +48,7 @@ export function ImagePicker({ file, onChange, error }: ImagePickerProps) {
         onDrop={drop}
         className={cn(
           "flex min-h-72 cursor-pointer flex-col items-center justify-center gap-3 rounded-md border border-dashed border-line-strong bg-surface p-5 text-center transition-colors duration-(--duration-fast) hover:border-ink",
-          dragging && "border-action bg-action/5",
+          dragging && "border-accent bg-accent/5",
           message && "border-blocked",
         )}
       >

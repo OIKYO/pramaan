@@ -6,9 +6,8 @@
 /* dark: utilities follow the app's theme switch, not only the system setting. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* Expose the tokens as Tailwind utilities (bg-surface, text-ink, border-line, bg-action, ...). */
+/* Expose the tokens as Tailwind utilities. */
 @theme inline {
-  --font-heading: var(--font-heading);
   --font-sans: var(--font-body);
   --font-mono: var(--font-code);
 
@@ -20,13 +19,13 @@
   --color-ink: var(--ink);
   --color-ink-strong: var(--ink-strong);
   --color-muted-text: var(--muted-text);
-  --color-action: var(--action);
-  --color-action-hover: var(--action-hover);
-  --color-on-action: var(--on-action);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
   --color-focus: var(--focus);
-  --color-inverse: var(--inverse);
-  --color-on-inverse: var(--on-inverse);
-  --color-on-inverse-muted: var(--on-inverse-muted);
   --color-blocked: var(--blocked);
   --color-blocked-soft: var(--blocked-soft);
   --color-info: var(--info);
@@ -37,7 +36,6 @@
   --color-passed: var(--passed);
   --color-passed-soft: var(--passed-soft);
   --color-on-tone: var(--on-tone);
-  --color-on-warning-mark: var(--on-warning-mark);
   --color-overlay: var(--overlay);
   --color-brand-blue: var(--brand-blue);
   --color-brand-gold: var(--brand-gold);
@@ -48,13 +46,11 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
@@ -72,10 +68,6 @@
   --radius-xl: calc(var(--radius) * 2);
 
   --shadow-overlay: var(--shadow-overlay);
-
-  --width-sidebar: var(--sidebar-width);
-  --width-content: var(--content-width);
-  --width-form: var(--form-width);
 }
 
 @layer base {
@@ -85,25 +77,21 @@
   html {
     @apply font-sans;
     -webkit-text-size-adjust: 100%;
+    font-feature-settings: "ss01";
   }
   body {
-    @apply bg-canvas text-ink antialiased;
+    @apply bg-canvas text-sm text-ink antialiased;
   }
-  h1 {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    color: var(--ink-strong);
-    text-wrap: balance;
-  }
+  h1,
   h2,
   h3 {
-    font-weight: 600;
     color: var(--ink-strong);
+    font-weight: 600;
+    letter-spacing: -0.01em;
     text-wrap: balance;
   }
   ::selection {
-    background: color-mix(in srgb, var(--action) 40%, transparent);
+    background: color-mix(in srgb, var(--accent) 35%, transparent);
   }
   :focus-visible {
     outline: 2px solid var(--focus);
@@ -111,7 +99,8 @@
   }
   button:not(:disabled),
   [role="button"]:not(:disabled),
-  [role="radio"]:not(:disabled) {
+  [role="radio"]:not(:disabled),
+  [role="menuitem"]:not([data-disabled]) {
     cursor: pointer;
   }
 }
