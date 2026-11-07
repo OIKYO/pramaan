@@ -1,19 +1,18 @@
-import { Capabilities } from "@/components/landing/Capabilities";
+import { Branches } from "@/components/landing/Branches";
+import { FeatureStrip } from "@/components/landing/FeatureStrip";
 import { Hero } from "@/components/landing/Hero";
-import { HowItWorks } from "@/components/landing/HowItWorks";
-import { LandingFooter } from "@/components/landing/LandingFooter";
-import { LandingNav } from "@/components/landing/LandingNav";
-import { SetupSection } from "@/components/landing/SetupSection";
+import { PublicLayout } from "@/components/landing/PublicLayout";
+import { StartSection } from "@/components/landing/StartSection";
+import { WhyPramaan } from "@/components/landing/WhyPramaan";
 
 export function LandingPage() {
   return (
-    <div className="flex flex-col">
-      <LandingNav />
+    <PublicLayout>
       <Hero />
-      <HowItWorks />
-      <Capabilities />
-      <SetupSection />
-      <LandingFooter />
-    </div>
+      <FeatureStrip />
+      <WhyPramaan />
+      <Branches />
+      <StartSection />
+    </PublicLayout>
   );
 }

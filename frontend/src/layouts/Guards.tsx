@@ -50,7 +50,7 @@ export function PublicOnly() {
   const { status, profile } = useSession();
   const location = useLocation();
   const from = (location.state as { from?: string } | null)?.from;
-  if (status === "loading" && location.pathname !== "/") {
+  if (status === "loading") {
     return (
       <ScreenMessage>
         <LoadingRows rows={3} />
