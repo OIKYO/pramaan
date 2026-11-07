@@ -1,6 +1,7 @@
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useSession } from "@/api/hooks/useSession";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export function LoginPage() {
   const { status } = useSession();
@@ -12,7 +13,9 @@ export function LoginPage() {
     <main className="grid min-h-screen place-items-center p-4">
       <div className="grid w-full max-w-4xl gap-10 rounded-xl border border-line bg-surface p-6 shadow-sm sm:p-10 md:grid-cols-2">
         <div className="flex flex-col gap-4">
-          <h1 className="text-4xl text-ink">Pramaan</h1>
+          <h1 className="text-ink">
+            <BrandLogo className="w-full max-w-sm" />
+          </h1>
           <p className="text-lg text-ink">Every branch poster, checked before it's published.</p>
           <p className="text-muted-text">
             Pramaan reads each poster, runs 17 checks against head office's rulebook and the CCPA coaching ad

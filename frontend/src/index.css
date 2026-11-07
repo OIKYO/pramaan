@@ -17,6 +17,8 @@
   --color-passed: var(--passed);
   --color-warning: var(--warning);
   --color-info: var(--info);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-gold: var(--brand-gold);
   --color-blocked-soft: var(--blocked-soft);
   --color-passed-soft: var(--passed-soft);
   --color-warning-soft: var(--warning-soft);

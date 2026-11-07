@@ -2,6 +2,7 @@ import { LogOut } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
 import { useProfile, useSession } from "@/api/hooks/useSession";
 import type { Role } from "@/api/types";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { Button } from "@/components/ui/button";
 import { ROLE_LABEL } from "@/lib/labels";
 import { cn } from "@/lib/utils";
@@ -62,8 +63,8 @@ export function AppShell() {
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[var(--sidebar-width)_minmax(0,1fr)]">
       <aside className="flex flex-col gap-6 border-b border-line bg-surface p-4 lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0">
-        <div>
-          <p className="font-heading text-2xl font-bold text-ink">Pramaan</p>
+        <div className="flex flex-col gap-2">
+          <BrandLogo className="w-full max-w-52 text-ink" />
           <p className="text-xs text-muted-text">Northfield Academy poster checks</p>
         </div>
         <nav aria-label="Main" className="flex flex-wrap gap-6 lg:flex-col">

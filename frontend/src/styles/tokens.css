@@ -18,6 +18,10 @@
   --warning: #d9822a;
   --info: #2e6a9e;
 
+  /* Pramaan's logo (docs/brand). Only BrandLogo uses these. */
+  --brand-blue: #2c87e8;
+  --brand-gold: #d8a03f;
+
   /* Tints for badges and highlighted rows */
   --blocked-soft: #f8e4df;
   --passed-soft: #e0f0ed;
