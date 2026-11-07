@@ -1,13 +1,19 @@
-# Rules for AI tools working on the frontend
+# Rules for anyone (and any AI tool) working on the frontend
 
-These come from the project brief (`CLAUDE.md`, section 11). `npm run check` enforces the ones a linter can.
+These come from the project brief (`CLAUDE.md`, section 11). `npm run check` (tsc + ESLint) enforces the ones marked ✓.
 
-- **`src/api/` is the stable contract.** The API client, the generated types (`schema.d.ts`) and the hooks in `src/api/hooks/` are what the final UI is built on. Don't change their shapes without asking the team.
-- **Data only through `src/api/hooks`.** Never call `fetch` or `supabase` inside a component or page.
-- **Pages do layout only.** They arrange components and call hooks. One component per file, under about 150 lines.
-- **Any new UI element goes in `components/ui`** as its own file, and gets reused.
-- **No hardcoded colours or sizes.** Use the tokens in `src/styles/tokens.css` (exposed as Tailwind classes such as `bg-paper`, `text-ink`, `text-blocked`).
-- **Animations live only in `src/lib/motion.ts` and `src/components/ui`.** Use motion only to answer a person's action (opening a drawer, highlighting the finding you clicked), never as decoration.
-- **Every page handles loading, empty and error states** with the shared `Skeleton`, `EmptyState` and `ErrorState` components.
+1. **Never write animation code outside `src/lib/motion.ts` and `src/components/ui`.** ✓ Motion answers a person's action (switching the theme, opening a panel, finding the problem they clicked). No hover lifts, entrance fades on load, looping effects or gradients.
+2. **Never hardcode colours or sizes; use tokens only.** Every colour, for both the light and the midnight theme, is a variable in `src/styles/tokens.css`, exposed as Tailwind classes (`bg-surface`, `text-ink`, `border-line`, `bg-action`, `text-blocked`...). Use Tailwind's spacing scale, not arbitrary pixel values.
+3. **If a new UI element is needed, add it to `components/ui` as its own file and reuse it.** Feature pieces go in `components/poster`, `components/rulebook`, `components/insights`, `components/audit` or `components/auth`.
+4. **Pages do layout only, with no styling beyond flex, grid and gap.** ✓ A page arranges components and calls hooks. `style=` is banned in pages, and every class on a page must be a flex, grid or gap class.
+5. **One component per file, under about 150 lines.**
+6. **Data comes only from `src/api/hooks`, never a fetch inside a component.** ✓ `fetch` and the Supabase and API clients may only be used inside `src/api`.
+7. **Every screen uses the shared loading, empty and error states** (`QueryState`, or `LoadingRows`, `EmptyState` and `ErrorState` from `components/ui/States`).
+8. **Before writing, list the files you'll touch, and touch nothing else.**
+9. **Run `npm run check` and fix every error before finishing.**
+
+## Also
+
+- **`src/api/` is the contract.** The client, the generated types (`schema.d.ts`) and the hooks are what every screen is built on. Changes that need a person to wait (submit, approve, send back, confirm, override, rulebook edits) update the screen at once and roll back if the server refuses (`hooks/optimistic.ts`).
+- **Both themes, always.** Check every change in light and midnight. Icons are Lucide (vector) and the logo is `components/ui/BrandLogo` (vector), so both follow the theme.
 - **Words:** sentence case everywhere, no all-caps labels. Buttons say exactly what they do ("Run checks", "Send back", "Approve"). Errors say what happened and how to fix it.
-- **`npm run check` (tsc + eslint) must pass.** ESLint bans Motion imports outside `lib/motion.ts` and `components/ui`, and bans `style=`, `animate-`/`transition` classes and hex colours inside `src/pages`.

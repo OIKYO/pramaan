@@ -11,7 +11,35 @@ const motionOnlyInUi = {
   })),
 };
 
-const classString = "JSXAttribute[name.name='className']";
+/** Classes a page may use: flex, grid and gap, with alignment and spans, at any breakpoint. */
+const LAYOUT_CLASS =
+  /^(?:(?:sm|md|lg|xl|2xl|max-sm|max-md|max-lg|max-xl|@[a-z0-9]+):)*(?:flex|inline-flex|grid|inline-grid|flex-(?:row|col|wrap|row-reverse|col-reverse|nowrap|1|auto|initial|none)|grid-cols-\S+|grid-rows-\S+|grid-flow-\S+|col-\S+|row-\S+|gap(?:-[xy])?-\S+|items-\S+|justify-\S+|content-\S+|self-\S+|justify-self-\S+|place-\S+|order-\S+)$/;
+
+/** Pages do layout only: every class on a page must be a flex, grid or gap class. */
+const layoutOnly = {
+  meta: {
+    type: "problem",
+    messages: {
+      notLayout:
+        "Pages do layout only (flex, grid, gap). Move “{{name}}” into a component in components/ui or a feature folder.",
+    },
+  },
+  create(context) {
+    const check = (node, text) => {
+      for (const name of text.split(/\s+/).filter(Boolean)) {
+        if (!LAYOUT_CLASS.test(name)) context.report({ node, messageId: "notLayout", data: { name } });
+      }
+    };
+    return {
+      "JSXAttribute[name.name='className'] Literal"(node) {
+        if (typeof node.value === "string") check(node, node.value);
+      },
+      "JSXAttribute[name.name='className'] TemplateElement"(node) {
+        check(node, node.value.raw);
+      },
+    };
+  },
+};
 
 export default defineConfig([
   globalIgnores(["dist", "src/api/schema.d.ts"]),
@@ -29,27 +57,32 @@ export default defineConfig([
     rules: { "no-restricted-imports": ["error", motionOnlyInUi] },
   },
   {
-    // Pages do layout only: no inline styles, no animation classes, no raw colours.
-    files: ["src/pages/**/*.{ts,tsx}"],
+    // Data comes only from src/api/hooks: no fetch or Supabase outside src/api.
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/api/**"],
     rules: {
+      "no-restricted-globals": ["error", { name: "fetch", message: "Data comes only from src/api/hooks." }],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "ImportDeclaration[source.value=/^@supabase\\u002F|api\\u002Fsupabase$|api\\u002Fclient$/]",
+          message: "Data comes only from src/api/hooks. Add a hook there instead.",
+        },
+      ],
+    },
+  },
+  {
+    // Pages do layout only: no inline styles, and classes limited to flex, grid and gap.
+    files: ["src/pages/**/*.{ts,tsx}"],
+    plugins: { pramaan: { rules: { "layout-only": layoutOnly } } },
+    rules: {
+      "pramaan/layout-only": "error",
       "no-restricted-syntax": [
         "error",
         { selector: "JSXAttribute[name.name='style']", message: "No style= in pages. Put the styling in a component." },
         {
-          selector: `${classString} Literal[value=/(^|\\s)(animate-|transition)/]`,
-          message: "No animation or transition classes in pages. Motion belongs in components/ui.",
-        },
-        {
-          selector: `${classString} TemplateElement[value.raw=/(^|\\s)(animate-|transition)/]`,
-          message: "No animation or transition classes in pages. Motion belongs in components/ui.",
-        },
-        {
-          selector: `${classString} Literal[value=/#[0-9a-fA-F]{3,8}/]`,
-          message: "No hex colours in pages. Use the colour tokens.",
-        },
-        {
-          selector: `${classString} TemplateElement[value.raw=/#[0-9a-fA-F]{3,8}/]`,
-          message: "No hex colours in pages. Use the colour tokens.",
+          selector: "ImportDeclaration[source.value=/^@supabase\\u002F|api\\u002Fsupabase$|api\\u002Fclient$/]",
+          message: "Data comes only from src/api/hooks. Add a hook there instead.",
         },
       ],
     },
