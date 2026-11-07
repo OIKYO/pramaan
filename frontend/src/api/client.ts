@@ -47,6 +47,9 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 export const postJson = <T>(path: string, body: unknown) =>
   api<T>(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
+export const patchJson = <T>(path: string, body: unknown) =>
+  api<T>(path, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
 export const postForm = <T>(path: string, form: FormData) => api<T>(path, { method: "POST", body: form });
 
 /** A multipart form from plain values: arrays become repeated fields, files stay files. */

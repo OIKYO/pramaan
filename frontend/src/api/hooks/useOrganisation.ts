@@ -1,7 +1,8 @@
 /** The organisation, its regions and branches, and how far its setup has got. */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { patchJson } from "../client";
 import { supabase } from "../supabase";
-import type { Branch, Organisation, Region } from "../types";
+import type { Branch, Organisation, OrganisationUpdate, Region } from "../types";
 import { keys } from "./keys";
 import { restore, snapshot } from "./optimistic";
 
@@ -56,3 +57,24 @@ export const useSaveBranch = () =>
   );
 
 export const useDeleteBranch = () => useWrite(keys.branches, (id: string) => rows(supabase.from("branches").delete().eq("id", id).select("id")));
+
+/** Head office changes what the organisation does, or which rulebooks it keeps. The server checks
+ * it against the catalog and adds the rulebooks every organisation keeps. */
+export function useUpdateOrganisation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (changes: OrganisationUpdate) => patchJson<Organisation>("/organisation", changes),
+    onMutate: async (changes) => {
+      const saved = await snapshot(qc, keys.organisation);
+      const given = Object.fromEntries(Object.entries(changes).filter(([, v]) => v !== null && v !== undefined));
+      qc.setQueryData<Organisation>(keys.organisation, (org) => org && { ...org, ...given });
+      return saved;
+    },
+    onError: (_e, _v, saved) => restore(qc, saved),
+    onSuccess: (org) => qc.setQueryData(keys.organisation, org),
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: keys.rules });
+      qc.invalidateQueries({ queryKey: keys.importSpecs });
+    },
+  });
+}

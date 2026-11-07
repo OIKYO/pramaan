@@ -15,7 +15,8 @@ interface SessionState {
   profile: Profile | null;
   profileError: string | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  /** Sign out here, or on every device you're signed in on. */
+  signOut: (everywhere?: boolean) => Promise<void>;
 }
 
 const SessionContext = createContext<SessionState | null>(null);
@@ -58,8 +59,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
       if (error) throw new Error(friendly(error.message));
     },
-    signOut: async () => {
-      await supabase.auth.signOut();
+    signOut: async (everywhere = false) => {
+      await supabase.auth.signOut({ scope: everywhere ? "global" : "local" });
       queryClient.clear();
     },
   };

@@ -21,6 +21,12 @@ export type ImportPreview = Schemas["ImportPreview"];
 export type ImportSpec = Schemas["DatasetSpecOut"];
 export type Dataset = ImportSpec["dataset"];
 export type SignupRequest = Schemas["SignupRequest"];
+export type Catalog = Schemas["Catalog"];
+export type Industry = Schemas["Industry"];
+export type Vocabulary = Schemas["Vocabulary"];
+export type Rulebook = Schemas["RulebookOut"];
+export type RulebookDef = Schemas["RulebookDef"];
+export type OrganisationUpdate = Schemas["OrganisationUpdate"];
 
 export type Role = "branch_staff" | "regional_manager" | "head_office";
 export type Channel = PosterDetail["channel"];
@@ -44,9 +50,16 @@ export interface Profile {
   created_at: string;
 }
 
+/** What the organisation does (from GET /catalog) and the rulebooks it keeps. */
 export interface Organisation {
   id: string;
   name: string;
+  industry_group: string | null;
+  industry: string | null;
+  org_type: string | null;
+  focus: string[];
+  /** Rulebook ids: brand, contacts, claims, offerings, figures, people, rankings. */
+  rulebooks: string[];
   created_at: string;
 }
 
@@ -99,9 +112,10 @@ export interface Course {
   id: string;
   name: string;
   aliases: string[];
-  course_type: CourseType;
-  duration_label: string;
-  duration_months: number;
+  /** Courses only. */
+  course_type: CourseType | null;
+  duration_label: string | null;
+  duration_months: number | null;
   fee_inr: number | null;
   is_paid: boolean;
   valid_until: string | null;
@@ -112,8 +126,8 @@ export interface ResultStat {
   id: string;
   label: string;
   value: number;
-  exam: string;
-  year: number;
+  exam: string | null;
+  year: number | null;
   source: string;
   valid_until: string | null;
 }
@@ -123,10 +137,11 @@ export interface Topper {
   id: string;
   full_name: string;
   name_variants: string[];
-  exam: string;
-  exam_year: number;
-  rank: number;
-  result_date: string;
+  /** Exam fields: kept while the exam results rulebook is on. */
+  exam: string | null;
+  exam_year: number | null;
+  rank: number | null;
+  result_date: string | null;
   course_id: string | null;
   is_minor: boolean;
   has_consent: boolean;

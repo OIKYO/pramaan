@@ -1,6 +1,6 @@
-/** Your own account: signing up a new organisation, and choosing your password. */
+/** Your own account: signing up a new organisation, your name, and choosing your password. */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postJson } from "../client";
+import { patchJson, postJson } from "../client";
 import { supabase } from "../supabase";
 import type { SignupRequest } from "../types";
 
@@ -21,6 +21,15 @@ export function useChangePassword() {
     mutationFn: async (password: string) => {
       await postJson<null>("/me/password", { password });
     },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["profile"] }),
+  });
+}
+
+/** Change your own name. Role and branch are head office's to change. */
+export function useUpdateMyName() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (full_name: string) => patchJson<null>("/me", { full_name }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["profile"] }),
   });
 }

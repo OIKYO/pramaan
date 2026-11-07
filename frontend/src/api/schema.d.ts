@@ -4,6 +4,27 @@
  */
 
 export interface paths {
+    "/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Catalog
+         * @description Industries, kinds of organisation, focus areas, each industry's words and the rulebooks.
+         *     The same for everyone, and needed before sign-up, so no sign-in.
+         */
+        get: operations["catalog_catalog_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/signup": {
         parameters: {
             query?: never;
@@ -24,6 +45,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/organisation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Organisation
+         * @description Change what the organisation does, or which rulebooks it keeps. The brand kit and branch
+         *     contact details are always kept, and a rulebook brings the ones it depends on with it.
+         */
+        patch: operations["update_organisation_organisation_patch"];
+        trace?: never;
+    };
     "/me/password": {
         parameters: {
             query?: never;
@@ -39,6 +81,26 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Me
+         * @description Change your own name. Only the name: anything else would let people promote themselves.
+         */
+        patch: operations["update_me_me_patch"];
         trace?: never;
     };
     "/members": {
@@ -141,7 +203,8 @@ export interface paths {
         };
         /**
          * Datasets
-         * @description What can be imported, each with its columns and a template.
+         * @description What can be imported, each with its columns and a template: branches and team always, and
+         *     the data of each rulebook the organisation keeps.
          */
         get: operations["datasets_imports_get"];
         put?: never;
@@ -466,6 +529,21 @@ export interface components {
             /** File */
             file: string;
         };
+        /** Catalog */
+        Catalog: {
+            /** Industries */
+            industries: components["schemas"]["Industry"][];
+            /** Org Types */
+            org_types: components["schemas"]["OrgType"][];
+            /** Focus Areas */
+            focus_areas: components["schemas"]["FocusArea"][];
+            /** Vocabularies */
+            vocabularies: {
+                [key: string]: components["schemas"]["Vocabulary"];
+            };
+            /** Rulebooks */
+            rulebooks: components["schemas"]["RulebookDef"][];
+        };
         /** Claim */
         Claim: {
             /** Box 2D */
@@ -563,6 +641,15 @@ export interface components {
             /** Resolved At */
             resolved_at?: string | null;
         };
+        /** FocusArea */
+        FocusArea: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Suggest */
+            suggest: string[];
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -650,6 +737,26 @@ export interface components {
                 [key: string]: string;
             };
         };
+        /** Industry */
+        Industry: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Vocabulary */
+            vocabulary: string;
+            /** Suggest */
+            suggest: string[];
+            /** Subdomains */
+            subdomains: string[];
+            /**
+             * Special
+             * @default {}
+             */
+            special: {
+                [key: string]: components["schemas"]["SubdomainSpecial"];
+            };
+        };
         /** Insights */
         Insights: {
             /** Posters By Status */
@@ -666,6 +773,11 @@ export interface components {
             open_blocking: number;
             /** Ai Calls */
             ai_calls: number;
+        };
+        /** MeUpdate */
+        MeUpdate: {
+            /** Full Name */
+            full_name: string;
         };
         /** MemberCreate */
         MemberCreate: {
@@ -743,6 +855,55 @@ export interface components {
             raw_text: string;
             /** Value */
             value?: number | null;
+        };
+        /** OrgType */
+        OrgType: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+        };
+        /** OrganisationOut */
+        OrganisationOut: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Industry Group */
+            industry_group?: string | null;
+            /** Industry */
+            industry?: string | null;
+            /** Org Type */
+            org_type?: string | null;
+            /**
+             * Focus
+             * @default []
+             */
+            focus: string[];
+            /** Rulebooks */
+            rulebooks: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /**
+         * OrganisationUpdate
+         * @description Head office changes what the organisation does, or which rulebooks it keeps. Fields left
+         *     out stay as they are. The industry fields go together.
+         */
+        OrganisationUpdate: {
+            /** Industry Group */
+            industry_group?: string | null;
+            /** Industry */
+            industry?: string | null;
+            /** Org Type */
+            org_type?: string | null;
+            /** Focus */
+            focus?: string[] | null;
+            /** Rulebooks */
+            rulebooks?: string[] | null;
         };
         /** PasswordChange */
         PasswordChange: {
@@ -916,10 +1077,11 @@ export interface components {
             /** Name */
             name: string;
             /**
-             * Category
-             * @enum {string}
+             * Rulebooks
+             * @description Runs when any of these rulebooks is on; empty means always
+             * @default []
              */
-            category: "claims" | "facts" | "brand" | "access" | "reader";
+            rulebooks: string[];
             /**
              * Kind
              * @enum {string}
@@ -948,10 +1110,11 @@ export interface components {
             /** Name */
             name: string;
             /**
-             * Category
-             * @enum {string}
+             * Rulebooks
+             * @description Runs when any of these rulebooks is on; empty means always
+             * @default []
              */
-            category: "claims" | "facts" | "brand" | "access" | "reader";
+            rulebooks: string[];
             /**
              * Kind
              * @enum {string}
@@ -976,14 +1139,62 @@ export interface components {
             version: string;
             /** Source */
             source: string;
-            /** Categories */
-            categories: {
-                [key: string]: string;
-            };
+            /** Rulebooks */
+            rulebooks: components["schemas"]["RulebookOut"][];
             /** Rules */
             rules: components["schemas"]["RuleOut"][];
             /** Reader Checks */
             reader_checks: components["schemas"]["RuleDef"][];
+        };
+        /**
+         * RulebookDef
+         * @description A rulebook: reference data an organisation keeps, and the checks that use it.
+         */
+        RulebookDef: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** About */
+            about: string;
+            /**
+             * Required
+             * @description Every organisation keeps it
+             * @default false
+             */
+            required: boolean;
+            /**
+             * Requires
+             * @description Rulebooks that must be on for this one to work
+             * @default []
+             */
+            requires: string[];
+        };
+        /** RulebookOut */
+        RulebookOut: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** About */
+            about: string;
+            /**
+             * Required
+             * @description Every organisation keeps it
+             * @default false
+             */
+            required: boolean;
+            /**
+             * Requires
+             * @description Rulebooks that must be on for this one to work
+             * @default []
+             */
+            requires: string[];
+            /**
+             * Enabled
+             * @description Whether the signed-in user's organisation keeps this rulebook
+             */
+            enabled: boolean;
         };
         /** SignupRequest */
         SignupRequest: {
@@ -998,6 +1209,23 @@ export interface components {
              * @description At least 8 characters
              */
             password: string;
+            /**
+             * Industry Group
+             * @description An industry id from GET /catalog
+             */
+            industry_group?: string | null;
+            /**
+             * Industry
+             * @description A subdomain of that industry, or the organisation's own words
+             */
+            industry?: string | null;
+            /** Org Type */
+            org_type?: string | null;
+            /**
+             * Focus
+             * @default []
+             */
+            focus: string[];
         };
         /** SignupResult */
         SignupResult: {
@@ -1007,6 +1235,16 @@ export interface components {
             user_id: string;
             /** Email */
             email: string;
+        };
+        /** SubdomainSpecial */
+        SubdomainSpecial: {
+            /** Vocabulary */
+            vocabulary?: string | null;
+            /**
+             * Suggest
+             * @default []
+             */
+            suggest: string[];
         };
         /** TextBlock */
         TextBlock: {
@@ -1069,6 +1307,38 @@ export interface components {
              */
             questions: components["schemas"]["WordingFlag"][];
         };
+        /**
+         * Vocabulary
+         * @description The words an industry uses for what it keeps, e.g. "Courses and fees" or "Menu and prices".
+         */
+        Vocabulary: {
+            /** Offerings */
+            offerings: string;
+            /** Offering */
+            offering: string;
+            /** Offering Plural */
+            offering_plural: string;
+            /** Price */
+            price: string;
+            /** Figures */
+            figures: string;
+            /** Figure */
+            figure: string;
+            /** People */
+            people: string;
+            /** Person */
+            person: string;
+            /** Person Plural */
+            person_plural: string;
+            /** Register Name */
+            register_name: string;
+            /** Durations */
+            durations: boolean;
+            /** Offering Types */
+            offering_types: boolean;
+            /** Exams */
+            exams: boolean;
+        };
         /** WordingFlag */
         WordingFlag: {
             /** Box 2D */
@@ -1094,6 +1364,26 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    catalog_catalog_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Catalog"];
+                };
+            };
+        };
+    };
     signup_signup_post: {
         parameters: {
             query?: never;
@@ -1127,6 +1417,41 @@ export interface operations {
             };
         };
     };
+    update_organisation_organisation_patch: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrganisationUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrganisationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     change_password_me_password_post: {
         parameters: {
             query?: never;
@@ -1139,6 +1464,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["PasswordChange"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_me_me_patch: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MeUpdate"];
             };
         };
         responses: {
