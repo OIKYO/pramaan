@@ -69,6 +69,18 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Contrast is measured only where a box holds text.** In live mode a reader's box sometimes slips onto plain background; k=2 then splits one flat colour into two and reports 1:1 "contrast", a false warning (seen on the clean poster read by Groq). A box is measured only if its second cluster covers at least 2% of the box and is at least ΔE 5 from the first. Genuinely faint text still counts: the pale test disclaimer has its text cluster at 19.5% of the box and ΔE 13.7.
 - **`scripts/e2e_flow.py` runs the whole Round 2 flow over HTTP as the demo users** (25 steps, including the forbidden moves). Point it at the deployed API before a demo.
 
+## Temporary frontend
+
+- **`src/api/` is the contract for the final UI.** `client.ts` signs every backend call with the Supabase session; `schema.d.ts` is generated from the backend's OpenAPI; `types.ts` gives friendly names; `hooks/` holds every read and write. Pages never touch `fetch` or `supabase`.
+- **Lists and rulebook edits go straight to Supabase; checks and review actions go to the backend.** Row-level security scopes each list (a branch sees its own posters, a region its branches), so the list pages have no permission logic of their own.
+- **Topper columns are selected by name** because `consent_path` is hidden from the browser (`select *` would be refused).
+- **Findings share one numbering on the poster and in the list** (`lib/findings.ts`). Findings that point at the same spot share one box with several numbers, and clicking it steps through them; smaller boxes sit on top of bigger ones, so a rank inside a topper's card stays clickable.
+- **The wrong-rank finding (CCPA-04) points at the rank itself** when the reader boxed it, not the whole topper card, so the box marks the exact number to change.
+- **Motion is used twice:** a short pulse on the finding or box you click, and a fade when you open the passed checks. Both live in `lib/motion.ts` and `components/ui/Highlight.tsx`; `MotionProvider` respects "reduce motion". shadcn's drawer and dialog animations stay inside `components/ui`.
+- **Fonts:** Source Serif 4 (bold, headings) and Source Sans 3 (body), from Google Fonts, replacing the Geist font shadcn installs by default.
+- **Checkboxes use a separate `<label htmlFor>`.** Wrapping a Radix checkbox in a `<label>` toggled it twice, so tags silently didn't stick (found while testing the upload page in a real browser).
+- **The demo-account buttons on the login page need `VITE_DEMO_PASSWORD`.** It's the same password the README lists for the judges; leave it empty to hide the buttons.
+
 ## Demo data
 
 - **Fictional phone numbers start with `+91 1`.** India doesn't give numbers in that range to subscribers, so no demo number can belong to a real person.
