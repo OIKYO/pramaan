@@ -123,6 +123,7 @@ revoke all on public.organisations from anon, authenticated;
 grant select on public.organisations to authenticated;
 grant update (name) on public.organisations to authenticated;
 grant insert, update, delete on public.regions, public.branches to authenticated;
+grant select (org_id) on public.toppers to authenticated;
 alter table public.organisations enable row level security;
 
 drop policy "regions: signed-in users read" on public.regions;

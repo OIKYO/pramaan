@@ -1,5 +1,9 @@
 -- Pramaan schema. Run in the Supabase SQL editor (or psql): schema.sql, then policies.sql,
--- then `python -m scripts.seed` from backend/.
+-- then `python -m scripts.seed` from backend/ for the demo organisation.
+--
+-- Many organisations share one database. Every table that belongs to a company carries org_id, names
+-- are unique within an organisation, and two-column foreign keys (id, org_id) make it impossible for
+-- a branch, profile, poster or topper to point into another organisation.
 
 -- ============================================================ enums
 
@@ -12,36 +16,58 @@ create type public.severity as enum ('block', 'warn', 'pass', 'needs_human');
 create type public.finding_status as enum ('open', 'resolved', 'overridden');
 create type public.course_type as enum ('classroom', 'crash', 'test_series', 'online');
 
--- ============================================================ organisation
+-- ============================================================ organisations and people
+
+create table public.organisations (
+  id uuid primary key default gen_random_uuid(),
+  name text not null check (char_length(btrim(name)) between 2 and 120),
+  created_by uuid references auth.users (id) on delete set null,
+  created_at timestamptz not null default now()
+);
 
 create table public.regions (
   id uuid primary key default gen_random_uuid(),
-  name text not null unique
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  name text not null,
+  constraint regions_org_name_key unique (org_id, name),
+  constraint regions_id_org_key unique (id, org_id)
 );
 
 create table public.branches (
   id uuid primary key default gen_random_uuid(),
-  name text not null unique,
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  name text not null,
   city text not null,
-  region_id uuid not null references public.regions (id),
+  region_id uuid not null,
   phone text not null,
-  address text not null
+  address text not null,
+  constraint branches_org_name_key unique (org_id, name),
+  constraint branches_id_org_key unique (id, org_id),
+  constraint branches_region_same_org foreign key (region_id, org_id) references public.regions (id, org_id)
 );
 
 create table public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
+  org_id uuid not null references public.organisations (id) on delete cascade,
   full_name text not null,
   role public.user_role not null,
-  branch_id uuid references public.branches (id),
-  region_id uuid references public.regions (id),
+  branch_id uuid,
+  region_id uuid,
+  email text,
+  needs_password_change boolean not null default false,  -- set while they have a temporary password
+  deactivated_at timestamptz,                            -- head office removed their access
+  created_at timestamptz not null default now(),
   constraint staff_belong_to_a_branch check (role <> 'branch_staff' or branch_id is not null),
-  constraint regional_managers_have_a_region check (role <> 'regional_manager' or region_id is not null)
+  constraint regional_managers_have_a_region check (role <> 'regional_manager' or region_id is not null),
+  constraint profiles_branch_same_org foreign key (branch_id, org_id) references public.branches (id, org_id),
+  constraint profiles_region_same_org foreign key (region_id, org_id) references public.regions (id, org_id)
 );
+create index profiles_by_org on public.profiles (org_id);
 
 -- ============================================================ rulebook (head office's approved facts)
 
 create table public.brand_kit (
-  id smallint primary key default 1 check (id = 1), -- single row
+  org_id uuid primary key references public.organisations (id) on delete cascade, -- one per organisation
   registered_name text not null,
   helpline text not null,
   palette text[] not null default '{}',               -- hex colours, e.g. '#1F3354'
@@ -53,7 +79,8 @@ create table public.brand_kit (
 
 create table public.courses (
   id uuid primary key default gen_random_uuid(),
-  name text not null unique,
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  name text not null,
   aliases text[] not null default '{}',
   course_type public.course_type not null,
   duration_label text not null,                       -- as written on posters, e.g. '2 years'
@@ -62,28 +89,33 @@ create table public.courses (
   is_paid boolean not null,
   valid_until date,
   source text not null default '',
-  constraint paid_courses_have_a_fee check (not is_paid or fee_inr is not null)
+  constraint paid_courses_have_a_fee check (not is_paid or fee_inr is not null),
+  constraint courses_org_name_key unique (org_id, name),
+  constraint courses_id_org_key unique (id, org_id)
 );
 
 create table public.result_stats (
   id uuid primary key default gen_random_uuid(),
-  label text not null unique,
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  label text not null,
   value numeric not null,
   exam text not null,
   year int not null,
   source text not null default '',
-  valid_until date
+  valid_until date,
+  constraint result_stats_org_label_key unique (org_id, label)
 );
 
 create table public.toppers (
   id uuid primary key default gen_random_uuid(),
-  full_name text not null unique,
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  full_name text not null,
   name_variants text[] not null default '{}',
   exam text not null,
   exam_year int not null,
   rank int not null check (rank > 0),
   result_date date not null,
-  course_id uuid references public.courses (id),
+  course_id uuid,
   is_minor boolean not null default false,
   photo_path text,
   consent_path text,                                  -- object path in the private 'consent' bucket
@@ -93,22 +125,27 @@ create table public.toppers (
   consent_valid_until date,
   guardian_signed boolean not null default false,
   verified_by uuid references public.profiles (id),
-  verified_at timestamptz
+  verified_at timestamptz,
+  constraint toppers_org_name_key unique (org_id, full_name),
+  constraint toppers_course_same_org foreign key (course_id, org_id) references public.courses (id, org_id)
 );
 
--- Which of the 17 checks are switched on. The checks themselves live in backend/rules/rule_pack.json.
+-- Which of the 17 checks each organisation has switched on. The checks live in backend/rules/rule_pack.json.
 create table public.rule_settings (
-  rule_id text primary key,
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  rule_id text not null,
   enabled boolean not null default true,
   updated_by uuid references public.profiles (id),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  primary key (org_id, rule_id)
 );
 
 -- ============================================================ posters and checks
 
 create table public.posters (
   id uuid primary key default gen_random_uuid(),
-  branch_id uuid not null references public.branches (id),
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  branch_id uuid not null,
   created_by uuid not null references public.profiles (id),
   title text not null check (char_length(btrim(title)) between 1 and 200),
   channel public.channel not null,
@@ -117,8 +154,10 @@ create table public.posters (
   current_version int not null default 1 check (current_version >= 1),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint stage_only_while_in_review check ((status = 'in_review') = (review_stage is not null))
+  constraint stage_only_while_in_review check ((status = 'in_review') = (review_stage is not null)),
+  constraint posters_branch_same_org foreign key (branch_id, org_id) references public.branches (id, org_id)
 );
+create index posters_by_org on public.posters (org_id, updated_at desc);
 create index posters_by_branch on public.posters (branch_id, updated_at desc);
 create index posters_by_status on public.posters (status, review_stage, updated_at desc);
 
@@ -176,6 +215,7 @@ create index reviews_by_poster on public.reviews (poster_id, created_at);
 
 create table public.audit_log (
   id bigint generated always as identity primary key,
+  org_id uuid not null references public.organisations (id) on delete cascade,
   actor_id uuid references public.profiles (id),      -- null for the pipeline itself
   action text not null,
   target_type text not null,
@@ -184,6 +224,7 @@ create table public.audit_log (
   created_at timestamptz not null default now()
 );
 create index audit_log_by_time on public.audit_log (created_at desc);
+create index audit_log_by_org on public.audit_log (org_id, created_at desc);
 
 -- ============================================================ triggers
 
