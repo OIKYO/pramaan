@@ -104,6 +104,21 @@ def consent_is_valid(ctx: RuleContext) -> list[Problem]:
     return problems
 
 
+def _inside(inner: list[int], outer: list[int]) -> bool:
+    """The centre of `inner` lies within `outer` (both box_2d)."""
+    cy, cx = (inner[0] + inner[2]) / 2, (inner[1] + inner[3]) / 2
+    return outer[0] <= cy <= outer[2] and outer[1] <= cx <= outer[3]
+
+
+def _rank_box(ctx: RuleContext, person, shown: float) -> list[int]:
+    """Point at the rank itself when the reader boxed it, so the finding marks the exact number."""
+    for number in ctx.reading.numbers:
+        if (number.kind == "rank" and number_value(number.raw_text, number.value) == shown
+                and _inside(number.box_2d, person.box_2d)):
+            return number.box_2d
+    return person.box_2d
+
+
 @rule("CCPA-04")
 def rank_matches(ctx: RuleContext) -> list[Problem]:
     problems = []
@@ -112,7 +127,7 @@ def rank_matches(ctx: RuleContext) -> list[Problem]:
         if shown is not None and int(shown) != topper.rank:
             problems.append(Problem(
                 f"Shows {person.rank_text or f'AIR {int(shown)}'} for {topper.full_name}; the register says AIR {topper.rank}.",
-                evidence(person.box_2d, person.rank_text or person.name, topper_id=topper.id),
+                evidence(_rank_box(ctx, person, shown), person.rank_text or person.name, topper_id=topper.id),
                 f"Change the rank to AIR {topper.rank}.",
             ))
     return problems
