@@ -5,7 +5,7 @@
 
 # Pramaan
 
-Pramaan checks every poster made by the branches of a multi-branch organisation before it is published. Our demo is a fictional coaching institute chain, **Northfield Academy**.
+Pramaan checks every poster made by the branches of a multi-branch organisation before it is published. Any organisation can sign up and gets its own private workspace; our demo is a fictional coaching institute chain, **Northfield Academy**.
 
 Branch staff upload a poster. Pramaan reads it, runs **17 checks** (15 in plain code, 2 by AI) against head office's brand kit, approved facts, a consent-backed toppers register and a rule pack based on the **CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024**, and shows each problem on the poster with the rule it breaks and a suggested fix. A regional manager reviews it, then head office gives final approval. **The AI never approves anything.**
 
@@ -39,14 +39,23 @@ Password for every account: `Northfield-demo-2026`. The login page also has one-
 
 `test-posters/` has one clean poster and ten posters that each plant one problem (see `test-posters/manifest.json`).
 
+### Start your own organisation
+
+1. Open the app and choose **Create organisation**. You become its head office.
+2. **Overview** shows a setup checklist: brand kit (name, helpline, logo, colours), branches, courses and fees, toppers, results figures and your team.
+3. **Import data** takes the spreadsheets you already keep (CSV): download a template, upload, and see every change and every problem by line and column before anything is saved. Exports from each rulebook page use the same columns, so they import back.
+4. **Team** adds people with a role and a branch or region. Each gets a temporary password, shown once, and must choose their own at first sign-in. Head office can reset passwords and remove access.
+
+Each organisation sees only its own data: every table carries `org_id` and every row-level-security policy starts with "your organisation only".
+
 ## How it works
 
 The AI reads; plain code decides; people approve. Details in [docs/architecture.md](docs/architecture.md), and the reasoning behind each choice in [docs/decisions.md](docs/decisions.md).
 
 ```
-frontend/   React + Vite + Tailwind + shadcn/ui (temporary UI; src/api/ is the stable contract)
+frontend/   React + Vite + Tailwind + shadcn/ui; src/api/ is the contract every screen is built on
 backend/    FastAPI: app/ (API, auth, status machine), pipeline/ (read, second read, match, visuals), rules/ (17 checks)
-supabase/   schema.sql, policies.sql
+supabase/   schema.sql, policies.sql, migrations/ (for databases created before organisations)
 tools/      make_test_posters.py, make_logo.py
 docs/       architecture, decisions, AI disclosure, user testing, contributions
 ```
@@ -71,7 +80,7 @@ npm run dev
 npm run check
 ```
 
-For a new Supabase project: run `supabase/schema.sql`, then `supabase/policies.sql`, in the SQL editor, then `python -m scripts.seed` from `backend/`. Check the policies with `python -m scripts.check_rls`, and the whole flow with `python -m scripts.e2e_flow` (needs the API running).
+For a new Supabase project: run `supabase/schema.sql`, then `supabase/policies.sql`, in the SQL editor, then `python -m scripts.seed` from `backend/`. Check the policies with `python -m scripts.check_rls` (21 checks, including a throwaway second organisation), the poster flow with `python -m scripts.e2e_flow`, and a new company's first hour with `python -m scripts.org_flow` (both need the API running).
 
 Install Tesseract for Windows (the UB Mannheim build, with Hindi and Bengali data) and set `TESSERACT_CMD`. Without it, every check still runs, but each poster asks a person to confirm its key numbers.
 

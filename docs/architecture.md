@@ -37,10 +37,12 @@ Supabase: Postgres (+ row-level security), Auth, Storage
 
 ## Security
 
-- The browser holds only the publishable key. Row-level security decides what each person reads: branch staff their branch's posters, regional managers their region's, head office everything. Only head office can edit the rulebook.
+- **Organisations are isolated.** Every company-owned table carries `org_id`; every row-level-security policy starts with "your organisation only" (`my_org()`), and two-column foreign keys `(id, org_id)` make it impossible for a branch, profile, poster or topper to point into another organisation. The backend, which bypasses RLS, filters by the caller's organisation too.
+- The browser holds only the publishable key. Inside an organisation, row-level security decides what each person reads: branch staff their branch's posters, regional managers their region's, head office everything. Only head office can edit the rulebook, regions and branches.
+- **Accounts:** signing up creates an organisation and its first head office account. Head office adds everyone else through the backend; each gets a temporary password (shown once) and must choose their own before using the app. Removing access bans the sign-in and empties `my_org()` at once; their history stays.
 - Posters, versions, findings, reviews and the audit log can't be written by any client. Only the backend writes them, with the secret key, and the backend repeats the visibility rule itself because that key bypasses row-level security.
 - `toppers.consent_path` is withheld from every client by a column grant; consent files are reachable only through the backend, for head office, through links that expire after 2 minutes.
-- `backend/scripts/check_rls.py` signs in as the demo users and checks these rules against the live database (13 checks).
+- `backend/scripts/check_rls.py` signs in as the demo users and a throwaway second organisation and checks these rules against the live database (21 checks).
 
 ## Privacy
 
