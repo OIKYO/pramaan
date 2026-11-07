@@ -9,6 +9,9 @@ The CodeNexus rules ask us to say where AI tools wrote significant parts of the 
 | 2026-11-07 | Repo setup: `.gitignore`, `.env.example` files, `render.yaml`, `frontend/vercel.json` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 | 2026-11-07 | Backend skeleton: `backend/app/config.py`, `backend/app/main.py` (`/health`), `backend/Dockerfile`, `backend/tests/test_health.py` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 | 2026-11-07 | Frontend setup: Tailwind, shadcn/ui init, `frontend/eslint.config.js` (page rules), `frontend/AGENTS.md`, `src/api/client.ts` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
+| 2026-11-07 | Database: `supabase/schema.sql`, `supabase/policies.sql`, `backend/app/db.py` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
+| 2026-11-07 | Demo data: `backend/scripts/seed.py`, `tools/make_logo.py` (fictional logo); RLS check `backend/scripts/check_rls.py` | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
+| 2026-11-07 | `docs/decisions.md` (first draft) | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
 
 ## AI inside the product
 
