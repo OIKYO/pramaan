@@ -19,7 +19,7 @@ const columns: Column<AuditEntry>[] = [
     shrink: true,
     cell: (e) => <ToneBadge tone={e.action === "ai_call" ? "warning" : "neutral"}>{e.action.replaceAll("_", " ")}</ToneBadge>,
   },
-  { header: "Details", cell: (e) => <span className="break-words text-muted-text">{summary(e.details)}</span> },
+  { header: "Details", cell: (e) => <span className="wrap-break-word text-muted-text">{summary(e.details)}</span> },
 ];
 
 /** Every status change and AI call, newest first. */

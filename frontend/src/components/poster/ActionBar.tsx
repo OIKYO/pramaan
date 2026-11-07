@@ -27,7 +27,7 @@ export function ActionBar({ poster, role }: { poster: PosterDetail; role: Role }
 
   return (
     <div className="flex flex-col gap-2 max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-30 max-lg:border-t max-lg:border-line max-lg:bg-surface max-lg:px-4 max-lg:py-3 lg:items-end">
-      <div className="flex flex-wrap gap-2 max-lg:[&>*]:flex-1">
+      <div className="flex flex-wrap gap-2 max-lg:*:flex-1">
         {actions.includes("send_back") && (
           <Button variant="secondary" onClick={() => setSendingBack(true)}>
             Send back
