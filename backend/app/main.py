@@ -11,6 +11,8 @@ from rules.registry import load_rule_pack
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 settings = get_settings()
+# Shown in the Render log, so a missing frontend origin is easy to spot.
+logging.getLogger("pramaan").info("CORS allows: %s", ", ".join(settings.allowed_origins) or "nothing")
 load_rule_pack()  # fail at startup, not on the first poster, if the rule pack and code disagree
 
 app = FastAPI(title="Pramaan API", version="0.2.0",

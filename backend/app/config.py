@@ -41,6 +41,20 @@ class Settings:
     groq_model: str
 
 
+def parse_origins(value: str) -> tuple[str, ...]:
+    """Comma-separated origins for CORS. Forgives the usual slips: spaces, quotes, a trailing
+    slash, or a bare domain like `pramaanapp.vercel.app` (taken as https)."""
+    origins = []
+    for item in value.split(","):
+        origin = item.strip().strip('"').strip("'").rstrip("/")
+        if not origin:
+            continue
+        if "://" not in origin:
+            origin = "https://" + origin
+        origins.append(origin)
+    return tuple(origins)
+
+
 @lru_cache
 def get_settings() -> Settings:
     load_env_file(BACKEND_DIR / ".env")
@@ -54,7 +68,7 @@ def get_settings() -> Settings:
         gemini_api_key=os.getenv("GEMINI_API_KEY", ""),
         gemini_model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash"),
         reader_mode=reader_mode,
-        allowed_origins=tuple(o.strip().rstrip("/") for o in origins.split(",") if o.strip()),
+        allowed_origins=parse_origins(origins),
         tesseract_cmd=os.getenv("TESSERACT_CMD", ""),
         demo_password=os.getenv("DEMO_PASSWORD", ""),
         groq_api_key=os.getenv("GROQ_API_KEY", ""),
