@@ -1,0 +1,88 @@
+{
+  "version": "2026.11-r2",
+  "source": "CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024, plus Northfield Academy's brand kit",
+  "rules": [
+    {
+      "id": "CCPA-01", "name": "No banned claims", "category": "claims", "kind": "code", "severity": "block",
+      "reason": "The CCPA guidelines bar coaching ads from promising selection, ranks or jobs. No institute can guarantee a result."
+    },
+    {
+      "id": "CCPA-02", "name": "Every topper shown has consent on file", "category": "claims", "kind": "code", "severity": "block",
+      "reason": "A student's name, photo or rank can be used in an ad only with their written consent, taken after the result."
+    },
+    {
+      "id": "CCPA-03", "name": "Consent is valid", "category": "claims", "kind": "code", "severity": "block",
+      "reason": "Consent must be given after the result, cover the channel the poster is for, still be in date, and be signed by a guardian if the student is a minor."
+    },
+    {
+      "id": "CCPA-04", "name": "Rank matches the register", "category": "claims", "kind": "code", "severity": "block",
+      "reason": "Showing a different rank from the one the student earned misleads students and parents."
+    },
+    {
+      "id": "CCPA-05", "name": "Required details next to each topper", "category": "claims", "kind": "code", "severity": "block",
+      "reason": "Next to each successful student, the ad must show their rank, the course they took, its duration and whether it was paid or free, so readers know what actually produced the result."
+    },
+    {
+      "id": "CCPA-06", "name": "Results figures match approved stats", "category": "claims", "kind": "code", "severity": "block",
+      "reason": "Success figures must be true and verifiable. Only figures head office has approved can be used."
+    },
+    {
+      "id": "FACT-01", "name": "Course names and durations", "category": "facts", "kind": "code", "severity": "block",
+      "reason": "Courses must be named and timed exactly as head office approved them."
+    },
+    {
+      "id": "FACT-02", "name": "Fees", "category": "facts", "kind": "code", "severity": "block",
+      "reason": "A fee on a poster is an offer. It must match the approved fee."
+    },
+    {
+      "id": "FACT-03", "name": "Branch contact details", "category": "facts", "kind": "code", "severity": "block",
+      "reason": "A wrong number or address sends enquiries to the wrong place, or to someone who isn't us."
+    },
+    {
+      "id": "FACT-04", "name": "No expired facts", "category": "facts", "kind": "code", "severity": "warn",
+      "reason": "Fees, courses and results figures are approved for a period. After that they must be re-approved before use."
+    },
+    {
+      "id": "BRAND-01", "name": "Logo present", "category": "brand", "kind": "code", "severity": "warn",
+      "reason": "Every poster carries the Northfield Academy logo, so readers know who published it."
+    },
+    {
+      "id": "BRAND-02", "name": "Colours within palette", "category": "brand", "kind": "code", "severity": "warn",
+      "reason": "Large areas of off-brand colour make a branch poster look unofficial."
+    },
+    {
+      "id": "BRAND-03", "name": "Registered name and helpline present", "category": "brand", "kind": "code", "severity": "warn",
+      "reason": "The registered company name and the helpline tell readers who is responsible for the ad and how to reach head office."
+    },
+    {
+      "id": "BRAND-04", "name": "Tone of voice", "category": "brand", "kind": "ai", "severity": "warn",
+      "reason": "Our tone is warm and factual. The AI flags wording that pressures or frightens; a person decides."
+    },
+    {
+      "id": "ACC-01", "name": "Text contrast at least 4.5:1", "category": "access", "kind": "code", "severity": "warn",
+      "reason": "Low-contrast text is hard to read on phones in sunlight and for people with low vision. 4.5:1 is the WCAG minimum for normal text."
+    },
+    {
+      "id": "ACC-02", "name": "Alt text on social posts", "category": "access", "kind": "code", "severity": "warn",
+      "reason": "Screen-reader users need a text description of image posts on Instagram and WhatsApp."
+    },
+    {
+      "id": "AI-01", "name": "Disguised guarantees", "category": "claims", "kind": "ai", "severity": "warn",
+      "reason": "Phrases like 'selection pakka' or 'seat confirmed' promise a result without saying 'guarantee'. The AI flags them; a person decides."
+    }
+  ],
+  "reader_checks": [
+    {
+      "id": "READ-01", "name": "Poster could be read", "category": "reader", "kind": "reader", "severity": "needs_human",
+      "reason": "If the reader couldn't read the poster, nothing on it was checked. A person must look at it."
+    },
+    {
+      "id": "READ-02", "name": "Key numbers read twice", "category": "reader", "kind": "reader", "severity": "needs_human",
+      "reason": "Ranks, fees, phone numbers and figures are read by two separate readers. When they disagree, a person confirms the right number."
+    },
+    {
+      "id": "READ-03", "name": "People shown are identified", "category": "reader", "kind": "reader", "severity": "needs_human",
+      "reason": "Pramaan doesn't recognise faces. Staff tag the students shown; anyone untagged or uncertain goes to a reviewer."
+    }
+  ]
+}
