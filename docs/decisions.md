@@ -56,6 +56,19 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
   OpenCV's random seed is fixed before every k-means, so results are repeatable.
 - **Test posters use the Nirmala UI font** (ships with Windows), which covers Latin, ₹ and Devanagari. This Pillow build has no text shaping (no libraqm), so Devanagari conjuncts and Bengali vowel signs render wrongly; the Hindi test poster uses phrases without them ("नया बैच शुरू", "सीट तय है!"). Bengali is covered by unit tests instead.
 
+## API and status machine
+
+- **The status machine is pure functions (`app/state.py`), separate from the routes.** Every rule in the brief (no approving your own poster, no approval with open blocks, overrides only by head office with a reason) is unit-tested without a database, and the routes can't skip a rule because they only apply the transition `state.py` returns.
+- **The backend checks visibility itself.** It uses the secret key, which bypasses row-level security, so `state.can_view()` repeats the policy rule (head office: all; regional: own region; staff: own branch). A poster you can't see answers 404, not 403, so it doesn't reveal that it exists.
+- **Login tokens are verified with `supabase.auth.get_claims()`,** which checks the token's ES256 signature against the project's published keys. No call to Supabase per request; forged or expired tokens are refused.
+- **The checks run inside the upload request** (about 20 s live, under 3 s with a cached reading). Simple, and the upload page shows a progress state. If the checks crash, the version is still marked checked, with a `READ-01` finding for a person, so a poster can never get stuck in `draft`.
+- **The pipeline finishing writes a `checked` row to `reviews`,** so every transition is in the history, as the brief requires. The `reviews.action` check constraint gained `checked` for this (applied to the live database too).
+- **Sending back needs a comment.** Without one the branch doesn't know what to fix.
+- **A reviewer's note when confirming a reading is stored in `findings.override_reason`,** the same column as an override reason (the table has one note column), and also in `reviews.comment` so it shows in the history.
+- **Gemini gets one more try after a 503** ("high demand, try again later"), 3 s later, before the Groq backup takes over. On 7 Nov 2026 Gemini 3.5 Flash returned 503 on most live calls; Groq carried every read.
+- **Contrast is measured only where a box holds text.** In live mode a reader's box sometimes slips onto plain background; k=2 then splits one flat colour into two and reports 1:1 "contrast", a false warning (seen on the clean poster read by Groq). A box is measured only if its second cluster covers at least 2% of the box and is at least ΔE 5 from the first. Genuinely faint text still counts: the pale test disclaimer has its text cluster at 19.5% of the box and ΔE 13.7.
+- **`scripts/e2e_flow.py` runs the whole Round 2 flow over HTTP as the demo users** (25 steps, including the forbidden moves). Point it at the deployed API before a demo.
+
 ## Demo data
 
 - **Fictional phone numbers start with `+91 1`.** India doesn't give numbers in that range to subscribers, so no demo number can belong to a real person.
