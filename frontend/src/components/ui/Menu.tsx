@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import { ChevronRight, type LucideIcon } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -9,16 +9,42 @@ export interface MenuItem {
   icon?: LucideIcon;
   danger?: boolean;
   disabled?: boolean;
-  /** Shows a tick: for picking one of a few options, like the theme. */
+  /** Shows a dot: for picking one of a few options, like the theme. */
   checked?: boolean;
+}
+
+/** A row that opens a second menu beside it, e.g. Theme → Light, Midnight, Match this device. */
+export interface SubMenu {
+  label: string;
+  icon?: LucideIcon;
+  /** Shown on the right of the row: the current choice. */
+  value?: string;
+  items: MenuItem[];
 }
 
 interface MenuProps {
   trigger: ReactNode;
-  items: (MenuItem | "separator")[];
+  items: (MenuItem | SubMenu | "separator")[];
   label?: string;
   align?: "start" | "end";
   side?: "top" | "bottom";
+}
+
+const PANEL = "z-50 min-w-52 rounded-md border border-line bg-surface p-1 text-sm shadow-overlay";
+const ROW = "flex h-8 items-center gap-2 rounded-sm px-2 outline-none data-disabled:opacity-50 data-highlighted:bg-surface-sunken";
+
+function Row({ item }: { item: MenuItem }) {
+  return (
+    <DropdownMenu.Item
+      disabled={item.disabled}
+      onSelect={item.onSelect}
+      className={cn(ROW, item.danger ? "text-blocked" : "text-ink-strong")}
+    >
+      {item.icon && <item.icon className={cn("size-4", item.danger ? "text-blocked" : "text-muted-text")} aria-hidden />}
+      <span className="flex-1">{item.label}</span>
+      {item.checked && <span aria-label="current" className="size-1.5 rounded-full bg-accent" />}
+    </DropdownMenu.Item>
+  );
 }
 
 /** A dropdown of actions for a row or the account. Arrow keys move, Enter picks, Esc closes. */
@@ -27,32 +53,29 @@ export function Menu({ trigger, items, label, align = "end", side = "bottom" }: 
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>{trigger}</DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content
-          align={align}
-          side={side}
-          sideOffset={6}
-          className="z-50 min-w-52 rounded-md border border-line bg-surface p-1 text-sm shadow-overlay"
-        >
-          {label && <DropdownMenu.Label className="px-2 py-1.5 text-xs text-muted-text">{label}</DropdownMenu.Label>}
-          {items.map((item, i) =>
-            item === "separator" ? (
-              <DropdownMenu.Separator key={`separator-${i}`} className="my-1 h-px bg-line" />
-            ) : (
-              <DropdownMenu.Item
-                key={item.label}
-                disabled={item.disabled}
-                onSelect={item.onSelect}
-                className={cn(
-                  "flex h-8 items-center gap-2 rounded-sm px-2 outline-none data-disabled:opacity-50 data-highlighted:bg-surface-sunken",
-                  item.danger ? "text-blocked" : "text-ink-strong",
-                )}
-              >
-                {item.icon && <item.icon className={cn("size-4", item.danger ? "text-blocked" : "text-muted-text")} aria-hidden />}
-                <span className="flex-1">{item.label}</span>
-                {item.checked && <span aria-label="current" className="size-1.5 rounded-full bg-accent" />}
-              </DropdownMenu.Item>
-            ),
-          )}
+        <DropdownMenu.Content align={align} side={side} sideOffset={6} className={PANEL}>
+          {label && <DropdownMenu.Label className="truncate px-2 py-1.5 text-xs text-muted-text">{label}</DropdownMenu.Label>}
+          {items.map((item, i) => {
+            if (item === "separator") return <DropdownMenu.Separator key={`separator-${i}`} className="my-1 h-px bg-line" />;
+            if ("items" in item) {
+              return (
+                <DropdownMenu.Sub key={item.label}>
+                  <DropdownMenu.SubTrigger className={cn(ROW, "text-ink-strong data-[state=open]:bg-surface-sunken")}>
+                    {item.icon && <item.icon className="size-4 text-muted-text" aria-hidden />}
+                    <span className="flex-1">{item.label}</span>
+                    {item.value && <span className="text-xs text-muted-text">{item.value}</span>}
+                    <ChevronRight className="size-4 text-muted-text" aria-hidden />
+                  </DropdownMenu.SubTrigger>
+                  <DropdownMenu.Portal>
+                    <DropdownMenu.SubContent sideOffset={6} className={cn(PANEL, "min-w-44")}>
+                      {item.items.map((sub) => <Row key={sub.label} item={sub} />)}
+                    </DropdownMenu.SubContent>
+                  </DropdownMenu.Portal>
+                </DropdownMenu.Sub>
+              );
+            }
+            return <Row key={item.label} item={item} />;
+          })}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

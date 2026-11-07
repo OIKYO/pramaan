@@ -38,10 +38,10 @@ export function ImportPreviewView({ preview, fileName, pending, onConfirm, onRes
           <ul className="flex flex-col gap-1">
             {preview.issues.map((issue, i) => (
               <li key={i} className="flex gap-3">
-                <span className="w-20 shrink-0 font-mono text-xs text-muted-text">
+                <span className="w-20 shrink-0 text-xs text-muted-text">
                   {issue.row > 0 ? `line ${issue.row}` : "file"}
                 </span>
-                <span className="w-32 shrink-0 font-mono text-xs text-ink-strong">{issue.column ?? ""}</span>
+                <span className="w-32 shrink-0 text-xs text-ink-strong">{issue.column ?? ""}</span>
                 <span className="text-ink">{issue.message}</span>
               </li>
             ))}
@@ -55,13 +55,13 @@ export function ImportPreviewView({ preview, fileName, pending, onConfirm, onRes
               <tr className="border-b border-line text-left text-xs text-muted-text">
                 <th className="h-8 px-4 font-medium">Line</th>
                 <th className="h-8 px-4 font-medium">Change</th>
-                {preview.columns.map((c) => <th key={c} className="h-8 px-4 font-mono font-medium whitespace-nowrap">{c}</th>)}
+                {preview.columns.map((c) => <th key={c} className="h-8 px-4 font-medium whitespace-nowrap">{c}</th>)}
               </tr>
             </thead>
             <tbody>
               {preview.rows.slice(0, SHOWN).map((row) => (
                 <tr key={row.row} className="border-b border-line last:border-b-0">
-                  <td className="px-4 py-2 font-mono text-xs text-muted-text">{row.row}</td>
+                  <td className="px-4 py-2 text-xs text-muted-text">{row.row}</td>
                   <td className="px-4 py-2">{row.action === "create" ? <ToneBadge tone="passed">New</ToneBadge> : <ToneBadge tone="info">Update</ToneBadge>}</td>
                   {preview.columns.map((c) => <td key={c} className="max-w-56 truncate px-4 py-2 whitespace-nowrap text-ink">{row.values[c]}</td>)}
                 </tr>

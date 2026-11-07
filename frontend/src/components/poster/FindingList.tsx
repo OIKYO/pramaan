@@ -87,7 +87,7 @@ export function FindingList(props: FindingListProps) {
             <Reveal className="grid gap-1.5 sm:grid-cols-2">
               {passes.map((f) => (
                 <p key={f.id} className="flex items-baseline gap-2 rounded-sm bg-passed-soft px-3 py-2 text-sm text-ink">
-                  <span className="font-mono text-xs text-passed">{f.rule_id}</span>
+                  <span className="text-xs text-passed">{f.rule_id}</span>
                   {ruleNames[f.rule_id] ?? ""}
                 </p>
               ))}

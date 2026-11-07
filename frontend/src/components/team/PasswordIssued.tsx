@@ -18,9 +18,9 @@ export function PasswordIssued({ issued, onClose }: { issued: MemberCreated | nu
         <div className="flex flex-col gap-4">
           <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-sm">
             <dt className="text-muted-text">Sign in at</dt>
-            <dd className="font-mono text-ink-strong">{signIn}</dd>
+            <dd className="text-ink-strong">{signIn}</dd>
             <dt className="text-muted-text">Email</dt>
-            <dd className="font-mono break-all text-ink-strong">{issued.member.email}</dd>
+            <dd className="break-all text-ink-strong">{issued.member.email}</dd>
           </dl>
           <CopyField label="Temporary password" value={issued.temporary_password} />
           <div className="flex justify-end">

@@ -15,7 +15,7 @@ export function BranchTable({ branches, regions, onEdit }: { branches: Branch[];
       ),
     },
     { header: "Region", cell: (b) => regions.find((r) => r.id === b.region_id)?.name ?? "" },
-    { header: "Phone on posters", cell: (b) => <span className="font-mono text-xs text-ink-strong">{b.phone}</span> },
+    { header: "Phone on posters", cell: (b) => <span className="text-xs text-ink-strong">{b.phone}</span> },
     { header: "Address", cell: (b) => <span className="text-muted-text">{b.address}</span> },
     ...(onEdit
       ? [{ header: "Edit", align: "end" as const, shrink: true, cell: (b: Branch) => (

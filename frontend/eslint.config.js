@@ -41,6 +41,29 @@ const layoutOnly = {
   },
 };
 
+/** No monospace type anywhere: one family, with tabular figures for numbers. */
+const noMonospace = {
+  meta: { type: "problem", messages: { mono: "Pramaan uses one typeface. Drop “{{name}}”; use tabular-nums for numbers." } },
+  create(context) {
+    const check = (node, text) => {
+      for (const name of text.split(/s+/).filter(Boolean)) {
+        if (/(^|:)font-(mono|code)$/.test(name)) context.report({ node, messageId: "mono", data: { name } });
+      }
+    };
+    return {
+      "JSXAttribute[name.name='className'] Literal"(node) {
+        if (typeof node.value === "string") check(node, node.value);
+      },
+      "JSXAttribute[name.name='className'] TemplateElement"(node) {
+        check(node, node.value.raw);
+      },
+      "CallExpression[callee.name='cn'] Literal"(node) {
+        if (typeof node.value === "string") check(node, node.value);
+      },
+    };
+  },
+};
+
 export default defineConfig([
   globalIgnores(["dist", "src/api/schema.d.ts"]),
   js.configs.recommended,
@@ -49,6 +72,11 @@ export default defineConfig([
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: { globals: globals.browser },
+  },
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    plugins: { type: { rules: { "no-monospace": noMonospace } } },
+    rules: { "type/no-monospace": "error" },
   },
   {
     // Motion is allowed only where animations are defined.

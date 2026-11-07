@@ -33,7 +33,7 @@ export function PosterWorkspace({ title, version, ruleNames, actions }: PosterWo
       <div className="flex flex-col gap-2 lg:sticky lg:top-6">
         <PosterCanvas imageUrl={version.image_url} title={title} problems={problems} selected={selected} onSelect={pickOnPoster} />
         <p className="text-xs text-muted-text">
-          Version {version.version} · read by <span className="font-mono">{version.reader_model ?? "nobody (the reader failed)"}</span>
+          Version {version.version} · read by {version.reader_model ?? "nobody (the reader failed)"}
         </p>
       </div>
       <div className="flex min-w-0 flex-col gap-5">

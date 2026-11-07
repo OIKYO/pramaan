@@ -30,11 +30,11 @@ export function ColumnGuide({ spec }: { spec: ImportSpec }) {
             {spec.columns.map((c) => (
               <tr key={c.name} className="border-b border-line last:border-b-0">
                 <td className="px-4 py-2 align-top whitespace-nowrap">
-                  <code className="font-mono text-xs text-ink-strong">{c.name}</code>
+                  <code className="text-xs text-ink-strong">{c.name}</code>
                   {c.required && <span className="ml-1.5 text-xs text-blocked">required</span>}
                 </td>
                 <td className="px-4 py-2 align-top text-muted-text">{c.help || "—"}</td>
-                <td className="px-4 py-2 align-top font-mono text-xs whitespace-nowrap text-ink">{c.example || "—"}</td>
+                <td className="px-4 py-2 align-top text-xs whitespace-nowrap text-ink">{c.example || "—"}</td>
               </tr>
             ))}
           </tbody>

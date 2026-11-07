@@ -1,12 +1,12 @@
-import { ChevronsUpDown, LogOut, Monitor, Moon, Settings, Sun } from "lucide-react";
+import { Building2, ChevronsUpDown, LogOut, Monitor, Moon, Palette, Settings, Sun } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useProfile, useSession } from "@/api/hooks/useSession";
 import { Avatar } from "@/components/ui/Avatar";
 import { Menu } from "@/components/ui/Menu";
 import { ROLE_LABEL } from "@/lib/labels";
-import { useTheme } from "@/lib/theme";
+import { THEME_LABEL, useTheme } from "@/lib/theme";
 
-/** Who is signed in. Opens settings, the theme choice and sign out. */
+/** Who is signed in. Opens settings, the organisation, the theme and sign out. */
 export function AccountMenu({ side = "top" }: { side?: "top" | "bottom" }) {
   const profile = useProfile();
   const { signOut } = useSession();
@@ -29,10 +29,17 @@ export function AccountMenu({ side = "top" }: { side?: "top" | "bottom" }) {
       }
       items={[
         { label: "Settings", icon: Settings, onSelect: () => navigate("/settings") },
-        "separator",
-        { label: "Light theme", icon: Sun, checked: choice === "light", onSelect: () => setTheme("light") },
-        { label: "Midnight theme", icon: Moon, checked: choice === "dark", onSelect: () => setTheme("dark") },
-        { label: "Match this device", icon: Monitor, checked: choice === "system", onSelect: () => setTheme("system") },
+        { label: "Organisation", icon: Building2, onSelect: () => navigate("/settings#organisation") },
+        {
+          label: "Theme",
+          icon: Palette,
+          value: THEME_LABEL[choice],
+          items: [
+            { label: THEME_LABEL.light, icon: Sun, checked: choice === "light", onSelect: () => setTheme("light") },
+            { label: THEME_LABEL.dark, icon: Moon, checked: choice === "dark", onSelect: () => setTheme("dark") },
+            { label: THEME_LABEL.system, icon: Monitor, checked: choice === "system", onSelect: () => setTheme("system") },
+          ],
+        },
         "separator",
         { label: "Sign out", icon: LogOut, onSelect: () => void signOut() },
       ]}

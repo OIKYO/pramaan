@@ -1,7 +1,9 @@
 import { MotionConfig } from "motion/react";
 import type { ReactNode } from "react";
+import { useReduceMotion } from "@/lib/preferences";
 
-/** Respects the person's "reduce motion" setting for every animation in the app. */
+/** Respects "reduce motion", from the device or from Settings, for every animation in the app. */
 export function MotionProvider({ children }: { children: ReactNode }) {
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+  const [reduce] = useReduceMotion();
+  return <MotionConfig reducedMotion={reduce ? "always" : "user"}>{children}</MotionConfig>;
 }

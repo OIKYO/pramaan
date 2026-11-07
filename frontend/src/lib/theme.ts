@@ -9,6 +9,8 @@ import { swapTheme } from "./motion";
 export type ThemeChoice = "light" | "dark" | "system";
 export type Theme = "light" | "dark";
 
+export const THEME_LABEL: Record<ThemeChoice, string> = { light: "Light", dark: "Midnight", system: "Match device" };
+
 const KEY = "pramaan-theme";
 const dark = typeof window === "undefined" ? null : window.matchMedia("(prefers-color-scheme: dark)");
 const listeners = new Set<() => void>();

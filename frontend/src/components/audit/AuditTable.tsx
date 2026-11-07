@@ -14,7 +14,7 @@ function summary(details: Record<string, unknown>): string {
 }
 
 const columns: Column<AuditEntry>[] = [
-  { header: "When", shrink: true, cell: (e) => <span className="font-mono text-xs text-muted-text tabular-nums">{formatDateTime(e.created_at)}</span> },
+  { header: "When", shrink: true, cell: (e) => <span className="text-xs text-muted-text tabular-nums">{formatDateTime(e.created_at)}</span> },
   { header: "Who", shrink: true, cell: (e) => <span className="font-medium text-ink-strong">{e.actor_name ?? "Pramaan"}</span> },
   {
     header: "What",

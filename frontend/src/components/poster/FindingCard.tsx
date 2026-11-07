@@ -42,7 +42,7 @@ export function FindingCard({ problem, ruleName, selected, onSelect, canResolve,
         <FindingNumber number={number} severity={finding.severity} muted={!open} />
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <p className="flex flex-wrap gap-x-2 text-xs text-muted-text">
-            <span className="font-mono">{finding.rule_id}</span>
+            {finding.rule_id}
             <span>{ruleName}</span>
           </p>
           <h3 className="text-base leading-snug text-pretty">{finding.message}</h3>

@@ -44,7 +44,7 @@ export function SegmentedControl<T extends string>({ label, value, onChange, opt
         >
           {Icon && <Icon className="size-4" aria-hidden />}
           {!iconOnly && text}
-          {count !== undefined && <span className="font-mono text-xs text-muted-text tabular-nums">{count}</span>}
+          {count !== undefined && <span className="text-xs text-muted-text tabular-nums">{count}</span>}
         </RadioGroup.Item>
       ))}
     </RadioGroup.Root>

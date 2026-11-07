@@ -1,18 +1,20 @@
 /**
  * The only place animations are defined. Motion answers a person's action (switching the theme,
  * opening the passed checks, finding the problem they clicked); it is never decoration. No hover
- * lifts, no entrance fades on load, no looping effects. Only components/ui and lib/theme use this.
+ * lifts, no entrance fades on load, no looping effects. Motion itself is imported only here and in
+ * components/ui; other code calls these helpers.
  *
  * Durations mirror --duration-* in styles/tokens.css; change both together.
- * Everything here stops for people who ask their device to reduce motion.
+ * Everything here stops for people who ask their device, or Settings, to reduce motion.
  */
 import type { Transition } from "motion/react";
+import { reduceMotionHere } from "./preferences";
 
 export const durations = { fast: 0.12, base: 0.2, slow: 0.32 } as const;
 const ease: [number, number, number, number] = [0.2, 0, 0, 1];
 
 const reduceMotion = () =>
-  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  reduceMotionHere() || (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
 /** A panel that appears because the person asked for it (e.g. "Show passed checks"). */
 export const reveal = {

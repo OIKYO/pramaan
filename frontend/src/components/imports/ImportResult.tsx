@@ -23,7 +23,7 @@ export function ImportResult({ result, onAnother }: { result: ImportPreview; onA
           <div className="flex flex-col gap-2 rounded-md border border-warning-mark/50 bg-warning-soft/60 p-3">
             <p className="font-medium text-ink-strong">Temporary passwords: shown only now</p>
             <p className="text-muted-text">Send each person theirs privately. They choose their own the first time they sign in.</p>
-            <ul className="flex flex-col gap-1 font-mono text-xs">
+            <ul className="flex flex-col gap-1 text-xs">
               {credentials.map((c) => (
                 <li key={c.email} className="flex flex-wrap gap-x-4">
                   <span className="text-ink-strong">{c.email}</span>
