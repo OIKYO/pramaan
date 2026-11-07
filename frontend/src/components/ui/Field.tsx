@@ -1,0 +1,32 @@
+import { useId, type ReactElement, cloneElement, type ReactNode } from "react";
+import { Label } from "./label";
+
+interface FieldProps {
+  label: string;
+  hint?: ReactNode;
+  error?: string | null;
+  /** The control. Field gives it an id and links the hint or error to it. */
+  children: ReactElement<{ id?: string; "aria-describedby"?: string; "aria-invalid"?: boolean }>;
+}
+
+/** A labelled form control with an optional hint or error underneath. */
+export function Field({ label, hint, error, children }: FieldProps) {
+  const id = useId();
+  const noteId = `${id}-note`;
+  const note = error || hint;
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      {cloneElement(children, {
+        id,
+        "aria-describedby": note ? noteId : undefined,
+        "aria-invalid": error ? true : undefined,
+      })}
+      {note && (
+        <p id={noteId} className={error ? "text-sm text-blocked" : "text-sm text-muted-text"}>
+          {note}
+        </p>
+      )}
+    </div>
+  );
+}
