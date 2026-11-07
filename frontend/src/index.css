@@ -25,6 +25,7 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-on-accent: var(--on-accent);
+  --color-control-on: var(--control-on);
   --color-focus: var(--focus);
   --color-blocked: var(--blocked);
   --color-blocked-soft: var(--blocked-soft);

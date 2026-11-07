@@ -5,7 +5,7 @@
  * Light: cool greys, Prussian blue #14213D for headings and the primary button, orange #FCA311
  * for focus, selection and "needs you".
  * Midnight: onyx, with no blue anywhere. Neutral greys step up from the canvas, the primary button
- * is off-white, and the accent is a matte sand. Severity colours are matte too.
+ * is off-white, and the accent is a warm amber. Severity colours are matte.
  * Severity colours carry meaning in both: red blocks, amber warns, green passed, and "needs a
  * person" is blue in light and a neutral grey in midnight.
  *
@@ -31,6 +31,8 @@
   --accent-soft: #fff4dc;
   --on-accent: #000000;
   --focus: #14213d;
+  /* A switch that is on: a deeper amber, so it stands out from white (3:1 or more). */
+  --control-on: #c77c06;
 
   --blocked: #b8321b;
   --blocked-soft: #fbebe7;
@@ -65,10 +67,11 @@
   --primary: #ebeae7;
   --primary-hover: #ffffff;
   --on-primary: #0d0d0d;
-  --accent: #cdb892;
-  --accent-soft: #24201a;
+  --accent: #e9a23b;
+  --accent-soft: #2b2112;
   --on-accent: #0d0d0d;
-  --focus: #cdb892;
+  --focus: #e9a23b;
+  --control-on: #f0a73a;
 
   --blocked: #e07a67;
   --blocked-soft: #2a1714;
