@@ -41,10 +41,11 @@ Password for every account: `Northfield-demo-2026`. The login page also has one-
 
 ### Start your own organisation
 
-1. Open the app and choose **Create organisation**. You become its head office.
-2. **Overview** shows a setup checklist: brand kit (name, helpline, logo, colours), branches, courses and fees, toppers, results figures and your team.
-3. **Import data** takes the spreadsheets you already keep (CSV): download a template, upload, and see every change and every problem by line and column before anything is saved. Exports from each rulebook page use the same columns, so they import back.
-4. **Team** adds people with a role and a branch or region. Each gets a temporary password, shown once, and must choose their own at first sign-in. Head office can reset passwords and remove access.
+1. Open the app and choose **Create organisation**. Say what your organisation does: search 30 industries and 500-odd kinds of organisation, or type your own. You become its head office.
+2. Your industry suggests **rulebooks**, and Pramaan uses its words: a coaching institute keeps "Courses and fees" and a "Toppers register"; a restaurant keeps "Menu and prices". Head office adds or removes rulebooks on the **Rulebooks** page; checks in a rulebook you don't keep never run.
+3. **Overview** shows a setup checklist that follows your rulebooks: brand kit (name, helpline, logo, colours), branches, what you offer and its prices, the people posters may show, approved figures and your team.
+4. **Import data** takes the spreadsheets you already keep (CSV): download a template, upload, and see every change and every problem by line and column before anything is saved. Exports from each rulebook page use the same columns, so they import back.
+5. **Team** adds people with a role and a branch or region. Each gets a temporary password, shown once, and must choose their own at first sign-in. Head office can reset passwords and remove access.
 
 Each organisation sees only its own data: every table carries `org_id` and every row-level-security policy starts with "your organisation only".
 
