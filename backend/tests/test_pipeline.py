@@ -158,6 +158,40 @@ def test_a_failing_service_is_not_retried():
     assert reader._try("fake", broken, errors) == (None, 1)
 
 
+def test_a_temporary_outage_is_retried_once():
+    calls = iter([RuntimeError("503 UNAVAILABLE"), RuntimeError("503 UNAVAILABLE")])
+
+    def busy():
+        raise next(calls)
+
+    waits: list[float] = []
+    assert reader._try("fake", busy, [], wait=waits.append) == (None, 2)
+    assert waits == [reader.SERVICE_RETRY_SECONDS]
+
+    answers = iter([RuntimeError("503 UNAVAILABLE"), json.dumps({"text_blocks": []})])
+
+    def recovers():
+        answer = next(answers)
+        if isinstance(answer, Exception):
+            raise answer
+        return answer
+
+    reading, attempts = reader._try("fake", recovers, [], wait=lambda s: None)
+    assert reading is not None and attempts == 2
+
+
+def test_contrast_is_not_measured_where_the_box_holds_no_text():
+    import numpy as np
+
+    image = np.array(Image.open(POSTERS / "01-clean.png").convert("RGB"))
+    disclaimer = next(b for b in reader.read_fixture("01-clean").reading.text_blocks if b.text.startswith("Ranks"))
+    y0, x0, y1, x1 = disclaimer.box_2d
+    from pipeline import visual
+    assert visual.block_contrast(image, [y0 - 40, x0, y1 - 40, x1]) is None  # box slipped onto plain background
+    pale = np.array(Image.open(POSTERS / "09-low-contrast.png").convert("RGB"))
+    assert visual.block_contrast(pale, disclaimer.box_2d)[0] < 2  # faint text is still measured
+
+
 def test_prompt_names_only_the_two_ai_rules_and_includes_the_caption():
     prompt = reader.build_prompt(BRAND_KIT, "Selection pakka!")
     assert "AI-01" in prompt and "BRAND-04" in prompt and "Selection pakka!" in prompt

@@ -10,6 +10,7 @@
 import base64
 import json
 import logging
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -25,6 +26,8 @@ FIXTURES_DIR = BACKEND_DIR / "tests" / "fixtures" / "readings"
 AI_RULE_IDS = ("BRAND-04", "AI-01")
 PROMPT_VERSION = "2026-11-07"
 MAX_ATTEMPTS = 3  # the first try plus 2 retries
+TEMPORARY = ("503", "UNAVAILABLE")  # the service says "try again later"
+SERVICE_RETRY_SECONDS = 3
 
 
 class ReaderError(Exception):
@@ -121,13 +124,19 @@ def _groq(image: bytes, mime_type: str, prompt: str, settings: Settings) -> str:
     return response.json()["choices"][0]["message"]["content"]
 
 
-def _try(name: str, call, errors: list[str]) -> tuple[PosterReading | None, int]:
-    """Up to MAX_ATTEMPTS calls; retries only when the output doesn't validate."""
+def _try(name: str, call, errors: list[str], wait=time.sleep) -> tuple[PosterReading | None, int]:
+    """Up to MAX_ATTEMPTS calls. Invalid output is retried. A failing service is retried once, after a
+    short wait, only if it said the failure is temporary (503); otherwise the next reader takes over."""
+    retried_service = False
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             raw = call()
-        except Exception as exc:  # the service failed: retrying the same service won't help
+        except Exception as exc:
             errors.append(f"{name}: {type(exc).__name__}: {str(exc)[:200]}")
+            if not retried_service and any(mark in str(exc) for mark in TEMPORARY):
+                retried_service = True
+                wait(SERVICE_RETRY_SECONDS)
+                continue
             return None, attempt
         try:
             return PosterReading.model_validate_json(raw), attempt

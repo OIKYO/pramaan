@@ -17,7 +17,9 @@ PALETTE_IGNORE_BELOW = 0.05  # clusters under 5% of the area are ignored
 PALETTE_WIDTH = 200          # the palette is computed on a downscaled copy
 LOGO_SIZES = np.geomspace(0.05, 0.35, 16)  # logo width as a fraction of the poster width
 LOGO_SEARCH_WIDTH = 720      # the logo search runs on a copy this wide
-KMEANS_CRITERIA = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.5)
+TEXT_MIN_SHARE = 0.02    # the text cluster must cover at least 2% of its box...
+TEXT_MIN_DELTA_E = 5     # ...and differ visibly from the background, or there's no text to measure
+KMEANS_CRITERIA =(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.5)
 SEED = 20261107
 
 
@@ -97,14 +99,22 @@ def contrast_ratio(a, b) -> float:
 
 
 def block_contrast(img: np.ndarray, box_2d: list[int]) -> tuple[float, str, str] | None:
-    """k-means with k=2 on the pixels in a text box: the larger cluster is the background."""
+    """k-means with k=2 on the pixels in a text box: the larger cluster is the background.
+
+    Returns None when the box holds no text to measure: the reader's box missed the text and
+    landed on plain background, which k=2 would otherwise report as 1:1 "contrast".
+    """
     left, top, right, bottom = to_pixels(box_2d, img.shape[1], img.shape[0])
     crop = img[top:bottom, left:right]
     if crop.shape[0] < 4 or crop.shape[1] < 4:
         return None
     labels, centers = _kmeans(crop.reshape(-1, 3), 2)
     counts = np.bincount(labels, minlength=2)
-    bg, fg = (centers[0], centers[1]) if counts[0] >= counts[1] else (centers[1], centers[0])
+    bg_i, fg_i = (0, 1) if counts[0] >= counts[1] else (1, 0)
+    lab = rgb_to_lab(centers)
+    if counts[fg_i] / counts.sum() < TEXT_MIN_SHARE or np.linalg.norm(lab[0] - lab[1]) < TEXT_MIN_DELTA_E:
+        return None
+    bg, fg = centers[bg_i], centers[fg_i]
     return round(contrast_ratio(fg, bg), 2), rgb_to_hex(fg), rgb_to_hex(bg)
 
 
