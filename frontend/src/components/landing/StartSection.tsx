@@ -7,7 +7,7 @@ const SWATCHES = ["bg-ink-strong", "bg-accent", "bg-passed", "bg-surface-sunken"
 /** Signing up, and the three things a new organisation sets up first. */
 export function StartSection() {
   return (
-    <section id="start" className="grid scroll-mt-20 items-center gap-12 border-x border-b border-line px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <section id="start" className="grid scroll-mt-20 items-center gap-12 px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:px-12">
       <div className="flex flex-col items-start gap-4">
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Start for free</h2>
         <p className="max-w-md text-pretty text-muted-text">

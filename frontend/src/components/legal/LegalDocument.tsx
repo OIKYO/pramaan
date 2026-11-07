@@ -1,10 +1,10 @@
 import { Link } from "react-router";
 import type { LegalDoc } from "./legalText";
 
-/** One legal page: a title, when it last changed, and short sections, between the page rails. */
+/** One legal page: a title, when it last changed, and short sections. */
 export function LegalDocument({ doc }: { doc: LegalDoc }) {
   return (
-    <article className="flex flex-1 flex-col border-x border-line px-5 py-16 sm:px-16">
+    <article className="flex flex-1 flex-col px-5 py-16 sm:px-8 lg:px-12">
       <div className="flex max-w-2xl flex-col gap-10">
         <header className="flex flex-col gap-2">
           <Link to="/" className="text-sm text-muted-text hover:text-ink-strong">Pramaan</Link>

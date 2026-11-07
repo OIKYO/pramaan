@@ -27,8 +27,8 @@ const external = (to: string) => to.startsWith("http");
 export function LandingFooter() {
   return (
     <footer className="border-t border-line">
-      <div className="mx-auto max-w-6xl sm:px-8">
-        <div className="grid gap-10 border-x border-line px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,1.2fr)_repeat(4,minmax(0,1fr))]">
+      <div>
+        <div className="grid gap-10 px-5 py-14 sm:px-8 md:grid-cols-[minmax(0,2fr)_repeat(4,minmax(0,1fr))] lg:px-12">
           <BrandLogo className="w-28 text-ink-strong" />
           {COLUMNS.map((column) => (
             <div key={column.title} className="flex flex-col gap-3">
@@ -47,7 +47,7 @@ export function LandingFooter() {
             </div>
           ))}
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-x border-t border-line px-5 py-5 text-xs text-muted-text sm:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-5 py-5 text-xs text-muted-text sm:px-8 lg:px-12">
           <span>© 2026 Pramaan. Built for CodeNexus India 2026.</span>
           <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-1">
             {LEGAL.map((l) => <Link key={l.to} to={l.to} className="hover:text-ink-strong">{l.label}</Link>)}
