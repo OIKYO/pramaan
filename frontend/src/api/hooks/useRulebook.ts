@@ -4,7 +4,7 @@
 import { useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { api, postForm } from "../client";
 import { supabase } from "../supabase";
-import type { Branch, BrandKit, Course, ResultStat, RulePack, Topper } from "../types";
+import type { BrandKit, Course, ResultStat, RulePack, Topper } from "../types";
 import { keys } from "./keys";
 import { restore, snapshot } from "./optimistic";
 
@@ -52,20 +52,32 @@ const removeRow = <T extends { id: string }>(list: T[], id: string) => list.filt
 
 // ---------------------------------------------------------------- brand kit
 
+/** Your organisation's brand kit (row-level security returns only yours). */
 export const useBrandKit = () =>
   useQuery({
     queryKey: keys.brandKit,
-    queryFn: () => rows<BrandKit>(supabase.from("brand_kit").select("*").eq("id", 1).single()),
+    queryFn: () => rows<BrandKit>(supabase.from("brand_kit").select("*").single()),
   });
 
 export const useSaveBrandKit = () =>
   useSave(
     keys.brandKit,
-    (kit: Partial<BrandKit>) => rows(supabase.from("brand_kit").update(kit).eq("id", 1).select("id").single()),
+    ({ org_id, ...kit }: Partial<BrandKit> & { org_id: string }) =>
+      rows(supabase.from("brand_kit").update(kit).eq("org_id", org_id).select("org_id").single()),
     (current: BrandKit, kit) => ({ ...current, ...kit, updated_at: new Date().toISOString() }),
   );
 
 export const logoUrl = (path: string) => supabase.storage.from("brand").getPublicUrl(path).data.publicUrl;
+
+/** Upload a new logo into your organisation's folder and point the brand kit at it. */
+export const useUploadLogo = () =>
+  useSave(keys.brandKit, async ({ orgId, file }: { orgId: string; file: File }) => {
+    const ext = file.name.split(".").pop()?.toLowerCase() || "png";
+    const path = `${orgId}/logo-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("brand").upload(path, file, { contentType: file.type, upsert: true });
+    if (error) throw new Error(`The logo wasn't uploaded: ${error.message}`);
+    return rows(supabase.from("brand_kit").update({ logo_path: path }).eq("org_id", orgId).select("org_id"));
+  });
 
 // ---------------------------------------------------------------- courses and results figures
 
@@ -145,7 +157,7 @@ export const useUploadConsent = () =>
 export const useConsentLink = () =>
   useMutation({ mutationFn: (topperId: string) => api<{ url: string; expires_in: number }>(`/toppers/${topperId}/consent-url`) });
 
-// ---------------------------------------------------------------- rules and branches
+// ---------------------------------------------------------------- rules
 
 export const useRules = () => useQuery({ queryKey: keys.rules, queryFn: () => api<RulePack>("/rules") });
 
@@ -156,6 +168,3 @@ export const useToggleRule = () =>
       rows(supabase.from("rule_settings").upsert({ rule_id: ruleId, enabled }).select("rule_id")),
     (pack: RulePack, { ruleId, enabled }) => ({ ...pack, rules: pack.rules.map((r) => (r.id === ruleId ? { ...r, enabled } : r)) }),
   );
-
-export const useBranches = () =>
-  useQuery({ queryKey: keys.branches, queryFn: () => rows<Branch[]>(supabase.from("branches").select("*").order("name")) });

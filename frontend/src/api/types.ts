@@ -15,6 +15,12 @@ export type RulePack = Schemas["RulePackOut"];
 export type Rule = Schemas["RuleOut"];
 export type Insights = Schemas["Insights"];
 export type CountItem = Schemas["CountItem"];
+export type MemberOut = Schemas["MemberOut"];
+export type MemberCreated = Schemas["MemberCreated"];
+export type ImportPreview = Schemas["ImportPreview"];
+export type ImportSpec = Schemas["DatasetSpecOut"];
+export type Dataset = ImportSpec["dataset"];
+export type SignupRequest = Schemas["SignupRequest"];
 
 export type Role = "branch_staff" | "regional_manager" | "head_office";
 export type Channel = PosterDetail["channel"];
@@ -26,10 +32,27 @@ export type PosterAction = "new_version" | "submit" | "approve" | "send_back" | 
 // Read directly from Supabase (row-level security applies)
 export interface Profile {
   id: string;
+  org_id: string;
   full_name: string;
   role: Role;
   branch_id: string | null;
   region_id: string | null;
+  email: string | null;
+  /** True while they still have the temporary password head office gave them. */
+  needs_password_change: boolean;
+  deactivated_at: string | null;
+  created_at: string;
+}
+
+export interface Organisation {
+  id: string;
+  name: string;
+  created_at: string;
+}
+
+export interface Region {
+  id: string;
+  name: string;
 }
 
 export interface Branch {
@@ -60,7 +83,7 @@ export interface PosterListItem {
 }
 
 export interface BrandKit {
-  id: number;
+  org_id: string;
   registered_name: string;
   helpline: string;
   palette: string[];

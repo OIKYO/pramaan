@@ -1,6 +1,7 @@
 /** React Query cache keys, in one place so mutations invalidate the right lists. */
 export const keys = {
   profile: (userId: string) => ["profile", userId] as const,
+  organisation: ["organisation"] as const,
   posters: ["posters"] as const,
   posterList: (scope: string) => ["posters", "list", scope] as const,
   poster: (id: string) => ["posters", "detail", id] as const,
@@ -9,7 +10,10 @@ export const keys = {
   courses: ["rulebook", "courses"] as const,
   resultStats: ["rulebook", "result-stats"] as const,
   toppers: ["rulebook", "toppers"] as const,
-  branches: ["branches"] as const,
+  regions: ["organisation", "regions"] as const,
+  branches: ["organisation", "branches"] as const,
+  members: ["organisation", "members"] as const,
+  importSpecs: ["imports"] as const,
   insights: ["insights"] as const,
   audit: ["audit"] as const,
 };

@@ -5,6 +5,9 @@ import { supabase } from "../supabase";
 import type { Profile } from "../types";
 import { keys } from "./keys";
 
+export const PROFILE_COLUMNS =
+  "id, org_id, full_name, role, branch_id, region_id, email, needs_password_change, deactivated_at, created_at";
+
 interface SessionState {
   /** "loading" until Supabase has restored any saved session. */
   status: "loading" | "signed_out" | "signed_in";
@@ -16,6 +19,13 @@ interface SessionState {
 }
 
 const SessionContext = createContext<SessionState | null>(null);
+
+/** Sign-in errors in words people understand. */
+function friendly(message: string): string {
+  if (message === "Invalid login credentials") return "That email and password don't match an account.";
+  if (/banned/i.test(message)) return "Head office has removed your access to Pramaan. Ask them if you need it back.";
+  return message;
+}
 
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
@@ -32,13 +42,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     queryKey: keys.profile(userId ?? "none"),
     enabled: Boolean(userId),
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, full_name, role, branch_id, region_id")
-        .eq("id", userId!)
-        .maybeSingle();
+      const { data, error } = await supabase.from("profiles").select(PROFILE_COLUMNS).eq("id", userId!).maybeSingle();
       if (error) throw error;
-      if (!data) throw new Error("Your account has no Pramaan profile yet. Ask head office to set one up.");
+      if (!data) throw new Error("Your account has no Pramaan profile, or your access was removed. Ask head office.");
       return data as Profile;
     },
   });
@@ -49,8 +55,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     profile: profile.data ?? null,
     profileError: profile.error?.message ?? null,
     signIn: async (email, password) => {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw new Error(error.message === "Invalid login credentials" ? "That email and password don't match an account." : error.message);
+      const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
+      if (error) throw new Error(friendly(error.message));
     },
     signOut: async () => {
       await supabase.auth.signOut();

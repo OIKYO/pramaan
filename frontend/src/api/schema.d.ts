@@ -4,6 +4,174 @@
  */
 
 export interface paths {
+    "/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Signup
+         * @description Create an organisation and its first head office account. No sign-in needed.
+         */
+        post: operations["signup_signup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change Password */
+        post: operations["change_password_me_password_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Member */
+        post: operations["add_member_members_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{member_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Member */
+        patch: operations["update_member_members__member_id__patch"];
+        trace?: never;
+    };
+    "/members/{member_id}/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset Password
+         * @description A new temporary password, for someone who forgot theirs.
+         */
+        post: operations["reset_password_members__member_id__reset_password_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{member_id}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Deactivate
+         * @description Remove someone's access at once. Their posters and history stay, so the audit trail is intact.
+         */
+        post: operations["deactivate_members__member_id__deactivate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{member_id}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reactivate */
+        post: operations["reactivate_members__member_id__reactivate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Datasets
+         * @description What can be imported, each with its columns and a template.
+         */
+        get: operations["datasets_imports_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/imports/{dataset}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run Import
+         * @description Check a CSV and show what would change. With commit=true, save it (only if every row is valid).
+         */
+        post: operations["run_import_imports__dataset__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/posters": {
         parameters: {
             query?: never;
@@ -283,6 +451,16 @@ export interface components {
              */
             tagged_topper_ids: string[];
         };
+        /** Body_run_import_imports__dataset__post */
+        Body_run_import_imports__dataset__post: {
+            /** File */
+            file: string;
+            /**
+             * Commit
+             * @default false
+             */
+            commit: boolean;
+        };
         /** Body_upload_consent_toppers__topper_id__consent_post */
         Body_upload_consent_toppers__topper_id__consent_post: {
             /** File */
@@ -317,6 +495,27 @@ export interface components {
             label: string;
             /** Count */
             count: number;
+        };
+        /** DatasetSpecOut */
+        DatasetSpecOut: {
+            /**
+             * Dataset
+             * @enum {string}
+             */
+            dataset: "branches" | "courses" | "results" | "toppers" | "members";
+            /** Title */
+            title: string;
+            /** Description */
+            description: string;
+            /** Key */
+            key: string;
+            /** Columns */
+            columns: components["schemas"]["ImportColumn"][];
+            /**
+             * Template
+             * @description A CSV with the header and one example row
+             */
+            template: string;
         };
         /** FindingOut */
         FindingOut: {
@@ -369,6 +568,88 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** ImportColumn */
+        ImportColumn: {
+            /** Name */
+            name: string;
+            /** Required */
+            required: boolean;
+            /** Help */
+            help: string;
+            /** Example */
+            example: string;
+        };
+        /** ImportIssue */
+        ImportIssue: {
+            /**
+             * Row
+             * @description Line number in the file (the header is line 1)
+             */
+            row: number;
+            /** Column */
+            column?: string | null;
+            /** Message */
+            message: string;
+        };
+        /** ImportPreview */
+        ImportPreview: {
+            /**
+             * Dataset
+             * @enum {string}
+             */
+            dataset: "branches" | "courses" | "results" | "toppers" | "members";
+            /** Columns */
+            columns: string[];
+            /** Rows */
+            rows: components["schemas"]["ImportRow"][];
+            /** Issues */
+            issues: components["schemas"]["ImportIssue"][];
+            /**
+             * Committed
+             * @default false
+             */
+            committed: boolean;
+            /**
+             * Created
+             * @default 0
+             */
+            created: number;
+            /**
+             * Updated
+             * @default 0
+             */
+            updated: number;
+            /**
+             * Credentials
+             * @description For imported team members: email and temporary password, shown once
+             * @default []
+             */
+            credentials: {
+                [key: string]: string;
+            }[];
+        };
+        /** ImportRow */
+        ImportRow: {
+            /** Row */
+            row: number;
+            /**
+             * Key
+             * @description What identifies the row, e.g. the course name
+             */
+            key: string;
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "create" | "update" | "skip";
+            /**
+             * Values
+             * @description The row as read from the file
+             */
+            values: {
+                [key: string]: string;
+            };
+        };
         /** Insights */
         Insights: {
             /** Posters By Status */
@@ -385,6 +666,64 @@ export interface components {
             open_blocking: number;
             /** Ai Calls */
             ai_calls: number;
+        };
+        /** MemberCreate */
+        MemberCreate: {
+            /** Full Name */
+            full_name: string;
+            /** Email */
+            email: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "branch_staff" | "regional_manager" | "head_office";
+            /** Branch Id */
+            branch_id?: string | null;
+            /** Region Id */
+            region_id?: string | null;
+        };
+        /** MemberCreated */
+        MemberCreated: {
+            member: components["schemas"]["MemberOut"];
+            /**
+             * Temporary Password
+             * @description Shown once. The member chooses their own when they first sign in.
+             */
+            temporary_password: string;
+        };
+        /** MemberOut */
+        MemberOut: {
+            /** Id */
+            id: string;
+            /** Full Name */
+            full_name: string;
+            /** Email */
+            email: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "branch_staff" | "regional_manager" | "head_office";
+            /** Branch Id */
+            branch_id: string | null;
+            /** Region Id */
+            region_id: string | null;
+            /** Needs Password Change */
+            needs_password_change: boolean;
+            /** Deactivated At */
+            deactivated_at: string | null;
+        };
+        /** MemberUpdate */
+        MemberUpdate: {
+            /** Full Name */
+            full_name?: string | null;
+            /** Role */
+            role?: ("branch_staff" | "regional_manager" | "head_office") | null;
+            /** Branch Id */
+            branch_id?: string | null;
+            /** Region Id */
+            region_id?: string | null;
         };
         /** NoteRequest */
         NoteRequest: {
@@ -404,6 +743,14 @@ export interface components {
             raw_text: string;
             /** Value */
             value?: number | null;
+        };
+        /** PasswordChange */
+        PasswordChange: {
+            /**
+             * Password
+             * @description At least 8 characters
+             */
+            password: string;
         };
         /** Person */
         Person: {
@@ -629,10 +976,37 @@ export interface components {
             version: string;
             /** Source */
             source: string;
+            /** Categories */
+            categories: {
+                [key: string]: string;
+            };
             /** Rules */
             rules: components["schemas"]["RuleOut"][];
             /** Reader Checks */
             reader_checks: components["schemas"]["RuleDef"][];
+        };
+        /** SignupRequest */
+        SignupRequest: {
+            /** Organisation Name */
+            organisation_name: string;
+            /** Full Name */
+            full_name: string;
+            /** Email */
+            email: string;
+            /**
+             * Password
+             * @description At least 8 characters
+             */
+            password: string;
+        };
+        /** SignupResult */
+        SignupResult: {
+            /** Org Id */
+            org_id: string;
+            /** User Id */
+            user_id: string;
+            /** Email */
+            email: string;
         };
         /** TextBlock */
         TextBlock: {
@@ -720,6 +1094,311 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    signup_signup_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    change_password_me_password_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordChange"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_member_members_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberCreated"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_member_members__member_id__patch: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_password_members__member_id__reset_password_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberCreated"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    deactivate_members__member_id__deactivate_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reactivate_members__member_id__reactivate_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    datasets_imports_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DatasetSpecOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    run_import_imports__dataset__post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                dataset: "branches" | "courses" | "results" | "toppers" | "members";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_run_import_imports__dataset__post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportPreview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_poster_posters_post: {
         parameters: {
             query?: never;
