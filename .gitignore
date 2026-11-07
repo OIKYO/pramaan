@@ -1,0 +1,25 @@
+# Secrets: never commit. Copy the .env.example files instead.
+.env
+.env.*
+!.env.example
+!.env.mock
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Generated at runtime
+backend/.cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
