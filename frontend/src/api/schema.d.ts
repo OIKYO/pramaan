@@ -219,6 +219,9 @@ export interface paths {
         /**
          * Health
          * @description Uptime check. Render's free instance sleeps; call this a minute before a demo.
+         *
+         *     With `?db=true` it also reads one row from the database. The keep-awake job uses this, which keeps
+         *     the free Supabase project active too (it pauses after a week without use).
          */
         get: operations["health_health_get"];
         put?: never;
@@ -1100,7 +1103,9 @@ export interface operations {
     };
     health_health_get: {
         parameters: {
-            query?: never;
+            query?: {
+                db?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1116,6 +1121,15 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

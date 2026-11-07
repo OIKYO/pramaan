@@ -2,10 +2,11 @@
 
 import logging
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
+from app.db import get_db
 from app.routers import findings, insights, posters, rules, toppers
 from rules.registry import load_rule_pack
 
@@ -28,6 +29,19 @@ for module in (posters, findings, toppers, rules, insights):
 
 
 @app.get("/health")
-def health() -> dict:
-    """Uptime check. Render's free instance sleeps; call this a minute before a demo."""
-    return {"ok": True, "reader_mode": settings.reader_mode}
+def health(response: Response, db: bool = False) -> dict:
+    """Uptime check. Render's free instance sleeps; call this a minute before a demo.
+
+    With `?db=true` it also reads one row from the database. The keep-awake job uses this, which keeps
+    the free Supabase project active too (it pauses after a week without use).
+    """
+    body = {"ok": True, "reader_mode": settings.reader_mode}
+    if db:
+        try:
+            get_db().table("regions").select("id").limit(1).execute()
+            body["database"] = "ok"
+        except Exception:  # report it plainly; the job then fails and GitHub emails the owner
+            logging.getLogger("pramaan").exception("health check: database unreachable")
+            response.status_code = 503
+            body.update(ok=False, database="unreachable")
+    return body
