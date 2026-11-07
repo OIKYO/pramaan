@@ -1,0 +1,66 @@
+/*
+ * Design tokens: every colour, size and duration in the app comes from here.
+ * The palette is from our Round 1 PDF. Pages use these through Tailwind classes such as
+ * bg-paper, text-ink, text-muted-text, border-line, text-blocked, bg-passed-soft.
+ *
+ * Note: the brief calls the secondary text colour "--muted". shadcn/ui already uses --muted for a
+ * background tint, so ours is --muted-text.
+ */
+:root {
+  /* Round 1 palette */
+  --paper: #f8f6f1;
+  --surface: #ffffff;
+  --ink: #1f3354;
+  --muted-text: #5b6b82;
+  --line: #d5dce6;
+  --blocked: #c8472c;
+  --passed: #238a7d;
+  --warning: #d9822a;
+  --info: #2e6a9e;
+
+  /* Tints for badges and highlighted rows */
+  --blocked-soft: #f8e4df;
+  --passed-soft: #e0f0ed;
+  --warning-soft: #fbeedd;
+  --info-soft: #e2ecf5;
+  --ink-soft: #e8ecf2;
+
+  /* Type */
+  --font-heading: "Source Serif 4", Georgia, serif;
+  --font-body: "Source Sans 3", system-ui, sans-serif;
+
+  /* Shape and motion */
+  --radius: 0.5rem;
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+
+  /* Layout */
+  --sidebar-width: 15rem;
+  --content-width: 80rem;
+
+  /* shadcn/ui variables, mapped onto the palette */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: #ffffff;
+  --secondary: var(--ink-soft);
+  --secondary-foreground: var(--ink);
+  --muted: var(--ink-soft);
+  --muted-foreground: var(--muted-text);
+  --accent: var(--ink-soft);
+  --accent-foreground: var(--ink);
+  --destructive: var(--blocked);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--info);
+  --chart-1: var(--blocked);
+  --chart-2: var(--warning);
+  --chart-3: var(--info);
+  --chart-4: var(--passed);
+  --chart-5: var(--muted-text);
+}
