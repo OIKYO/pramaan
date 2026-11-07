@@ -43,10 +43,18 @@ function toListItem(row: ListRow): PosterListItem {
 /** Which posters a list shows. */
 export type PosterScope = "all" | "regional_review" | "final_approval";
 
+/** Whether a poster belongs in a list. The queries below and optimistic updates both use this. */
+export function fitsScope(poster: Pick<PosterListItem, "status" | "review_stage">, scope: PosterScope): boolean {
+  if (scope === "regional_review") return poster.status === "in_review" && poster.review_stage === "regional";
+  if (scope === "final_approval") return poster.status === "in_review" && poster.review_stage === "head_office";
+  return true;
+}
+
 async function listPosters(scope: PosterScope): Promise<PosterListItem[]> {
   let query = supabase.from("posters").select(LIST_COLUMNS).order("updated_at", { ascending: false });
-  if (scope === "regional_review") query = query.eq("status", "in_review").eq("review_stage", "regional");
-  if (scope === "final_approval") query = query.eq("status", "in_review").eq("review_stage", "head_office");
+  if (scope !== "all") query = query.eq("status", "in_review");
+  if (scope === "regional_review") query = query.eq("review_stage", "regional");
+  if (scope === "final_approval") query = query.eq("review_stage", "head_office");
   const { data, error } = await query;
   if (error) throw new Error(`Couldn't load posters: ${error.message}`);
   return (data as unknown as ListRow[]).map(toListItem);

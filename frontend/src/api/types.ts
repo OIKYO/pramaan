@@ -55,6 +55,8 @@ export interface PosterListItem {
   blocking: number;
   /** All open findings that aren't passes on the current version. */
   open_issues: number;
+  /** Shown at once while an upload's checks run; replaced by the real poster when they finish. */
+  pending?: boolean;
 }
 
 export interface BrandKit {

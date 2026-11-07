@@ -48,4 +48,13 @@ export const postJson = <T>(path: string, body: unknown) =>
 
 export const postForm = <T>(path: string, form: FormData) => api<T>(path, { method: "POST", body: form });
 
-export const getHealth = () => api<{ ok: boolean; reader_mode: string }>("/health");
+/** A multipart form from plain values: arrays become repeated fields, files stay files. */
+export function toForm(input: Record<string, unknown>): FormData {
+  const form = new FormData();
+  for (const [key, value] of Object.entries(input)) {
+    if (Array.isArray(value)) value.forEach((item) => form.append(key, String(item)));
+    else if (value instanceof File) form.append(key, value);
+    else form.append(key, String(value ?? ""));
+  }
+  return form;
+}
