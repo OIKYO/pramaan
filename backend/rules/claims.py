@@ -1,5 +1,5 @@
-"""Claims and toppers: banned promises, consent, ranks, required details, results figures, and the
-AI's disguised-guarantee flags (CCPA-01 to CCPA-06, AI-01)."""
+"""Claims and people: banned promises, consent, ranks and required details (coaching ads), approved
+figures, and the AI's disguised-guarantee flags (CCPA-01 to CCPA-06, AI-01)."""
 
 from rapidfuzz import fuzz
 
@@ -22,8 +22,12 @@ BANNED_PHRASES = [
 def _approved_figure_example(ctx: RuleContext) -> str:
     if ctx.result_stats:
         stat = ctx.result_stats[0]
-        return f" You can show a verified result instead, such as “{stat.label}: {stat.value:g}”."
+        return f" You can show an approved figure instead, such as “{stat.label}: {stat.value:g}”."
     return ""
+
+
+def _a(noun: str) -> str:
+    return f"an {noun}" if noun[:1].lower() in "aeiou" else f"a {noun}"
 
 
 @rule("CCPA-01")
@@ -51,14 +55,14 @@ def no_banned_claims(ctx: RuleContext) -> list[Problem]:
 
 @rule("CCPA-02")
 def consent_on_file(ctx: RuleContext) -> list[Problem]:
-    problems = []
+    problems, register = [], ctx.words.register_name
     for match in ctx.people:
         person = ctx.reading.people[match.person_index]
         if match.status == "no_match":
             problems.append(Problem(
-                message=f"{person.name} isn't in the toppers register, so there is no consent on file.",
+                message=f"{person.name} isn't in the {register}, so there is no consent on file.",
                 evidence=evidence(person.box_2d, person.name),
-                suggested_fix=f"Remove {person.name}, or ask head office to add them to the register with signed consent.",
+                suggested_fix=f"Remove {person.name}, or ask head office to add them to the {register} with signed consent.",
             ))
         elif match.status == "match":
             topper = ctx.toppers[match.topper_id]
@@ -66,7 +70,7 @@ def consent_on_file(ctx: RuleContext) -> list[Problem]:
                 problems.append(Problem(
                     message=f"{topper.full_name} is shown, but there's no signed consent on file.",
                     evidence=evidence(person.box_2d, person.name, topper_id=topper.id),
-                    suggested_fix=f"Remove {topper.full_name} from the poster, or upload their signed consent to the toppers register first.",
+                    suggested_fix=f"Remove {topper.full_name} from the poster, or upload their signed consent to the {register} first.",
                 ))
     return problems
 
@@ -79,10 +83,14 @@ def consent_is_valid(ctx: RuleContext) -> list[Problem]:
             continue  # CCPA-02 reports missing consent.
         where = evidence(person.box_2d, person.name, topper_id=topper.id)
         name = topper.full_name
-        if topper.consent_date is None or topper.consent_date <= topper.result_date:
-            when = f"on {topper.consent_date:%d %b %Y}" if topper.consent_date else "with no date"
+        if topper.consent_date is None:
             problems.append(Problem(
-                f"{name}'s consent was signed {when}, before the result on {topper.result_date:%d %b %Y}, so it can't cover this result.",
+                f"{name}'s consent has no date, so nobody can tell what it covers.", where,
+                f"Add the date {name} signed the consent to the {ctx.words.register_name}.",
+            ))
+        elif topper.result_date and topper.consent_date <= topper.result_date:
+            problems.append(Problem(
+                f"{name}'s consent was signed on {topper.consent_date:%d %b %Y}, before the result on {topper.result_date:%d %b %Y}, so it can't cover this result.",
                 where, f"Get fresh written consent from {name}, dated after the result.",
             ))
         if ctx.channel not in topper.consent_channels:
@@ -124,7 +132,7 @@ def rank_matches(ctx: RuleContext) -> list[Problem]:
     problems = []
     for person, topper in ctx.matched():
         shown = person.rank_value if person.rank_value is not None else number_value(person.rank_text, None)
-        if shown is not None and int(shown) != topper.rank:
+        if shown is not None and topper.rank is not None and int(shown) != topper.rank:
             problems.append(Problem(
                 f"Shows {person.rank_text or f'AIR {int(shown)}'} for {topper.full_name}; the register says AIR {topper.rank}.",
                 evidence(_rank_box(ctx, person, shown), person.rank_text or person.name, topper_id=topper.id),
@@ -149,7 +157,7 @@ def details_next_to_toppers(ctx: RuleContext) -> list[Problem]:
                 issues.append(f"the course shown (“{person.course_text}”) isn't the one they took")
         if not person.duration_text:
             issues.append("no course duration")
-        elif course and duration_months(person.duration_text) != course.duration_months:
+        elif course and course.duration_months and duration_months(person.duration_text) != course.duration_months:
             issues.append(f"the duration shown (“{person.duration_text}”) is wrong")
         if not person.paid_text:
             issues.append("no paid or free label")
@@ -159,9 +167,10 @@ def details_next_to_toppers(ctx: RuleContext) -> list[Problem]:
             if (course.is_paid and says_free) or (not course.is_paid and says_paid):
                 issues.append(f"it says “{person.paid_text}”, but the course is {'paid' if course.is_paid else 'free'}")
         if issues:
-            fix = f"Show next to {topper.full_name}: AIR {topper.rank}"
+            shown = [f"AIR {topper.rank}" if topper.rank else "their rank"]
             if course:
-                fix += f" · {course.name} · {course.duration_label} · {'paid' if course.is_paid else 'free'}"
+                shown += [course.name, *([course.duration_label] if course.duration_label else []), "paid" if course.is_paid else "free"]
+            fix = f"Show next to {topper.full_name}: {' · '.join(shown)}"
             problems.append(Problem(
                 f"Next to {topper.full_name}: {'; '.join(issues)}.",
                 evidence(person.box_2d, person.name, topper_id=topper.id),
@@ -185,7 +194,7 @@ def results_figures(ctx: RuleContext) -> list[Problem]:
         fix = (f"Use the approved figure: {nearest.label}: {nearest.value:g}." if nearest
                else "Remove the figure, or ask head office to approve it first.")
         problems.append(Problem(
-            f"“{context.strip()}” isn't an approved results figure.",
+            f"“{context.strip()}” isn't {_a(ctx.words.figure)}.",
             evidence(number.box_2d, number.raw_text), fix,
         ))
     return problems

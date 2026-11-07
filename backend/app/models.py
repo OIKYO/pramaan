@@ -91,9 +91,9 @@ class Course(BaseModel):
     id: str
     name: str
     aliases: list[str] = []
-    course_type: str
-    duration_label: str
-    duration_months: int
+    course_type: str | None = None  # education only: classroom, crash, test_series, online
+    duration_label: str | None = None
+    duration_months: int | None = None
     fee_inr: int | None = None
     is_paid: bool
     valid_until: date | None = None
@@ -103,8 +103,8 @@ class ResultStat(BaseModel):
     id: str
     label: str
     value: float
-    exam: str
-    year: int
+    exam: str | None = None
+    year: int | None = None
     valid_until: date | None = None
 
 
@@ -112,10 +112,10 @@ class Topper(BaseModel):
     id: str
     full_name: str
     name_variants: list[str] = []
-    exam: str
-    exam_year: int
-    rank: int
-    result_date: date
+    exam: str | None = None  # exam fields are filled in when the exam results rulebook is on
+    exam_year: int | None = None
+    rank: int | None = None
+    result_date: date | None = None
     course_id: str | None = None
     is_minor: bool = False
     consent_path: str | None = None
@@ -182,10 +182,20 @@ class Finding(BaseModel):
     suggested_fix: str | None = None
 
 
+class RulebookDef(BaseModel):
+    """A rulebook: reference data an organisation keeps, and the checks that use it."""
+
+    id: str
+    name: str
+    about: str
+    required: bool = Field(default=False, description="Every organisation keeps it")
+    requires: list[str] = Field(default=[], description="Rulebooks that must be on for this one to work")
+
+
 class RuleDef(BaseModel):
     id: str
     name: str
-    category: Literal["claims", "facts", "brand", "access", "reader"]
+    rulebooks: list[str] = Field(default=[], description="Runs when any of these rulebooks is on; empty means always")
     kind: Kind
     severity: Severity
     reason: str
@@ -195,7 +205,7 @@ class RuleDef(BaseModel):
 class RulePack(BaseModel):
     version: str
     source: str
-    categories: dict[str, str] = Field(default={}, description="Display name for each rule category")
+    rulebooks: list[RulebookDef]
     rules: list[RuleDef]
     reader_checks: list[RuleDef]
 
@@ -279,10 +289,14 @@ class RuleOut(RuleDef):
     """A rule as the Rules page shows it: the pack entry, with on/off from rule_settings."""
 
 
+class RulebookOut(RulebookDef):
+    enabled: bool = Field(description="Whether the signed-in user's organisation keeps this rulebook")
+
+
 class RulePackOut(BaseModel):
     version: str
     source: str
-    categories: dict[str, str]
+    rulebooks: list[RulebookOut]
     rules: list[RuleOut]
     reader_checks: list[RuleDef]
 
@@ -334,6 +348,90 @@ class SignupRequest(BaseModel):
     full_name: str = Field(min_length=2, max_length=120)
     email: Email
     password: Password
+    industry_group: str | None = Field(default=None, description="An industry id from GET /catalog")
+    industry: str | None = Field(default=None, max_length=80, description="A subdomain of that industry, or the organisation's own words")
+    org_type: str | None = None
+    focus: list[str] = []
+
+
+# ============================================================ what an organisation does (GET /catalog)
+
+
+class SubdomainSpecial(BaseModel):
+    vocabulary: str | None = None
+    suggest: list[str] = []
+
+
+class Industry(BaseModel):
+    id: str
+    name: str
+    vocabulary: str
+    suggest: list[str]
+    subdomains: list[str]
+    special: dict[str, SubdomainSpecial] = {}
+
+
+class OrgType(BaseModel):
+    id: str
+    name: str
+
+
+class FocusArea(BaseModel):
+    id: str
+    name: str
+    suggest: list[str]
+
+
+class Vocabulary(BaseModel):
+    """The words an industry uses for what it keeps, e.g. "Courses and fees" or "Menu and prices"."""
+
+    offerings: str
+    offering: str
+    offering_plural: str
+    price: str
+    figures: str
+    figure: str
+    people: str
+    person: str
+    person_plural: str
+    register_name: str
+    durations: bool
+    offering_types: bool
+    exams: bool
+
+
+class Catalog(BaseModel):
+    industries: list[Industry]
+    org_types: list[OrgType]
+    focus_areas: list[FocusArea]
+    vocabularies: dict[str, Vocabulary]
+    rulebooks: list[RulebookDef]
+
+
+class OrganisationOut(BaseModel):
+    id: str
+    name: str
+    industry_group: str | None = None
+    industry: str | None = None
+    org_type: str | None = None
+    focus: list[str] = []
+    rulebooks: list[str]
+    created_at: datetime
+
+
+class OrganisationUpdate(BaseModel):
+    """Head office changes what the organisation does, or which rulebooks it keeps. Fields left
+    out stay as they are. The industry fields go together."""
+
+    industry_group: str | None = None
+    industry: str | None = Field(default=None, max_length=80)
+    org_type: str | None = None
+    focus: list[str] | None = None
+    rulebooks: list[str] | None = None
+
+
+class MeUpdate(BaseModel):
+    full_name: str = Field(min_length=2, max_length=120)
 
 
 class SignupResult(BaseModel):

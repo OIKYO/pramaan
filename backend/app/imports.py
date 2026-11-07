@@ -41,32 +41,32 @@ SPECS: dict[str, Spec] = {
         Column("phone", "text", True, "The number printed on this branch's posters", "+91 10000 22102"),
         Column("address", "text", True, "", "2nd floor, 14 Hill Cart Road, Siliguri 734001"),
     ), "Branches and the regions they sit in. Posters are checked against each branch's phone and address."),
-    "courses": Spec("Courses and fees", "name", (
-        Column("name", "text", True, "Official course name", "2-Year Classroom Programme"),
-        Column("course_type", "course_type", True, "classroom, crash, test series or online", "classroom"),
-        Column("duration_label", "text", True, "Duration as written on posters", "2 years"),
-        Column("duration_months", "int", True, "", "24"),
+    "courses": Spec("Offerings and prices", "name", (
+        Column("name", "text", True, "The approved name", "2-Year Classroom Programme"),
         Column("is_paid", "bool", True, "yes or no", "yes"),
-        Column("fee_inr", "int", False, "Required for paid courses", "48000"),
+        Column("fee_inr", "int", False, "Price in rupees; required when it is paid. A column called price works too", "48000"),
+        Column("duration_label", "text", False, "Duration as written on posters, if it has one", "2 years"),
+        Column("duration_months", "int", False, "The same duration in months", "24"),
+        Column("course_type", "course_type", False, "Courses only: classroom, crash, test series or online", "classroom"),
         Column("aliases", "list", False, "Other names on posters, separated by ;", "2-year classroom; classroom programme"),
         Column("valid_until", "date", False, "YYYY-MM-DD; after this the fact is out of date", "2027-03-31"),
         Column("source", "text", False, "Where the fee is approved", "Fee circular 2026-27"),
     ), "Approved courses, durations and fees. Posters must name and price courses exactly as listed."),
-    "results": Spec("Results figures", "label", (
+    "results": Spec("Approved figures", "label", (
         Column("label", "text", True, "What the figure counts", "Classroom students who qualified JEE Main 2026"),
         Column("value", "number", True, "", "42"),
-        Column("exam", "text", True, "", "JEE Main"),
-        Column("year", "int", True, "", "2026"),
+        Column("exam", "text", False, "The exam it comes from, for results figures", "JEE Main"),
+        Column("year", "int", False, "The year it counts", "2026"),
         Column("source", "text", False, "Where it can be verified", "Results circular 2026"),
         Column("valid_until", "date", False, "YYYY-MM-DD", "2027-03-31"),
     ), "The only success figures posters may claim."),
-    "toppers": Spec("Toppers register", "full_name", (
+    "toppers": Spec("People and consent", "full_name", (
         Column("full_name", "text", True, "", "Riya Sen"),
-        Column("exam", "text", True, "", "JEE Main"),
-        Column("exam_year", "int", True, "", "2026"),
-        Column("rank", "int", True, "All India Rank, as a number", "73"),
-        Column("result_date", "date", True, "YYYY-MM-DD", "2026-04-19"),
-        Column("course", "text", False, "A course name from Courses and fees", "2-Year Classroom Programme"),
+        Column("exam", "text", False, "Exam results only: the exam", "JEE Main"),
+        Column("exam_year", "int", False, "Exam results only: the year", "2026"),
+        Column("rank", "int", False, "Exam results only: All India Rank, as a number", "73"),
+        Column("result_date", "date", False, "Exam results only: YYYY-MM-DD", "2026-04-19"),
+        Column("course", "text", False, "A name from your offerings, if it applies", "2-Year Classroom Programme"),
         Column("name_variants", "list", False, "Other spellings, separated by ;", "Ria Sen; Riya S."),
         Column("is_minor", "bool", False, "yes if under 18", "no"),
         Column("guardian_signed", "bool", False, "yes if a parent or guardian signed the consent", "no"),
@@ -174,6 +174,11 @@ class Existing:
     branches: dict[str, str] = field(default_factory=dict)
     courses: dict[str, str] = field(default_factory=dict)
     emails_elsewhere: set[str] = field(default_factory=set)  # members import: emails taken by another org
+    rankings: bool = False  # the exam results rulebook is on, so people need their exam, rank and result date
+
+
+# Other names spreadsheets use for a column.
+ALIASES = {"price": "fee_inr", "price_inr": "fee_inr", "fee": "fee_inr", "type": "course_type"}
 
 
 @dataclass
@@ -212,7 +217,10 @@ def plan(dataset: str, data: bytes, existing: Existing) -> Plan:
         result.issues.append((0, None, "The file is larger than 2 MB. Split it into smaller files."))
         return result
     reader = csv.DictReader(io.StringIO(_decode(data)))
-    headers = {_header(h): h for h in (reader.fieldnames or [])}
+    headers = {}
+    for h in reader.fieldnames or []:
+        name = _header(h)
+        headers.setdefault(ALIASES.get(name, name) if ALIASES.get(name) in names else name, h)
     missing = [c.name for c in spec.columns if c.required and c.name not in headers]
     if missing:
         result.issues.append((1, None, f"Missing column{'s' if len(missing) > 1 else ''}: {', '.join(missing)}. "
@@ -263,17 +271,26 @@ def _row_rules(dataset: str, v: dict, existing: Existing) -> list[tuple[str | No
     problems = []
     if dataset == "courses":
         if v["is_paid"] and v["fee_inr"] is None:
-            problems.append(("fee_inr", "A paid course needs its fee."))
+            problems.append(("fee_inr", "Something paid needs its price."))
         if v["fee_inr"] is not None and v["fee_inr"] < 0:
-            problems.append(("fee_inr", "The fee can't be negative."))
-        if v["duration_months"] <= 0:
+            problems.append(("fee_inr", "The price can't be negative."))
+        if v["duration_months"] is not None and v["duration_months"] <= 0:
             problems.append(("duration_months", "Write the duration in months, more than 0."))
+        if v["duration_label"] and v["duration_months"] is None:
+            problems.append(("duration_months", "Give the duration in months too, so posters can be checked."))
+        if v["duration_months"] and not v["duration_label"]:
+            months = v["duration_months"]
+            v["duration_label"] = f"{months // 12} year{'s' if months > 12 else ''}" if months % 12 == 0 else f"{months} months"
     if dataset == "toppers":
-        if v["rank"] <= 0:
+        if v["rank"] is not None and v["rank"] <= 0:
             problems.append(("rank", "Ranks start at 1."))
+        if existing.rankings:
+            for column in ("exam", "exam_year", "rank", "result_date"):
+                if v[column] is None:
+                    problems.append((column, "Needed while the exam results rulebook is on."))
         if v["course"] and v["course"].lower() not in existing.courses:
-            problems.append(("course", f"“{v['course']}” isn't in Courses and fees. Import or add the course first."))
-    if dataset == "results" and not 1900 < v["year"] <= date.today().year + 1:
+            problems.append(("course", f"“{v['course']}” isn't in your offerings. Import or add it first."))
+    if dataset == "results" and v["year"] is not None and not 1900 < v["year"] <= date.today().year + 1:
         problems.append(("year", "Write a four-digit year, like 2026."))
     if dataset == "members":
         if v["email"] in existing.emails_elsewhere:

@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 FIXTURES_DIR = BACKEND_DIR / "tests" / "fixtures" / "readings"
 AI_RULE_IDS = ("BRAND-04", "AI-01")
-PROMPT_VERSION = "2026-11-07"
+PROMPT_VERSION = "2026-11-08"
 MAX_ATTEMPTS = 3  # the first try plus 2 retries
 TEMPORARY = ("503", "UNAVAILABLE")  # the service says "try again later"
 SERVICE_RETRY_SECONDS = 3
@@ -42,15 +42,16 @@ class ReadResult:
     errors: list[str] = field(default_factory=list)
 
 
-def build_prompt(brand_kit: BrandKit, caption: str) -> str:
-    return f"""You read advertising posters for {brand_kit.registered_name} so that plain code can check them.
+def build_prompt(brand_kit: BrandKit, caption: str, about: str = "", person: str = "people") -> str:
+    kind = f" ({about})" if about else ""
+    return f"""You read advertising posters for {brand_kit.registered_name}{kind} so that plain code can check them.
 
 Report only what is visibly printed on the poster image. Never guess, infer or fill in anything that isn't printed. If something isn't visible, leave the field empty.
 
 Fill in:
 - text_blocks: every separate line of text, verbatim (keep spelling, symbols, capitals and numbers exactly). For Hindi or Bengali text, also give a Latin-script transliteration in `romanised`.
 - claims: promotional statements about results, selections, ranks, success rates or jobs.
-- people: every student shown or named as an achiever. Give the name as printed (and romanised_name if it isn't in Latin script), rank_text exactly as printed and rank_value as a number, and the course name, duration and paid/free wording printed next to that person. Leave a field empty if it isn't printed next to them.
+- people: every person shown or named on the poster (for this organisation, usually {person}). Give the name as printed (and romanised_name if it isn't in Latin script), rank_text exactly as printed and rank_value as a number, and the course name, duration and paid/free wording printed next to that person. Leave a field empty if it isn't printed next to them.
 - numbers: every rank, fee, phone number and results figure. kind is one of rank, fee, phone, stat, other. raw_text exactly as printed. value as a number (fees in rupees); leave value empty for phone numbers. The box should cover just the number.
 - registered_name_seen: true only if "{brand_kit.registered_name}" is printed.
 - helpline_seen: true only if the helpline {brand_kit.helpline} is printed.
@@ -145,8 +146,9 @@ def _try(name: str, call, errors: list[str], wait=time.sleep) -> tuple[PosterRea
     return None, MAX_ATTEMPTS
 
 
-def read_live(image: bytes, mime_type: str, brand_kit: BrandKit, caption: str, settings: Settings) -> ReadResult:
-    prompt = build_prompt(brand_kit, caption)
+def read_live(image: bytes, mime_type: str, brand_kit: BrandKit, caption: str, settings: Settings, *,
+              about: str = "", person: str = "people") -> ReadResult:
+    prompt = build_prompt(brand_kit, caption, about, person)
     errors: list[str] = []
     readers = []
     if settings.gemini_api_key:

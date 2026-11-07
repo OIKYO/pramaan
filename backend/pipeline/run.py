@@ -19,7 +19,7 @@ from app.config import Settings
 from app.models import BrandKit, Branch, Course, Finding, PosterReading, ResultStat, Topper
 from pipeline import ocr, reader, visual
 from pipeline.match import identity_findings, match_people
-from rules.registry import Problem, RuleContext, rule_def, run_rules, to_finding
+from rules.registry import Problem, RuleContext, Words, rule_def, run_rules, to_finding
 
 log = logging.getLogger(__name__)
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -38,7 +38,8 @@ class PosterInput:
 
 @dataclass
 class Reference:
-    """Head office's rulebook, as the checks need it."""
+    """Head office's rulebooks, as the checks need them. `rulebooks` is None in tests that want
+    every check; for an organisation it is the set it keeps."""
 
     brand_kit: BrandKit
     courses: list[Course]
@@ -47,6 +48,12 @@ class Reference:
     branch: Branch
     logo: Image.Image | None = None
     enabled: dict[str, bool] = field(default_factory=dict)
+    rulebooks: set[str] | None = None
+    words: Words = field(default_factory=Words)
+    about: str = ""  # what the organisation does, for the AI reader, e.g. "Coaching Institutes"
+
+    def keeps(self, rulebook: str) -> bool:
+        return self.rulebooks is None or rulebook in self.rulebooks
 
 
 @dataclass
@@ -96,7 +103,8 @@ def check_poster(
         live = settings.reader_mode == "live"
         try:
             if live:
-                result = reader.read_live(poster.image, poster.mime_type, ref.brand_kit, poster.caption, settings)
+                result = reader.read_live(poster.image, poster.mime_type, ref.brand_kit, poster.caption, settings,
+                                          about=ref.about, person=ref.words.person_plural)
             else:
                 result = reader.read_fixture(reader.fixture_name_for(sha, poster.filename))
         except reader.ReaderError as exc:
@@ -117,20 +125,26 @@ def check_poster(
         digit_reader = default_digit_reader(settings)
     findings = ocr.cross_check(image, reading, digit_reader)
 
-    # 3. Who is shown.
-    matches = match_people(reading, list(ref.toppers.values()))
-    findings += identity_findings(reading, matches, poster.tagged_topper_ids, ref.toppers)
+    # 3. Who is shown, when the organisation keeps a register of people.
+    matches = []
+    if ref.keeps("people"):
+        matches = match_people(reading, list(ref.toppers.values()))
+        findings += identity_findings(reading, matches, poster.tagged_topper_ids, ref.toppers)
 
     # 4. Pixels: palette, logo, contrast.
     report = visual.analyse(image, reading, ref.brand_kit.palette, ref.logo)
 
-    # 5. The 17 checks.
+    # 5. The checks in the rulebooks the organisation keeps. Data from a rulebook it doesn't keep
+    #    is left out, so no other check leans on it.
     ctx = RuleContext(
         reading=reading, people=matches, tagged_topper_ids=poster.tagged_topper_ids, brand_kit=ref.brand_kit,
-        courses=ref.courses, result_stats=ref.result_stats, toppers=ref.toppers, branch=ref.branch,
+        courses=ref.courses if ref.keeps("offerings") else [],
+        result_stats=ref.result_stats if ref.keeps("figures") else [],
+        toppers=ref.toppers if ref.keeps("people") else {}, branch=ref.branch,
         channel=poster.channel, caption=poster.caption, alt_text=poster.alt_text, visual=report, today=today,
+        words=ref.words,
     )
-    findings = [_passed("READ-01", read_note), *findings, *run_rules(ctx, ref.enabled)]
+    findings = [_passed("READ-01", read_note), *findings, *run_rules(ctx, ref.enabled, ref.rulebooks)]
     return CheckResult(sha, reading, model, findings, ai_call)
 
 
@@ -162,7 +176,10 @@ def _logo(db_url: str, path: str) -> Image.Image | None:
 
 
 def load_reference(db, branch_id: str, org_id: str) -> Reference:
-    """The poster's organisation's rulebook, and its branch. Nothing from other organisations."""
+    """The poster's organisation's rulebooks, and its branch. Nothing from other organisations."""
+    from app.catalog import complete, words
+
+    org = db.table("organisations").select("industry_group, industry, rulebooks").eq("id", org_id).single().execute().data
     brand = db.table("brand_kit").select("*").eq("org_id", org_id).single().execute().data
     toppers = db.table("toppers").select("*").eq("org_id", org_id).execute().data
     branch = db.table("branches").select("*").eq("id", branch_id).eq("org_id", org_id).single().execute().data
@@ -175,6 +192,9 @@ def load_reference(db, branch_id: str, org_id: str) -> Reference:
         branch=Branch(**branch),
         logo=_logo(str(db.supabase_url), brand["logo_path"]) if brand.get("logo_path") else None,
         enabled={r["rule_id"]: r["enabled"] for r in settings_rows},
+        rulebooks=set(complete(org.get("rulebooks") or [])),
+        words=words(org.get("industry_group"), org.get("industry")),
+        about=org.get("industry") or "",
     )
 
 

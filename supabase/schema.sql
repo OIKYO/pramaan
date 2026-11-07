@@ -21,6 +21,12 @@ create type public.course_type as enum ('classroom', 'crash', 'test_series', 'on
 create table public.organisations (
   id uuid primary key default gen_random_uuid(),
   name text not null check (char_length(btrim(name)) between 2 and 120),
+  -- What it does, from backend/app/catalog.json, and the rulebooks it keeps. Backend writes only.
+  industry_group text,
+  industry text check (industry is null or char_length(industry) between 2 and 80),
+  org_type text,
+  focus text[] not null default '{}',
+  rulebooks text[] not null default '{brand,contacts,claims,offerings,figures,people}',
   created_by uuid references auth.users (id) on delete set null,
   created_at timestamptz not null default now()
 );
@@ -82,9 +88,9 @@ create table public.courses (
   org_id uuid not null references public.organisations (id) on delete cascade,
   name text not null,
   aliases text[] not null default '{}',
-  course_type public.course_type not null,
-  duration_label text not null,                       -- as written on posters, e.g. '2 years'
-  duration_months int not null check (duration_months > 0),
+  course_type public.course_type,                     -- courses only
+  duration_label text,                                -- as written on posters, e.g. '2 years'
+  duration_months int check (duration_months > 0),
   fee_inr int check (fee_inr is null or fee_inr >= 0),
   is_paid boolean not null,
   valid_until date,
@@ -99,8 +105,8 @@ create table public.result_stats (
   org_id uuid not null references public.organisations (id) on delete cascade,
   label text not null,
   value numeric not null,
-  exam text not null,
-  year int not null,
+  exam text,
+  year int,
   source text not null default '',
   valid_until date,
   constraint result_stats_org_label_key unique (org_id, label)
@@ -111,10 +117,10 @@ create table public.toppers (
   org_id uuid not null references public.organisations (id) on delete cascade,
   full_name text not null,
   name_variants text[] not null default '{}',
-  exam text not null,
-  exam_year int not null,
-  rank int not null check (rank > 0),
-  result_date date not null,
+  exam text,                                          -- exam fields: the exam results rulebook
+  exam_year int,
+  rank int check (rank > 0),
+  result_date date,
   course_id uuid,
   is_minor boolean not null default false,
   photo_path text,

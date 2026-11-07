@@ -14,14 +14,14 @@ from pipeline import ocr, reader
 from pipeline.boxes import from_pixels, to_pixels
 from pipeline.run import PosterInput, Reference, check_poster
 from rules.text import digits
-from tests.builders import BRAND_KIT, BRANCH, COURSES, STATS, TODAY, TOPPERS, topper_id
+from tests.builders import BRAND_KIT, BRANCH, COURSES, NORTHFIELD_WORDS, STATS, TODAY, TOPPERS, topper_id
 
 POSTERS = REPO_DIR / "test-posters"
 MANIFEST = json.loads((POSTERS / "manifest.json").read_text(encoding="utf-8"))
 SETTINGS = replace(get_settings(), reader_mode="fixture", gemini_api_key="", groq_api_key="")
 REFERENCE = Reference(
     brand_kit=BRAND_KIT, courses=COURSES, result_stats=STATS, toppers=TOPPERS, branch=BRANCH,
-    logo=Image.open(BACKEND_DIR / "assets" / "northfield-logo.png").convert("RGB"),
+    logo=Image.open(BACKEND_DIR / "assets" / "northfield-logo.png").convert("RGB"), words=NORTHFIELD_WORDS,
 )
 
 

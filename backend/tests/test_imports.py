@@ -36,12 +36,32 @@ def test_errors_name_the_line_and_column_and_say_how_to_fix_it():
 
 def test_a_paid_course_needs_a_fee():
     data = b"name,course_type,duration_label,duration_months,is_paid\nCrash,crash,1 year,12,yes\n"
-    assert plan("courses", data, Existing()).issues == [(2, "fee_inr", "A paid course needs its fee.")]
+    assert plan("courses", data, Existing()).issues == [(2, "fee_inr", "Something paid needs its price.")]
+
+
+def test_offerings_outside_education_need_only_a_name_and_a_price():
+    data = "name,price,is_paid\nMasala dosa,120,yes\nFilter coffee,\"₹40\",yes\n".encode("utf-8")
+    result = plan("courses", data, Existing())
+    assert result.issues == []
+    assert [r.values["fee_inr"] for r in result.rows] == [120, 40]  # "price" is read as fee_inr
+    assert result.rows[0].values["course_type"] is None and result.rows[0].values["duration_months"] is None
+
+
+def test_a_duration_in_months_gets_a_label_for_posters():
+    data = b"name,is_paid,fee_inr,duration_months\nGym membership,yes,9000,12\n"
+    assert plan("courses", data, Existing()).rows[0].values["duration_label"] == "1 year"
 
 
 def test_missing_columns_are_reported_before_any_row():
-    result = plan("toppers", b"full_name,rank\nRiya Sen,73\n", Existing())
-    assert result.rows == [] and "Missing columns: exam, exam_year, result_date" in result.issues[0][2]
+    result = plan("toppers", b"rank\n73\n", Existing())
+    assert result.rows == [] and "Missing column: full_name" in result.issues[0][2]
+
+
+def test_exam_details_are_needed_only_while_the_exam_results_rulebook_is_on():
+    data = b"full_name,rank\nRiya Sen,73\n"
+    assert plan("toppers", data, Existing()).issues == []
+    issues = plan("toppers", data, Existing(rankings=True)).issues
+    assert {column for _, column, _ in issues} == {"exam", "exam_year", "result_date"}
 
 
 def test_duplicate_keys_in_one_file_are_refused():
@@ -52,7 +72,7 @@ def test_duplicate_keys_in_one_file_are_refused():
 def test_toppers_must_name_a_course_that_exists():
     data = b"full_name,exam,exam_year,rank,result_date,course\nRiya Sen,JEE Main,2026,73,2026-04-19,Unknown course\n"
     issues = plan("toppers", data, Existing(courses={"2-year classroom programme": "c1"})).issues
-    assert issues[0][1] == "course" and "isn't in Courses and fees" in issues[0][2]
+    assert issues[0][1] == "course" and "isn't in your offerings" in issues[0][2]
 
 
 def test_members_need_a_branch_or_region_and_a_free_email():

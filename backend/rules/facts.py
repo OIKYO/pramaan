@@ -1,4 +1,6 @@
-"""Approved facts: course names and durations, fees, branch contact details, expiry (FACT-01 to FACT-04)."""
+"""Approved facts: what the organisation offers and its prices, branch contact details, expiry
+(FACT-01 to FACT-04). An "offering" is a course, a menu item, a membership: whatever the
+organisation sells, called by its own word (ctx.words)."""
 
 import re
 
@@ -13,6 +15,16 @@ COURSE_WORDS = re.compile(r"\b(course|programme|program|batch|series)\b", re.IGN
 PIN_CODE = re.compile(r"\b\d{6}\b")
 
 
+def _names_an_offering(ctx: RuleContext, text: str) -> bool:
+    """The block looks like it names something on offer: "course", "batch", or the organisation's own word."""
+    own = re.compile(rf"\b{re.escape(ctx.words.offering)}s?\b", re.IGNORECASE)
+    return bool(COURSE_WORDS.search(text) or own.search(text))
+
+
+def _label(course) -> str:
+    return f"{course.name} ({course.duration_label})" if course.duration_label else course.name
+
+
 @rule("FACT-01")
 def courses_and_durations(ctx: RuleContext) -> list[Problem]:
     problems = []
@@ -20,17 +32,17 @@ def courses_and_durations(ctx: RuleContext) -> list[Problem]:
         course, score = best_course(block.text, ctx.courses)
         shown = duration_months(block.text)
         if course and score >= COURSE_MENTION:
-            if shown is not None and shown != course.duration_months:
+            if shown is not None and course.duration_months and shown != course.duration_months:
                 problems.append(Problem(
                     f"“{block.text}” gives a duration of {shown} months, but {course.name} is {course.duration_label}.",
                     evidence(block.box_2d, block.text),
-                    f"Write the course as “{course.name}” ({course.duration_label}).",
+                    f"Write the {ctx.words.offering} as “{course.name}” ({course.duration_label}).",
                 ))
-        elif COURSE_WORDS.search(block.text) and shown is not None and score < COURSE_UNKNOWN:
+        elif _names_an_offering(ctx, block.text) and shown is not None and score < COURSE_UNKNOWN:
             problems.append(Problem(
-                f"“{block.text}” names a course that isn't on the approved list.",
+                f"“{block.text}” names a {ctx.words.offering} that isn't on the approved list.",
                 evidence(block.box_2d, block.text),
-                "Use an approved course: " + ", ".join(f"{c.name} ({c.duration_label})" for c in ctx.courses) + ".",
+                f"Use an approved {ctx.words.offering}: " + ", ".join(_label(c) for c in ctx.courses) + ".",
             ))
     return problems
 
@@ -48,16 +60,18 @@ def fees(ctx: RuleContext) -> list[Problem]:
         block = block_with(ctx.reading, number.raw_text)
         course, score = best_course(block.text, ctx.courses) if block else (None, 0.0)
         where = evidence(number.box_2d, block.text if block else number.raw_text)
+        price = ctx.words.price
         if course and score >= COURSE_MENTION:
             if not course.is_paid and value > 0:
-                problems.append(Problem(f"Shows a fee of {inr(value)} for {course.name}, which is free.", where,
-                                        f"Remove the fee; {course.name} is free."))
+                problems.append(Problem(f"Shows a {price} of {inr(value)} for {course.name}, which is free.", where,
+                                        f"Remove the {price}; {course.name} is free."))
             elif course.is_paid and value != course.fee_inr:
-                problems.append(Problem(f"Shows {inr(value)} for {course.name}; the approved fee is {inr(course.fee_inr)}.",
-                                        where, f"Change the fee to {inr(course.fee_inr)}."))
+                problems.append(Problem(f"Shows {inr(value)} for {course.name}; the approved {price} is {inr(course.fee_inr)}.",
+                                        where, f"Change the {price} to {inr(course.fee_inr)}."))
         elif value not in approved:
             listed = ", ".join(f"{inr(fee)} ({c.name})" for fee, c in approved.items())
-            problems.append(Problem(f"{inr(value)} isn't an approved fee.", where, f"Use an approved fee: {listed}."))
+            fix = f"Use an approved {price}: {listed}." if listed else f"Remove the {price}, or ask head office to approve it first."
+            problems.append(Problem(f"{inr(value)} isn't an approved {price}.", where, fix))
     return problems
 
 

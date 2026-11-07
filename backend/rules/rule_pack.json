@@ -1,95 +1,97 @@
 {
-  "version": "2026.11-r2",
-  "source": "CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024, plus each organisation's brand kit",
-  "categories": {
-    "claims": "CCPA coaching guidelines",
-    "facts": "Approved facts",
-    "brand": "Brand",
-    "access": "Accessibility",
-    "reader": "Reading checks"
-  },
+  "version": "2026.11-r3",
+  "source": "Each organisation's rulebooks, with the CCPA Guidelines for Prevention of Misleading Advertisement in Coaching Sector, 2024 for coaching ads",
+  "rulebooks": [
+    {"id": "brand", "name": "Brand kit", "required": true, "about": "Registered name, helpline, logo, colours and tone of voice, plus readable text and alt text."},
+    {"id": "contacts", "name": "Branch contact details", "required": true, "about": "Phone numbers and addresses on a poster must be the branch's own or the helpline."},
+    {"id": "claims", "name": "Honest claims", "about": "Blocks promised results such as “100% selection” or “guaranteed job”, in English, Hindi and Bengali, and flags disguised ones."},
+    {"id": "offerings", "name": "Offerings and prices", "about": "What you sell, with its approved price and, where it applies, its duration. Posters must match it."},
+    {"id": "figures", "name": "Approved figures", "about": "Statistics you are allowed to quote, such as results or people served. Any other figure is blocked."},
+    {"id": "people", "name": "People and consent", "about": "Everyone who appears on a poster, with their signed consent and the channels it covers."},
+    {"id": "rankings", "name": "Exam results (coaching ads)", "requires": ["people", "offerings"], "about": "For coaching institutes in India: ranks must match the register, and each topper needs their course, its duration and paid or free beside them (CCPA, 2024)."}
+  ],
   "rules": [
     {
-      "id": "CCPA-01", "name": "No banned claims", "category": "claims", "kind": "code", "severity": "block",
-      "reason": "The CCPA guidelines bar coaching ads from promising selection, ranks or jobs. No institute can guarantee a result."
+      "id": "CCPA-01", "name": "No banned claims", "rulebooks": ["claims"], "kind": "code", "severity": "block",
+      "reason": "Promising a result nobody can guarantee, such as selection, a rank or a job, misleads readers. India's guidelines on misleading advertisements forbid it."
     },
     {
-      "id": "CCPA-02", "name": "Every topper shown has consent on file", "category": "claims", "kind": "code", "severity": "block",
-      "reason": "A student's name, photo or rank can be used in an ad only with their written consent, taken after the result."
+      "id": "CCPA-02", "name": "Everyone shown has consent on file", "rulebooks": ["people"], "kind": "code", "severity": "block",
+      "reason": "A person's name, photo or story can be used in an ad only with their written consent."
     },
     {
-      "id": "CCPA-03", "name": "Consent is valid", "category": "claims", "kind": "code", "severity": "block",
-      "reason": "Consent must be given after the result, cover the channel the poster is for, still be in date, and be signed by a guardian if the student is a minor."
+      "id": "CCPA-03", "name": "Consent is valid", "rulebooks": ["people"], "kind": "code", "severity": "block",
+      "reason": "Consent must cover the channel the poster is for, still be in date, and be signed by a guardian if the person is a minor. Consent to use a result must be given after the result."
     },
     {
-      "id": "CCPA-04", "name": "Rank matches the register", "category": "claims", "kind": "code", "severity": "block",
+      "id": "CCPA-04", "name": "Rank matches the register", "rulebooks": ["rankings"], "kind": "code", "severity": "block",
       "reason": "Showing a different rank from the one the student earned misleads students and parents."
     },
     {
-      "id": "CCPA-05", "name": "Required details next to each topper", "category": "claims", "kind": "code", "severity": "block",
+      "id": "CCPA-05", "name": "Required details next to each topper", "rulebooks": ["rankings"], "kind": "code", "severity": "block",
       "reason": "Next to each successful student, the ad must show their rank, the course they took, its duration and whether it was paid or free, so readers know what actually produced the result."
     },
     {
-      "id": "CCPA-06", "name": "Results figures match approved stats", "category": "claims", "kind": "code", "severity": "block",
-      "reason": "Success figures must be true and verifiable. Only figures head office has approved can be used."
+      "id": "CCPA-06", "name": "Figures match approved figures", "rulebooks": ["figures"], "kind": "code", "severity": "block",
+      "reason": "Success and impact figures must be true and verifiable. Only figures head office has approved can be used."
     },
     {
-      "id": "FACT-01", "name": "Course names and durations", "category": "facts", "kind": "code", "severity": "block",
-      "reason": "Courses must be named and timed exactly as head office approved them."
+      "id": "FACT-01", "name": "Offerings named as approved", "rulebooks": ["offerings"], "kind": "code", "severity": "block",
+      "reason": "Courses, products and services must be named, and timed where that applies, exactly as head office approved them."
     },
     {
-      "id": "FACT-02", "name": "Fees", "category": "facts", "kind": "code", "severity": "block",
-      "reason": "A fee on a poster is an offer. It must match the approved fee."
+      "id": "FACT-02", "name": "Prices match approved prices", "rulebooks": ["offerings"], "kind": "code", "severity": "block",
+      "reason": "A price on a poster is an offer. It must match the approved price."
     },
     {
-      "id": "FACT-03", "name": "Branch contact details", "category": "facts", "kind": "code", "severity": "block",
+      "id": "FACT-03", "name": "Branch contact details", "rulebooks": ["contacts"], "kind": "code", "severity": "block",
       "reason": "A wrong number or address sends enquiries to the wrong place, or to someone who isn't us."
     },
     {
-      "id": "FACT-04", "name": "No expired facts", "category": "facts", "kind": "code", "severity": "warn",
-      "reason": "Fees, courses and results figures are approved for a period. After that they must be re-approved before use."
+      "id": "FACT-04", "name": "No expired prices or figures", "rulebooks": ["offerings", "figures"], "kind": "code", "severity": "warn",
+      "reason": "Prices and figures are approved for a period. After that they must be re-approved before use."
     },
     {
-      "id": "BRAND-01", "name": "Logo present", "category": "brand", "kind": "code", "severity": "warn",
+      "id": "BRAND-01", "name": "Logo present", "rulebooks": ["brand"], "kind": "code", "severity": "warn",
       "reason": "Every poster carries the organisation's logo, so readers know who published it."
     },
     {
-      "id": "BRAND-02", "name": "Colours within palette", "category": "brand", "kind": "code", "severity": "warn",
+      "id": "BRAND-02", "name": "Colours within palette", "rulebooks": ["brand"], "kind": "code", "severity": "warn",
       "reason": "Large areas of off-brand colour make a branch poster look unofficial."
     },
     {
-      "id": "BRAND-03", "name": "Registered name and helpline present", "category": "brand", "kind": "code", "severity": "warn",
+      "id": "BRAND-03", "name": "Registered name and helpline present", "rulebooks": ["brand"], "kind": "code", "severity": "warn",
       "reason": "The registered company name and the helpline tell readers who is responsible for the ad and how to reach head office."
     },
     {
-      "id": "BRAND-04", "name": "Tone of voice", "category": "brand", "kind": "ai", "severity": "warn",
-      "reason": "Our tone is warm and factual. The AI flags wording that pressures or frightens; a person decides."
+      "id": "BRAND-04", "name": "Tone of voice", "rulebooks": ["brand"], "kind": "ai", "severity": "warn",
+      "reason": "Each organisation describes its tone of voice in the brand kit. The AI flags wording that doesn't fit it; a person decides."
     },
     {
-      "id": "ACC-01", "name": "Text contrast at least 4.5:1", "category": "access", "kind": "code", "severity": "warn",
+      "id": "ACC-01", "name": "Text contrast at least 4.5:1", "rulebooks": ["brand"], "kind": "code", "severity": "warn",
       "reason": "Low-contrast text is hard to read on phones in sunlight and for people with low vision. 4.5:1 is the WCAG minimum for normal text."
     },
     {
-      "id": "ACC-02", "name": "Alt text on social posts", "category": "access", "kind": "code", "severity": "warn",
+      "id": "ACC-02", "name": "Alt text on social posts", "rulebooks": ["brand"], "kind": "code", "severity": "warn",
       "reason": "Screen-reader users need a text description of image posts on Instagram and WhatsApp."
     },
     {
-      "id": "AI-01", "name": "Disguised guarantees", "category": "claims", "kind": "ai", "severity": "warn",
+      "id": "AI-01", "name": "Disguised guarantees", "rulebooks": ["claims"], "kind": "ai", "severity": "warn",
       "reason": "Phrases like 'selection pakka' or 'seat confirmed' promise a result without saying 'guarantee'. The AI flags them; a person decides."
     }
   ],
   "reader_checks": [
     {
-      "id": "READ-01", "name": "Poster could be read", "category": "reader", "kind": "reader", "severity": "needs_human",
+      "id": "READ-01", "name": "Poster could be read", "kind": "reader", "severity": "needs_human",
       "reason": "If the reader couldn't read the poster, nothing on it was checked. A person must look at it."
     },
     {
-      "id": "READ-02", "name": "Key numbers read twice", "category": "reader", "kind": "reader", "severity": "needs_human",
+      "id": "READ-02", "name": "Key numbers read twice", "kind": "reader", "severity": "needs_human",
       "reason": "Ranks, fees, phone numbers and figures are read by two separate readers. When they disagree, a person confirms the right number."
     },
     {
-      "id": "READ-03", "name": "People shown are identified", "category": "reader", "kind": "reader", "severity": "needs_human",
-      "reason": "Pramaan doesn't recognise faces. Staff tag the students shown; anyone untagged or uncertain goes to a reviewer."
+      "id": "READ-03", "name": "People shown are identified", "kind": "reader", "severity": "needs_human",
+      "reason": "Pramaan doesn't recognise faces. Staff tag the people shown; anyone untagged or uncertain goes to a reviewer."
     }
   ]
 }

@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
 from app import imports
 from app.auth import require
+from app.catalog import complete, vocabulary
 from app.db import audit, get_db
 from app.models import (
     Dataset, DatasetSpecOut, ImportColumn, ImportIssue, ImportPreview, ImportRow, Profile,
@@ -17,17 +18,28 @@ from app.team import add_profile, create_login, temporary_password
 router = APIRouter(prefix="/imports", tags=["imports"])
 HeadOffice = Annotated[Profile, Depends(require("head_office"))]
 TABLE = {"branches": "branches", "courses": "courses", "results": "result_stats", "toppers": "toppers", "members": "profiles"}
+RULEBOOK = {"courses": "offerings", "results": "figures", "toppers": "people"}  # branches and members: always
+TITLE = {"courses": "offerings", "results": "figures", "toppers": "people"}  # the organisation's own words
+
+
+def _organisation(org_id: str) -> tuple[set[str], dict]:
+    org = get_db().table("organisations").select("industry_group, industry, rulebooks").eq("id", org_id).single().execute().data
+    return set(complete(org.get("rulebooks") or [])), vocabulary(org.get("industry_group"), org.get("industry"))
 
 
 @router.get("", response_model=list[DatasetSpecOut])
 def datasets(user: HeadOffice) -> list[DatasetSpecOut]:
-    """What can be imported, each with its columns and a template."""
+    """What can be imported, each with its columns and a template: branches and team always, and
+    the data of each rulebook the organisation keeps."""
+    kept, words = _organisation(user.org_id)
     return [
-        DatasetSpecOut(dataset=name, title=spec.title, description=spec.description, key=spec.key,
+        DatasetSpecOut(dataset=name, title=words[TITLE[name]] if name in TITLE else spec.title,
+                       description=spec.description, key=spec.key,
                        columns=[ImportColumn(name=c.name, required=c.required, help=c.help, example=c.example)
                                 for c in spec.columns],
                        template=imports.template(name))
         for name, spec in imports.SPECS.items()
+        if RULEBOOK.get(name, "brand") in kept
     ]
 
 
@@ -42,6 +54,7 @@ def _existing(dataset: str, org_id: str) -> imports.Existing:
         keys=_names(TABLE[dataset], org_id, key),
         regions=_names("regions", org_id), branches=_names("branches", org_id), courses=_names("courses", org_id),
     )
+    existing.rankings = "rankings" in _organisation(org_id)[0]
     if dataset == "members":
         others = get_db().table("profiles").select("email").neq("org_id", org_id).execute().data
         existing.emails_elsewhere = {r["email"].lower() for r in others if r["email"]}
@@ -107,6 +120,8 @@ def _write(dataset: str, plan: imports.Plan, existing: imports.Existing, org_id:
 def run_import(dataset: Dataset, user: HeadOffice, file: Annotated[UploadFile, File()],
                commit: Annotated[bool, Form()] = False) -> ImportPreview:
     """Check a CSV and show what would change. With commit=true, save it (only if every row is valid)."""
+    if RULEBOOK.get(dataset, "brand") not in _organisation(user.org_id)[0]:
+        raise HTTPException(400, "Your organisation doesn't keep this rulebook. Add it on the Rulebooks page first.")
     data = file.file.read(imports.MAX_BYTES + 1)
     existing = _existing(dataset, user.org_id)
     plan = imports.plan(dataset, data, existing)

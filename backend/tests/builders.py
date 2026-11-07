@@ -1,5 +1,6 @@
 """Test data built from the same constants as scripts/seed.py, so tests and the demo can't drift."""
 
+from app.catalog import words
 from datetime import date
 
 from app.models import (
@@ -97,6 +98,10 @@ def clean_visual(blocks: int = 9) -> VisualReport:
     )
 
 
+# Northfield is a coaching institute, so findings use its words ("fee", "toppers register").
+NORTHFIELD_WORDS = words("education", "Coaching Institutes")
+
+
 def make_ctx(reading: PosterReading | None = None, *, tagged: list[str] | None = None, channel: str = "print",
              caption: str = "", alt_text: str = "", visual: VisualReport | None | str = "clean",
              today: date = TODAY, toppers: dict[str, Topper] | None = None, courses: list[Course] | None = None,
@@ -118,6 +123,7 @@ def make_ctx(reading: PosterReading | None = None, *, tagged: list[str] | None =
         alt_text=alt_text,
         visual=clean_visual(len(reading.text_blocks)) if visual == "clean" else visual,
         today=today,
+        words=NORTHFIELD_WORDS,
     )
 
 

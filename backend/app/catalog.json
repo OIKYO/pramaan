@@ -1,0 +1,1179 @@
+{
+ "industries": [
+  {
+   "id": "technology",
+   "name": "Technology & IT",
+   "vocabulary": "default",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Information Technology (IT)",
+    "Software Development",
+    "Web Development",
+    "Mobile App Development",
+    "SaaS (Software as a Service)",
+    "Artificial Intelligence & Machine Learning",
+    "Data Science & Analytics",
+    "Cybersecurity",
+    "Cloud Computing",
+    "Networking & Telecommunications",
+    "Blockchain & Web3",
+    "Game Development",
+    "Game Publishing",
+    "Hardware & Electronics",
+    "Computer Engineering",
+    "IT Consulting",
+    "Technical Support",
+    "Robotics & Automation",
+    "Internet Services",
+    "AR & VR Development",
+    "Semiconductor & Chip Manufacturing"
+   ]
+  },
+  {
+   "id": "education",
+   "name": "Education & Academia",
+   "vocabulary": "education",
+   "suggest": [
+    "offerings",
+    "figures",
+    "people"
+   ],
+   "subdomains": [
+    "Schools",
+    "Colleges",
+    "Universities",
+    "Engineering Colleges",
+    "Medical Colleges",
+    "Coaching Institutes",
+    "Tuition Centres",
+    "EdTech",
+    "Online Learning Platforms",
+    "Training Institutes",
+    "Skill Development Centres",
+    "Research Institutions",
+    "Educational NGOs",
+    "Student Organisations",
+    "Student Clubs",
+    "Academic Societies",
+    "Alumni Associations",
+    "Debate Societies",
+    "Science Clubs",
+    "Cultural Committees",
+    "Placement Cells",
+    "Institutional Departments",
+    "Libraries",
+    "Educational Consultancies"
+   ],
+   "special": {
+    "Coaching Institutes": {
+     "vocabulary": "coaching",
+     "suggest": [
+      "rankings"
+     ]
+    },
+    "Tuition Centres": {
+     "vocabulary": "coaching",
+     "suggest": [
+      "rankings"
+     ]
+    },
+    "EdTech": {
+     "vocabulary": "coaching",
+     "suggest": [
+      "rankings"
+     ]
+    },
+    "Online Learning Platforms": {
+     "vocabulary": "coaching",
+     "suggest": [
+      "rankings"
+     ]
+    }
+   }
+  },
+  {
+   "id": "marketing",
+   "name": "Marketing, Advertising & Media",
+   "vocabulary": "default",
+   "suggest": [
+    "figures",
+    "people"
+   ],
+   "subdomains": [
+    "Digital Marketing",
+    "Social Media Marketing",
+    "Advertising Agencies",
+    "Creative Agencies",
+    "Branding & Identity Design",
+    "Public Relations (PR)",
+    "Content Marketing",
+    "Influencer Marketing",
+    "Performance Marketing",
+    "Search Engine Optimisation (SEO)",
+    "Search Engine Marketing (SEM)",
+    "Media Buying",
+    "Market Research",
+    "Marketing Consultancy",
+    "Event Marketing",
+    "Affiliate Marketing",
+    "Email Marketing",
+    "Media Production",
+    "Publicity & Promotions",
+    "Outdoor Advertising",
+    "Print Advertising"
+   ]
+  },
+  {
+   "id": "design",
+   "name": "Design & Creative Arts",
+   "vocabulary": "default",
+   "suggest": [
+    "offerings",
+    "people"
+   ],
+   "subdomains": [
+    "Graphic Design",
+    "UI/UX Design",
+    "Product Design",
+    "Web Design",
+    "Motion Graphics",
+    "Animation",
+    "3D Modelling",
+    "Illustration",
+    "Photography",
+    "Videography",
+    "Film Production",
+    "Music Production",
+    "Audio Engineering",
+    "Fashion Design",
+    "Interior Design",
+    "Architecture & Design",
+    "Fine Arts",
+    "Digital Art",
+    "Visual Communication",
+    "Creative Studios",
+    "Art Collectives",
+    "Printing & Publishing Design"
+   ]
+  },
+  {
+   "id": "business",
+   "name": "Business & Professional Services",
+   "vocabulary": "services",
+   "suggest": [
+    "offerings",
+    "figures"
+   ],
+   "subdomains": [
+    "Business Consulting",
+    "Management Consulting",
+    "Human Resources (HR)",
+    "Recruitment & Staffing",
+    "Business Development",
+    "Operations Management",
+    "Project Management",
+    "Financial Consulting",
+    "Legal Services",
+    "Accounting & Auditing",
+    "Tax Consultancy",
+    "Corporate Services",
+    "Administrative Services",
+    "Business Process Outsourcing (BPO)",
+    "Knowledge Process Outsourcing (KPO)",
+    "Customer Support Services",
+    "Market Intelligence",
+    "Corporate Training",
+    "Entrepreneurship",
+    "Startups",
+    "Venture Capital",
+    "Business Incubators",
+    "Accelerators"
+   ]
+  },
+  {
+   "id": "finance",
+   "name": "Finance & Banking",
+   "vocabulary": "finance",
+   "suggest": [
+    "offerings",
+    "figures"
+   ],
+   "subdomains": [
+    "Banking",
+    "Investment Banking",
+    "Insurance",
+    "FinTech",
+    "Stock Market & Trading",
+    "Wealth Management",
+    "Asset Management",
+    "Mutual Funds",
+    "Accounting",
+    "Financial Planning",
+    "Financial Advisory",
+    "Microfinance",
+    "Cryptocurrency & Digital Assets",
+    "Credit & Lending",
+    "Payment Solutions",
+    "Taxation",
+    "Auditing",
+    "Risk Management"
+   ]
+  },
+  {
+   "id": "healthcare",
+   "name": "Healthcare & Medical",
+   "vocabulary": "services",
+   "suggest": [
+    "offerings",
+    "figures",
+    "people"
+   ],
+   "subdomains": [
+    "Hospitals",
+    "Clinics",
+    "Medical Practices",
+    "Pharmaceuticals",
+    "Biotechnology",
+    "Medical Research",
+    "Diagnostic Laboratories",
+    "Pathology",
+    "Dentistry",
+    "Ophthalmology",
+    "Physiotherapy",
+    "Nursing",
+    "Mental Health Services",
+    "Psychology & Counselling",
+    "Veterinary Healthcare",
+    "Medical Equipment",
+    "Healthcare Technology",
+    "Public Health",
+    "Healthcare NGOs",
+    "Medical Education",
+    "Wellness Centres",
+    "Rehabilitation Centres"
+   ]
+  },
+  {
+   "id": "science",
+   "name": "Science & Research",
+   "vocabulary": "default",
+   "suggest": [
+    "figures"
+   ],
+   "subdomains": [
+    "Scientific Research",
+    "Biotechnology Research",
+    "Chemical Research",
+    "Physics Research",
+    "Mathematics Research",
+    "Environmental Research",
+    "Space Research",
+    "Astronomy",
+    "Agricultural Research",
+    "Medical Research",
+    "Material Science",
+    "Nanotechnology",
+    "Renewable Energy Research",
+    "Research & Development (R&D)",
+    "Scientific Communities",
+    "Innovation Labs"
+   ]
+  },
+  {
+   "id": "engineering",
+   "name": "Engineering & Manufacturing",
+   "vocabulary": "default",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Civil Engineering",
+    "Mechanical Engineering",
+    "Electrical Engineering",
+    "Electronics Engineering",
+    "Chemical Engineering",
+    "Aerospace Engineering",
+    "Automotive Engineering",
+    "Industrial Engineering",
+    "Structural Engineering",
+    "Environmental Engineering",
+    "Manufacturing",
+    "Industrial Automation",
+    "Construction",
+    "Infrastructure Development",
+    "Metal Fabrication",
+    "Textile Manufacturing",
+    "Consumer Electronics",
+    "Quality Control",
+    "Product Manufacturing",
+    "Industrial Design"
+   ]
+  },
+  {
+   "id": "retail",
+   "name": "Retail & E-commerce",
+   "vocabulary": "default",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Retail Stores",
+    "E-commerce",
+    "Online Marketplaces",
+    "Wholesale Distribution",
+    "FMCG",
+    "Consumer Goods",
+    "Fashion Retail",
+    "Electronics Retail",
+    "Grocery & Supermarkets",
+    "Jewellery",
+    "Beauty & Cosmetics",
+    "Home & Lifestyle",
+    "Luxury Goods",
+    "D2C Brands",
+    "Dropshipping",
+    "Shopping Centres",
+    "Franchise Businesses"
+   ]
+  },
+  {
+   "id": "food",
+   "name": "Food & Beverage",
+   "vocabulary": "food",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Restaurants",
+    "Cafes & Coffee Shops",
+    "Bakeries",
+    "Catering Services",
+    "Cloud Kitchens",
+    "Food Manufacturing",
+    "Food Processing",
+    "Food Delivery",
+    "Hotels & Dining",
+    "Bars & Pubs",
+    "Breweries",
+    "Food Retail",
+    "Food & Beverage Brands",
+    "Agriculture-based Food Businesses",
+    "Culinary Organisations",
+    "Food Blogging & Media"
+   ]
+  },
+  {
+   "id": "hospitality",
+   "name": "Hospitality & Tourism",
+   "vocabulary": "hospitality",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Hotels & Resorts",
+    "Travel Agencies",
+    "Tour Operators",
+    "Tourism Boards",
+    "Travel Technology",
+    "Airlines",
+    "Aviation Services",
+    "Railways & Transportation",
+    "Event Tourism",
+    "Adventure Tourism",
+    "Hospitality Management",
+    "Homestays",
+    "Guest Houses",
+    "Destination Management",
+    "Tourism Communities",
+    "Heritage Tourism"
+   ]
+  },
+  {
+   "id": "entertainment",
+   "name": "Entertainment & Gaming",
+   "vocabulary": "default",
+   "suggest": [
+    "people"
+   ],
+   "subdomains": [
+    "Esports Organisations",
+    "Gaming Communities",
+    "Gaming Studios",
+    "Game Publishers",
+    "Gaming Events",
+    "Sports Entertainment",
+    "Film & Television",
+    "Music Labels",
+    "Music Bands",
+    "Theatre Groups",
+    "Performing Arts",
+    "Streaming Platforms",
+    "Content Creators",
+    "YouTube Channels",
+    "Podcast Networks",
+    "Entertainment Agencies",
+    "Talent Management",
+    "Production Houses",
+    "Animation Studios"
+   ]
+  },
+  {
+   "id": "sports",
+   "name": "Sports & Fitness",
+   "vocabulary": "sports",
+   "suggest": [
+    "offerings",
+    "figures",
+    "people"
+   ],
+   "subdomains": [
+    "Sports Clubs",
+    "Football Clubs",
+    "Cricket Clubs",
+    "Basketball Clubs",
+    "Esports Teams",
+    "Athletics Associations",
+    "Sports Academies",
+    "Sports Federations",
+    "Sports Associations",
+    "Fitness Centres",
+    "Gyms",
+    "Yoga Studios",
+    "Martial Arts Academies",
+    "Swimming Clubs",
+    "Adventure Sports",
+    "Sports Management",
+    "Sports Marketing",
+    "Personal Training",
+    "Fitness Communities",
+    "Sports Events"
+   ]
+  },
+  {
+   "id": "government",
+   "name": "Government & Public Administration",
+   "vocabulary": "default",
+   "suggest": [
+    "figures"
+   ],
+   "subdomains": [
+    "Central Government",
+    "State Government",
+    "Local Government",
+    "Municipal Corporations",
+    "Government Departments",
+    "Public Sector Undertakings (PSUs)",
+    "Public Administration",
+    "Public Infrastructure",
+    "Law Enforcement",
+    "Fire & Emergency Services",
+    "Defence Organisations",
+    "Public Welfare",
+    "Urban Development",
+    "Rural Development",
+    "Government Educational Institutions",
+    "Government Healthcare Institutions",
+    "Election & Civic Organisations"
+   ]
+  },
+  {
+   "id": "nonprofit",
+   "name": "Non-Profit & Social Organisations",
+   "vocabulary": "nonprofit",
+   "suggest": [
+    "figures",
+    "people"
+   ],
+   "subdomains": [
+    "Non-Governmental Organisations (NGOs)",
+    "Charitable Organisations",
+    "Foundations",
+    "Trusts",
+    "Social Welfare Organisations",
+    "Community Development",
+    "Human Rights Organisations",
+    "Environmental Organisations",
+    "Animal Welfare Organisations",
+    "Educational Foundations",
+    "Healthcare Foundations",
+    "Disaster Relief Organisations",
+    "Youth Organisations",
+    "Volunteer Groups",
+    "Fundraising Organisations",
+    "Religious Charities",
+    "International Development Organisations",
+    "Social Enterprises"
+   ]
+  },
+  {
+   "id": "politics",
+   "name": "Politics & Public Affairs",
+   "vocabulary": "default",
+   "suggest": [
+    "figures",
+    "people"
+   ],
+   "subdomains": [
+    "Political Parties",
+    "Political Campaign Organisations",
+    "Student Political Organisations",
+    "Youth Political Wings",
+    "Political Consultancies",
+    "Election Campaign Teams",
+    "Public Policy Organisations",
+    "Think Tanks",
+    "Advocacy Groups",
+    "Civic Engagement Organisations",
+    "Political Research Organisations",
+    "Public Affairs Agencies"
+   ]
+  },
+  {
+   "id": "community",
+   "name": "Community & Social Groups",
+   "vocabulary": "community",
+   "suggest": [
+    "people"
+   ],
+   "subdomains": [
+    "Online Communities",
+    "Offline Communities",
+    "Interest-Based Communities",
+    "Hobby Clubs",
+    "Gaming Communities",
+    "Technology Communities",
+    "Developer Communities",
+    "Photography Clubs",
+    "Reading Clubs",
+    "Book Clubs",
+    "Music Communities",
+    "Cultural Associations",
+    "Language Communities",
+    "Regional Associations",
+    "Residential Welfare Associations",
+    "Neighbourhood Committees",
+    "Youth Clubs",
+    "Social Clubs",
+    "Networking Communities",
+    "Professional Associations"
+   ]
+  },
+  {
+   "id": "events",
+   "name": "Events & Management",
+   "vocabulary": "events",
+   "suggest": [
+    "offerings",
+    "people"
+   ],
+   "subdomains": [
+    "Event Management",
+    "Wedding Planning",
+    "Corporate Events",
+    "Concert Management",
+    "Festival Management",
+    "Exhibition Management",
+    "Conference Management",
+    "Seminar & Workshop Management",
+    "Sports Event Management",
+    "Cultural Event Management",
+    "College Fest Committees",
+    "Event Promotion",
+    "Stage & Production Management",
+    "Event Photography",
+    "Event Logistics",
+    "Ticketing & Registration",
+    "Event Technology"
+   ]
+  },
+  {
+   "id": "fashion",
+   "name": "Fashion & Lifestyle",
+   "vocabulary": "default",
+   "suggest": [
+    "offerings",
+    "people"
+   ],
+   "subdomains": [
+    "Fashion Brands",
+    "Clothing & Apparel",
+    "Fashion Retail",
+    "Modelling Agencies",
+    "Fashion Events",
+    "Beauty & Personal Care",
+    "Cosmetics",
+    "Skincare",
+    "Haircare",
+    "Lifestyle Brands",
+    "Luxury Fashion",
+    "Jewellery & Accessories",
+    "Textile & Garments",
+    "Fashion Media",
+    "Fashion Influencers",
+    "Personal Styling"
+   ]
+  },
+  {
+   "id": "realestate",
+   "name": "Real Estate & Construction",
+   "vocabulary": "realestate",
+   "suggest": [
+    "offerings",
+    "figures"
+   ],
+   "subdomains": [
+    "Real Estate Agencies",
+    "Property Management",
+    "Property Development",
+    "Real Estate Investment",
+    "Construction Companies",
+    "Architecture Firms",
+    "Interior Design Firms",
+    "Civil Contractors",
+    "Infrastructure Projects",
+    "Housing Societies",
+    "Commercial Property",
+    "Facility Management",
+    "Smart Cities",
+    "Urban Planning"
+   ]
+  },
+  {
+   "id": "agriculture",
+   "name": "Agriculture & Environment",
+   "vocabulary": "default",
+   "suggest": [
+    "offerings",
+    "figures"
+   ],
+   "subdomains": [
+    "Agriculture",
+    "Organic Farming",
+    "Agribusiness",
+    "Agricultural Technology (AgriTech)",
+    "Horticulture",
+    "Floriculture",
+    "Animal Husbandry",
+    "Dairy Farming",
+    "Fisheries",
+    "Forestry",
+    "Environmental Conservation",
+    "Wildlife Conservation",
+    "Climate Action",
+    "Waste Management",
+    "Recycling",
+    "Renewable Energy",
+    "Solar Energy",
+    "Sustainability Consulting",
+    "Water Management",
+    "Environmental NGOs"
+   ]
+  },
+  {
+   "id": "transport",
+   "name": "Transportation & Logistics",
+   "vocabulary": "services",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Logistics",
+    "Supply Chain Management",
+    "Courier Services",
+    "Freight & Shipping",
+    "Warehousing",
+    "Transportation Services",
+    "Road Transport",
+    "Aviation Logistics",
+    "Maritime Services",
+    "Fleet Management",
+    "Delivery Services",
+    "Mobility Technology",
+    "Automobile Services",
+    "Public Transport"
+   ]
+  },
+  {
+   "id": "legal",
+   "name": "Legal & Security",
+   "vocabulary": "services",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Law Firms",
+    "Legal Consultancy",
+    "Corporate Law",
+    "Criminal Law",
+    "Intellectual Property Law",
+    "Legal Aid Organisations",
+    "Security Services",
+    "Private Security Agencies",
+    "Cybersecurity Services",
+    "Risk & Compliance",
+    "Investigation Services",
+    "Safety Management"
+   ]
+  },
+  {
+   "id": "telecom",
+   "name": "Telecommunications",
+   "vocabulary": "plans",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Telecom Operators",
+    "Internet Service Providers",
+    "Mobile Network Providers",
+    "Broadband Services",
+    "Satellite Communications",
+    "Communication Technology",
+    "Radio Broadcasting",
+    "Television Broadcasting",
+    "Telecom Infrastructure",
+    "Communication Equipment"
+   ]
+  },
+  {
+   "id": "energy",
+   "name": "Energy & Utilities",
+   "vocabulary": "plans",
+   "suggest": [
+    "offerings",
+    "figures"
+   ],
+   "subdomains": [
+    "Electricity Generation",
+    "Power Distribution",
+    "Renewable Energy",
+    "Solar Power",
+    "Wind Energy",
+    "Hydropower",
+    "Oil & Gas",
+    "Petroleum",
+    "Mining",
+    "Natural Resources",
+    "Water Utilities",
+    "Wastewater Management",
+    "Energy Consulting",
+    "Energy Technology"
+   ]
+  },
+  {
+   "id": "religious",
+   "name": "Religious & Spiritual Organisations",
+   "vocabulary": "community",
+   "suggest": [
+    "people"
+   ],
+   "subdomains": [
+    "Religious Institutions",
+    "Temples",
+    "Churches",
+    "Mosques",
+    "Gurudwaras",
+    "Monasteries",
+    "Spiritual Organisations",
+    "Meditation Centres",
+    "Religious Trusts",
+    "Religious Educational Institutions",
+    "Faith-Based NGOs",
+    "Religious Event Committees",
+    "Interfaith Organisations"
+   ]
+  },
+  {
+   "id": "publishing",
+   "name": "Publishing & Communication",
+   "vocabulary": "default",
+   "suggest": [
+    "offerings",
+    "people"
+   ],
+   "subdomains": [
+    "Publishing Houses",
+    "Newspaper Organisations",
+    "Digital News Platforms",
+    "Magazines",
+    "Journalism",
+    "News Agencies",
+    "Editorial Teams",
+    "Book Publishing",
+    "Academic Publishing",
+    "Technical Writing",
+    "Translation Services",
+    "Language Services",
+    "Copywriting",
+    "Documentation Services",
+    "Media Houses"
+   ]
+  },
+  {
+   "id": "personal",
+   "name": "Personal & Lifestyle Services",
+   "vocabulary": "services",
+   "suggest": [
+    "offerings",
+    "people"
+   ],
+   "subdomains": [
+    "Beauty Salons",
+    "Spas",
+    "Fitness & Wellness",
+    "Personal Coaching",
+    "Career Counselling",
+    "Life Coaching",
+    "Home Services",
+    "Cleaning Services",
+    "Repair & Maintenance",
+    "Photography Services",
+    "Personal Finance Services",
+    "Pet Care",
+    "Childcare",
+    "Elderly Care",
+    "Professional Training"
+   ]
+  },
+  {
+   "id": "other",
+   "name": "Other & Emerging Industries",
+   "vocabulary": "default",
+   "suggest": [
+    "offerings"
+   ],
+   "subdomains": [
+    "Space Technology",
+    "Defence Technology",
+    "Drones & UAVs",
+    "Quantum Computing",
+    "Internet of Things (IoT)",
+    "Smart Devices",
+    "Deep Technology",
+    "Metaverse",
+    "Climate Technology",
+    "Social Innovation",
+    "Research & Innovation",
+    "Multidisciplinary Organisations",
+    "Conglomerates",
+    "Holding Companies"
+   ]
+  }
+ ],
+ "org_types": [
+  {
+   "id": "company",
+   "name": "Company"
+  },
+  {
+   "id": "chain",
+   "name": "Chain or franchise"
+  },
+  {
+   "id": "institution",
+   "name": "School, college or university"
+  },
+  {
+   "id": "coaching",
+   "name": "Coaching or training institute"
+  },
+  {
+   "id": "club",
+   "name": "Club, team or society"
+  },
+  {
+   "id": "nonprofit",
+   "name": "NGO, trust or foundation"
+  },
+  {
+   "id": "community",
+   "name": "Community or association"
+  },
+  {
+   "id": "agency",
+   "name": "Agency or studio"
+  },
+  {
+   "id": "government",
+   "name": "Government body"
+  },
+  {
+   "id": "political",
+   "name": "Political organisation"
+  },
+  {
+   "id": "religious",
+   "name": "Religious organisation"
+  },
+  {
+   "id": "other",
+   "name": "Something else"
+  }
+ ],
+ "focus_areas": [
+  {
+   "id": "admissions",
+   "name": "Admissions and enrolment",
+   "suggest": [
+    "offerings"
+   ]
+  },
+  {
+   "id": "results",
+   "name": "Results and achievements",
+   "suggest": [
+    "people",
+    "figures"
+   ]
+  },
+  {
+   "id": "offers",
+   "name": "Offers and prices",
+   "suggest": [
+    "offerings"
+   ]
+  },
+  {
+   "id": "events",
+   "name": "Events",
+   "suggest": []
+  },
+  {
+   "id": "campaigns",
+   "name": "Marketing campaigns",
+   "suggest": [
+    "figures"
+   ]
+  },
+  {
+   "id": "launches",
+   "name": "Product launches",
+   "suggest": [
+    "offerings"
+   ]
+  },
+  {
+   "id": "recruitment",
+   "name": "Recruitment",
+   "suggest": []
+  },
+  {
+   "id": "fundraising",
+   "name": "Fundraising",
+   "suggest": [
+    "figures"
+   ]
+  },
+  {
+   "id": "testimonials",
+   "name": "Testimonials and people",
+   "suggest": [
+    "people"
+   ]
+  },
+  {
+   "id": "announcements",
+   "name": "Announcements",
+   "suggest": []
+  }
+ ],
+ "vocabularies": {
+  "default": {
+   "offerings": "Products and prices",
+   "offering": "product",
+   "offering_plural": "products",
+   "price": "price",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "People and consent",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "consent register",
+   "durations": false,
+   "offering_types": false,
+   "exams": false
+  },
+  "education": {
+   "offerings": "Courses and fees",
+   "offering": "course",
+   "offering_plural": "courses",
+   "price": "fee",
+   "figures": "Results figures",
+   "figure": "results figure",
+   "people": "Students and consent",
+   "person": "student",
+   "person_plural": "students",
+   "register_name": "student register",
+   "durations": true,
+   "offering_types": true,
+   "exams": true
+  },
+  "coaching": {
+   "offerings": "Courses and fees",
+   "offering": "course",
+   "offering_plural": "courses",
+   "price": "fee",
+   "figures": "Results figures",
+   "figure": "results figure",
+   "people": "Toppers register",
+   "person": "topper",
+   "person_plural": "toppers",
+   "register_name": "toppers register",
+   "durations": true,
+   "offering_types": true,
+   "exams": true
+  },
+  "food": {
+   "offerings": "Menu and prices",
+   "offering": "menu item",
+   "offering_plural": "menu items",
+   "price": "price",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "People and consent",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "consent register",
+   "durations": false,
+   "offering_types": false,
+   "exams": false
+  },
+  "services": {
+   "offerings": "Services and charges",
+   "offering": "service",
+   "offering_plural": "services",
+   "price": "charge",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "People and consent",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "consent register",
+   "durations": false,
+   "offering_types": false,
+   "exams": false
+  },
+  "finance": {
+   "offerings": "Products and charges",
+   "offering": "product",
+   "offering_plural": "products",
+   "price": "charge",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "People and consent",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "consent register",
+   "durations": false,
+   "offering_types": false,
+   "exams": false
+  },
+  "hospitality": {
+   "offerings": "Packages and rates",
+   "offering": "package",
+   "offering_plural": "packages",
+   "price": "rate",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "People and consent",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "consent register",
+   "durations": true,
+   "offering_types": false,
+   "exams": false
+  },
+  "sports": {
+   "offerings": "Memberships and fees",
+   "offering": "membership",
+   "offering_plural": "memberships",
+   "price": "fee",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "Players and consent",
+   "person": "player",
+   "person_plural": "players",
+   "register_name": "players register",
+   "durations": true,
+   "offering_types": false,
+   "exams": false
+  },
+  "nonprofit": {
+   "offerings": "Programmes and fees",
+   "offering": "programme",
+   "offering_plural": "programmes",
+   "price": "fee",
+   "figures": "Impact figures",
+   "figure": "impact figure",
+   "people": "People and consent",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "consent register",
+   "durations": false,
+   "offering_types": false,
+   "exams": false
+  },
+  "community": {
+   "offerings": "Memberships and fees",
+   "offering": "membership",
+   "offering_plural": "memberships",
+   "price": "fee",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "Members and consent",
+   "person": "member",
+   "person_plural": "members",
+   "register_name": "members register",
+   "durations": true,
+   "offering_types": false,
+   "exams": false
+  },
+  "events": {
+   "offerings": "Tickets and passes",
+   "offering": "ticket",
+   "offering_plural": "tickets",
+   "price": "price",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "Speakers and performers",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "performers register",
+   "durations": false,
+   "offering_types": false,
+   "exams": false
+  },
+  "realestate": {
+   "offerings": "Projects and prices",
+   "offering": "project",
+   "offering_plural": "projects",
+   "price": "price",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "People and consent",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "consent register",
+   "durations": false,
+   "offering_types": false,
+   "exams": false
+  },
+  "plans": {
+   "offerings": "Plans and tariffs",
+   "offering": "plan",
+   "offering_plural": "plans",
+   "price": "tariff",
+   "figures": "Approved figures",
+   "figure": "approved figure",
+   "people": "People and consent",
+   "person": "person",
+   "person_plural": "people",
+   "register_name": "consent register",
+   "durations": true,
+   "offering_types": false,
+   "exams": false
+  }
+ }
+}

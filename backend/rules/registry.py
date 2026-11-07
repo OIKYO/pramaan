@@ -1,7 +1,8 @@
 """The rule engine: rules register with @rule, and run_rules() runs every enabled one.
 
 A rule is a plain function that takes a RuleContext and returns the problems it found, as
-Problem objects. The registry turns them into Findings with the rule's id, kind, severity and
+Problem objects. Each rule belongs to one or more rulebooks; it runs only when the organisation
+keeps one of them and hasn't switched the rule off. The registry turns them into Findings with the rule's id, kind, severity and
 reason from rule_pack.json. A rule that finds nothing gets one "pass" finding, so the findings
 view can show passed checks too.
 """
@@ -21,6 +22,20 @@ from app.models import (
 RULE_PACK_PATH = Path(__file__).with_name("rule_pack.json")
 
 
+@dataclass(frozen=True)
+class Words:
+    """How an organisation talks about what its rulebooks hold, so findings use its words:
+    "isn't an approved fee" for a coaching institute, "isn't an approved price" for a shop."""
+
+    offering: str = "product"
+    offering_plural: str = "products"
+    price: str = "price"
+    figure: str = "approved figure"
+    person: str = "person"
+    person_plural: str = "people"
+    register_name: str = "consent register"
+
+
 @dataclass
 class RuleContext:
     reading: PosterReading
@@ -36,6 +51,7 @@ class RuleContext:
     alt_text: str = ""
     visual: VisualReport | None = None
     today: date = field(default_factory=date.today)
+    words: Words = field(default_factory=Words)
 
     def matched(self):
         """(person, topper) pairs for people confidently matched to the register."""
@@ -78,6 +94,9 @@ def load_rule_pack() -> RulePack:
     pack = RulePack.model_validate(json.loads(RULE_PACK_PATH.read_text(encoding="utf-8")))
     _import_rule_modules()
     pack_ids = {r.id for r in pack.rules}
+    books = {b.id for b in pack.rulebooks}
+    if stray := {book for r in pack.rules for book in r.rulebooks} - books:
+        raise RuntimeError(f"Rules name rulebooks that rule_pack.json doesn't define: {sorted(stray)}")
     if missing := pack_ids - _RULES.keys():
         raise RuntimeError(f"Rules in rule_pack.json with no code: {sorted(missing)}")
     if extra := _RULES.keys() - pack_ids:
@@ -105,11 +124,17 @@ def to_finding(rule_id: str, problem: Problem) -> Finding:
     )
 
 
-def run_rules(ctx: RuleContext, enabled: dict[str, bool] | None = None) -> list[Finding]:
-    """Run every enabled check. `enabled` comes from the rule_settings table; missing ids use the pack."""
+def rule_applies(rd: RuleDef, rulebooks: set[str] | None) -> bool:
+    """A rule runs when the organisation keeps one of its rulebooks. None means every rulebook."""
+    return rulebooks is None or not rd.rulebooks or bool(rulebooks & set(rd.rulebooks))
+
+
+def run_rules(ctx: RuleContext, enabled: dict[str, bool] | None = None, rulebooks: set[str] | None = None) -> list[Finding]:
+    """Run every check that is switched on (`enabled`, from rule_settings; missing ids use the pack)
+    and belongs to a rulebook the organisation keeps."""
     findings: list[Finding] = []
     for rd in load_rule_pack().rules:
-        if not (enabled or {}).get(rd.id, rd.enabled):
+        if not rule_applies(rd, rulebooks) or not (enabled or {}).get(rd.id, rd.enabled):
             continue
         problems = _RULES[rd.id](ctx)
         if problems:
