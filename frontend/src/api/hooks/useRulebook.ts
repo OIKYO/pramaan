@@ -74,7 +74,8 @@ export const useUploadLogo = () =>
   useSave(keys.brandKit, async ({ orgId, file }: { orgId: string; file: File }) => {
     const ext = file.name.split(".").pop()?.toLowerCase() || "png";
     const path = `${orgId}/logo-${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("brand").upload(path, file, { contentType: file.type, upsert: true });
+    // Every logo gets a new path, so no upsert: an upsert also needs read and update rights on the bucket.
+    const { error } = await supabase.storage.from("brand").upload(path, file, { contentType: file.type });
     if (error) throw new Error(`The logo wasn't uploaded: ${error.message}`);
     return rows(supabase.from("brand_kit").update({ logo_path: path }).eq("org_id", orgId).select("org_id"));
   });
