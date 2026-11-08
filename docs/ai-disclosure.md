@@ -12,10 +12,10 @@ The CodeNexus rules ask teams to say where AI tools were used. This is our accou
 
 ## Where AI tools were used
 
-| Area | Tool | Directed by |
+| Used as | Tool | Directed by |
 |---|---|---|
-| Code and documentation: backend, rule engine, reading pipeline, database, frontend, tests, scripts and tools, and first drafts of the rule wording and banned-phrase examples (for Rishav Nandi's review) | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
-| Website text (landing page, Product, Enterprise, Privacy, Terms, Cookies), written from our brief and fact-checked, and the industry list and rulebook suggestions | ChatGPT | Oikyo Chowdhury |
+| Coding assistant for the backend, rule engine, reading pipeline, database, frontend, tests, scripts, tools and documentation, and for first drafts of the rule wording and banned-phrase examples (for Rishav Nandi's review) | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
+| Writing assistant for the website text (landing page, Product, Enterprise, Privacy, Terms, Cookies), from our brief and fact-checked, and for gathering the industry list and rulebook suggestions | ChatGPT | Oikyo Chowdhury |
 
 ## How the work was checked
 
