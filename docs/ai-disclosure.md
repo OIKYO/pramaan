@@ -12,15 +12,10 @@ The CodeNexus rules ask teams to say where AI tools were used. This is our accou
 
 ## Where AI tools were used
 
-| Area | Tool | How |
+| Area | Tool | Directed by |
 |---|---|---|
-| Code: backend, rule engine, reading pipeline, database, frontend, tests and scripts | Claude Code (Claude Opus 5.5) | Coding assistant, working from the team's brief, sketches and decisions. Every change was directed and accepted by Oikyo Chowdhury. |
-| Documentation (README, architecture, decisions) | Claude Code | Drafted from the team's decisions |
-| Website text (landing page, Product, Enterprise, Privacy, Terms, Cookies) | ChatGPT | Written from our brief (`copy-brief.md`); every fact checked, and gaps filled with true details |
-| Industry list and rulebook suggestions | ChatGPT | Gathered by Oikyo Chowdhury, who chose what to keep |
-| Rule wording and the Hindi and Bengali banned-phrase examples | Claude Code | First drafts, for review by Rishav Nandi (rule pack owner) |
-| Vector version of the logo | Claude Code | Rebuilt the team's logo design as SVG |
-| Test poster generator | Claude Code | Scaffold; Zihan Sirat owns the test posters |
+| Code and documentation: backend, rule engine, reading pipeline, database, frontend, tests, scripts and tools, and first drafts of the rule wording and banned-phrase examples (for Rishav Nandi's review) | Claude Code (Claude Opus 5.5) | Oikyo Chowdhury |
+| Website text (landing page, Product, Enterprise, Privacy, Terms, Cookies), written from our brief and fact-checked, and the industry list and rulebook suggestions | ChatGPT | Oikyo Chowdhury |
 
 ## How the work was checked
 
