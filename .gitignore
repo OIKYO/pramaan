@@ -26,3 +26,6 @@ Thumbs.db
 
 # Local brief for Claude Code; kept on the developer's machine, not on GitHub
 CLAUDE.md
+
+# One-off upgrades for databases made before 8 Nov; schema.sql and policies.sql are the full setup
+supabase/migrations/

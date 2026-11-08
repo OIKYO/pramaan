@@ -1,5 +1,5 @@
 # Backup keep-awake: calls /health?db=true every 10 minutes so neither Render nor Supabase sleeps.
-# The main job runs inside Supabase (supabase/migrations/2026-11-08d_keep_awake.sql), because GitHub
+# The main job runs inside Supabase (the last part of supabase/schema.sql), because GitHub
 # runs free scheduled jobs late or skips them.
 name: Keep awake
 

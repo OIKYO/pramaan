@@ -114,7 +114,7 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 
 ## Organisations, team and imports (7 Nov, later)
 
-- **Many organisations on one Pramaan, each seeing only its own data.** A new company signs up and becomes its own head office. Every company-owned table gained `org_id`; names are unique within an organisation; `my_org()` starts every RLS policy; two-column foreign keys `(id, org_id)` stop references across organisations at the database level, so even a bug in the API couldn't link one company's branch to another's region. The migration (`supabase/migrations/2026-11-07_organisations.sql`) moved the demo data into the first organisation; `schema.sql` and `policies.sql` include organisations for new installs. Rehearsed on an in-memory Postgres (PGlite) before running on the live database, in one transaction.
+- **Many organisations on one Pramaan, each seeing only its own data.** A new company signs up and becomes its own head office. Every company-owned table gained `org_id`; names are unique within an organisation; `my_org()` starts every RLS policy; two-column foreign keys `(id, org_id)` stop references across organisations at the database level, so even a bug in the API couldn't link one company's branch to another's region. A one-off migration moved the demo data into the first organisation; `schema.sql` and `policies.sql` include organisations for new installs. Rehearsed on an in-memory Postgres (PGlite) before running on the live database, in one transaction.
 - **The old one-column foreign keys were dropped.** With both kept, the database API saw two ways to join posters to branches and refused to guess (PGRST201). The two-column keys enforce everything the old ones did.
 - **Removing someone's access keeps their history.** Deleting a person would break the audit trail (they created posters and reviews), so head office bans the sign-in and sets `deactivated_at`; `my_org()` and `my_role()` then return nothing for them.
 - **Temporary passwords instead of email invites.** Free email sending is rate-limited and needs the project's redirect URLs set up; head office already knows how to reach its staff. The password is random (about 59 bits), shown once, never stored by us, and must be replaced at first sign-in.
@@ -135,7 +135,7 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **One set of tables, the organisation's own words.** Courses, results figures and toppers keep their tables (renaming them would have broken every existing poster's history), but the screens and findings use the industry's words: "Menu and prices", "Impact figures", "Players and consent". Fields only coaching institutes have (course type and duration, a figure's exam, a person's rank and result date) became optional; the exam results rulebook asks for them again.
 - **The industry picker searches everything at once.** One search box across all 516 subdomains, grouped under their industry, instead of 30 options then a second list. If nothing fits, the organisation types its own words and picks the closest industry, which sets the vocabulary.
 - **Data imports follow the rulebooks.** Only datasets of kept rulebooks can be imported, titled in the organisation's words; `price` is accepted as a column name for `fee_inr`.
-- **Migration:** `supabase/migrations/2026-11-08_rulebooks.sql`, rehearsed on an in-memory Postgres (fresh install and migrated database end up with the same columns). The demo organisation keeps every rulebook as a coaching institute.
+- **Migration:** applied to the live database after a rehearsal on an in-memory Postgres (fresh install and migrated database end up with the same columns). The demo organisation keeps every rulebook as a coaching institute.
 
 ## Design, fourth pass (8 Nov)
 
@@ -159,7 +159,7 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Three behaviours instead of eleven switches.** *Always on* (brand kit, branch contacts, honest claims, people and consent, copyright) can't be switched off. *Conditional* rulebooks act only when a poster shows a price, figure, date, offer or claim; dates, offers and legal start on for everyone, offerings and figures when the industry or kind of organisation calls for them. *Domain-specific* (exam results for coaching ads) comes with the industry or with "Coaching or training institute". Head office can still switch off any conditional or domain rulebook.
 - **The organisation has its own page.** Organisation › Profile holds the name, what it does and the rulebooks it keeps; Settings is only about the person. Until the industry and kind of organisation are filled in, the Profile menu item and the account menu's Organisation carry a marker, and the page explains why.
 - **The demo is no longer advertised.** Northfield Academy and its accounts stay in the database (for judges, who get the logins from the README), but the product page, its menus and the sign-in page no longer link to it. The product page's example is labelled as an example with a fictional poster.
-- **Migration:** `supabase/migrations/2026-11-08b_general_rulebooks.sql` (two brand-kit lists, and the general rulebooks switched on for existing organisations), rehearsed on an in-memory Postgres.
+- **Migration:** two brand-kit lists, and the general rulebooks switched on for existing organisations; rehearsed on an in-memory Postgres.
 
 ## Invites, join codes and passwords (8 Nov, later)
 
@@ -169,7 +169,7 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Passwords need 8 characters, a number and a special character**, checked by the server and, as people type, by `PasswordInput`: it names only the next thing to fix, fills three bars, and turns red when the person stops typing with something missing. The head office password is called the *organisation password*, with a note that it can't be recovered.
 - **Small things that make the site feel finished:** theme-coloured thin scrollbars; smooth anchor scrolling; menus and popovers that fade and lift open; the passed-checks list opens smoothly; a slight press on buttons; a cookie notice once per browser, bottom left; a real 404 page for every unknown address; and on phones a solid top bar (blurring it while scrolling stutters) and no sideways scroll.
 - **`docs/copy-brief.md`** gives a copywriter every true fact about Pramaan, the voice, and the exact pieces of text needed, so the product, enterprise and legal pages can be written without inventing anything.
-- **Migration:** `supabase/migrations/2026-11-08c_invites.sql`, rehearsed on an in-memory Postgres.
+- **Migration:** rehearsed on an in-memory Postgres, then applied to the live database.
 
 ## Website text, legal pages and deletion (8 Nov, later)
 
@@ -185,7 +185,7 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 ## Keeping the API awake, take two (8 Nov, later)
 
 - **GitHub's scheduler isn't reliable enough.** The keep-awake workflow is set to every 10 minutes, but GitHub ran it 3 times in a day: free scheduled jobs are delayed or dropped when GitHub is busy. Render then slept, and the first page after a quiet spell showed loading placeholders for about a minute.
-- **Supabase's scheduler does it now.** `pg_cron` with `pg_net` (both free on Supabase) calls `/health?db=true` every 10 minutes from inside the database (`supabase/migrations/2026-11-08d_keep_awake.sql`). The GitHub workflow stays as a backup and an uptime alert.
+- **Supabase's scheduler does it now.** `pg_cron` with `pg_net` (both free on Supabase) calls `/health?db=true` every 10 minutes from inside the database (the last part of `supabase/schema.sql`). The GitHub workflow stays as a backup and an uptime alert.
 - **The site helps too.** It calls `/health` the moment anyone opens it, so the server is waking while they read or type; and any loading state that lasts more than 4 seconds says the server may be waking and how long that takes.
 - **The API's bare address** now answers with its name and links instead of "Not Found".
 

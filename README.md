@@ -16,7 +16,7 @@ Team **HEISEN-DE-BUG** · CodeNexus India 2026 (We Code Coders) · problem state
 - App: **https://pramaanapp.vercel.app**
 - API: https://pramaan-api-6p3b.onrender.com ([`/health`](https://pramaan-api-6p3b.onrender.com/health), [API docs](https://pramaan-api-6p3b.onrender.com/docs))
 
-The API runs on Render's free tier, which sleeps after 15 idle minutes. Supabase's scheduler calls `/health?db=true` every 10 minutes to keep it awake ([2026-11-08d_keep_awake.sql](supabase/migrations/2026-11-08d_keep_awake.sql)); a scheduled GitHub Action ([keep-awake.yml](.github/workflows/keep-awake.yml)) does the same as a backup. The site also nudges the API awake as soon as someone opens it. If a page still says the server is waking up, wait a minute. Open `/health` a minute before a demo to be sure.
+The API runs on Render's free tier, which sleeps after 15 idle minutes. Supabase's scheduler calls `/health?db=true` every 10 minutes to keep it awake (the last part of [schema.sql](supabase/schema.sql)); a scheduled GitHub Action ([keep-awake.yml](.github/workflows/keep-awake.yml)) does the same as a backup. The site also nudges the API awake as soon as someone opens it. If a page still says the server is waking up, wait a minute. Open `/health` a minute before a demo to be sure.
 
 ### Demo accounts (all fictional)
 
@@ -57,7 +57,7 @@ The AI reads; plain code decides; people approve. Details in [docs/architecture.
 ```
 frontend/   React + Vite + Tailwind + shadcn/ui; src/api/ is the contract every screen is built on
 backend/    FastAPI: app/ (API, auth, status machine), pipeline/ (read, second read, match, visuals), rules/ (27 checks in 11 rulebooks)
-supabase/   schema.sql, policies.sql, migrations/ (for databases created before organisations)
+supabase/   schema.sql, policies.sql
 tools/      make_test_posters.py, make_logo.py
 docs/       architecture, decisions, AI disclosure, user testing, contributions
 ```

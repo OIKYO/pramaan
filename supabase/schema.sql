@@ -268,3 +268,18 @@ create table public.invites (
   constraint invites_region_same_org foreign key (region_id, org_id) references public.regions (id, org_id) on delete cascade
 );
 create index invites_org_idx on public.invites (org_id);
+
+-- Keep the API awake. Render's free plan sleeps after 15 idle minutes and GitHub runs free scheduled
+-- jobs late, so Supabase's own scheduler calls /health?db=true every 10 minutes, which also keeps the
+-- database active. For another deployment, change the URL. Running this again replaces the job.
+-- Check it: select * from cron.job_run_details order by start_time desc limit 5;
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+
+select cron.unschedule(jobid) from cron.job where jobname = 'pramaan-keep-awake';
+
+select cron.schedule(
+  'pramaan-keep-awake',
+  '*/10 * * * *',
+  $$ select net.http_get(url := 'https://pramaan-api-6p3b.onrender.com/health?db=true', timeout_milliseconds := 90000) $$
+);
