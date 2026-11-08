@@ -8,12 +8,10 @@ interface PopoverProps {
   onOpenChange: (open: boolean) => void;
   trigger: ReactNode;
   children: ReactNode;
-  /** Match the trigger's width, for pickers that look like a field. */
   matchWidth?: boolean;
   className?: string;
 }
 
-/** A panel that opens under its trigger and closes on Esc or a click outside. */
 export function Popover({ open, onOpenChange, trigger, children, matchWidth = false, className }: PopoverProps) {
   return (
     <P.Root open={open} onOpenChange={onOpenChange}>

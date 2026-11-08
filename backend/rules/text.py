@@ -1,5 +1,3 @@
-"""Small text helpers the rules share: normalising, digits, durations, rupees, course lookup."""
-
 import re
 
 from rapidfuzz import fuzz
@@ -88,7 +86,6 @@ def best_course(text: str, courses: list[Course]) -> tuple[Course | None, float]
 
 
 def block_with(reading: PosterReading, raw: str) -> TextBlock | None:
-    """The text block a number or phrase was printed in."""
     wanted, wanted_digits = norm(raw), digits(raw)
     for block in reading.text_blocks:
         if wanted and wanted in norm(block.text):

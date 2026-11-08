@@ -6,7 +6,6 @@ import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner";
 
-/** Email and password, and a way to create an organisation. */
 export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
   const { signIn } = useSession();
   const [email, setEmail] = useState("");

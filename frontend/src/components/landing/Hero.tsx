@@ -2,7 +2,6 @@ import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { ProductPreview } from "./ProductPreview";
 
-/** What Pramaan does, in one line, the two ways in, and the product itself underneath. */
 export function Hero() {
   return (
     <section id="how" className="scroll-mt-20">

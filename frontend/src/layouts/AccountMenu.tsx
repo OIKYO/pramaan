@@ -7,7 +7,6 @@ import { Menu } from "@/components/ui/Menu";
 import { ROLE_LABEL } from "@/lib/labels";
 import { THEME_LABEL, useTheme } from "@/lib/theme";
 
-/** Who is signed in. Opens settings, the organisation, the theme and sign out. */
 export function AccountMenu({ side = "top" }: { side?: "top" | "bottom" }) {
   const profile = useProfile();
   const { signOut } = useSession();

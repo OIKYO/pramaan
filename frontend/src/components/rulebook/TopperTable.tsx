@@ -11,8 +11,6 @@ interface TopperTableProps {
   onEdit?: (topper: Topper) => void;
 }
 
-/** People posters may show, and whether their consent is on file. With the exam results rulebook,
- * also their verified rank and the course they took. */
 export function TopperTable({ toppers, courses, onEdit }: TopperTableProps) {
   const words = useVocabulary();
   const results = useKeeps()("rankings") || toppers.some((t) => t.rank);

@@ -8,7 +8,6 @@ interface ChoiceChipsProps {
   onChange: (value: string[]) => void;
 }
 
-/** Pick any number of options. Each chip is a toggle button, so it works with the keyboard. */
 export function ChoiceChips({ label, options, value, onChange }: ChoiceChipsProps) {
   const toggle = (id: string) => onChange(value.includes(id) ? value.filter((v) => v !== id) : [...value, id]);
   return (

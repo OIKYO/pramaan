@@ -8,8 +8,6 @@ import { openBlockingOf } from "@/lib/findings";
 import { NoteDialog } from "./NoteDialog";
 import { PosterForm } from "./PosterForm";
 
-/** What this person can do next with the poster. The server decides; this only offers it.
- * On wide screens it sits in the page header; on phones it stays at the bottom of the screen. */
 export function ActionBar({ poster, role }: { poster: PosterDetail; role: Role }) {
   const actions = poster.allowed_actions as PosterAction[];
   const [uploading, setUploading] = useState(false);

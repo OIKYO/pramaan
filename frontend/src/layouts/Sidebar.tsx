@@ -3,7 +3,6 @@ import { AccountMenu } from "./AccountMenu";
 import { NavList } from "./NavList";
 import { OrgHeader } from "./OrgHeader";
 
-/** The menu on wide screens: the organisation at the top, the role's pages, and the account at the foot. */
 export function Sidebar({ role }: { role: Role }) {
   return (
     <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line bg-surface lg:flex">

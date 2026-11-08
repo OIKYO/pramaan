@@ -9,7 +9,6 @@ import { Panel } from "@/components/ui/Panel";
 import { toast } from "@/components/ui/Toast";
 import { ROLE_LABEL, formatDate } from "@/lib/labels";
 
-/** Who you are in Pramaan. You can change your name; head office changes roles and branches. */
 export function AccountPanel({ profile, where }: { profile: Profile; where: string }) {
   const update = useUpdateMyName();
   const [editing, setEditing] = useState(false);

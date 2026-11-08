@@ -13,7 +13,6 @@ import { EmptyState } from "@/components/ui/States";
 import { download } from "@/lib/csv";
 import { statsCsv } from "@/lib/rulebookCsv";
 
-/** The only figures posters may quote: results figures, impact figures, approved figures. */
 export function FiguresPage() {
   const words = useVocabulary();
   const stats = useResultStats();

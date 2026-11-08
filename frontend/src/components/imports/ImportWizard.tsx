@@ -9,7 +9,6 @@ import { DatasetPicker } from "./DatasetPicker";
 import { ImportPreviewView } from "./ImportPreviewView";
 import { ImportResult } from "./ImportResult";
 
-/** Choose what to import, see the columns, upload a CSV, check the preview, then confirm. */
 export function ImportWizard({ specs, initial }: { specs: ImportSpec[]; initial: Dataset | null }) {
   const [dataset, setDataset] = useState<Dataset>(initial ?? specs[0].dataset);
   const [file, setFile] = useState<File | null>(null);

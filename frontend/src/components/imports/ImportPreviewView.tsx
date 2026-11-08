@@ -14,7 +14,6 @@ interface ImportPreviewViewProps {
 
 const SHOWN = 50;
 
-/** What the file would change, and every problem by line and column. Nothing is saved yet. */
 export function ImportPreviewView({ preview, fileName, pending, onConfirm, onReset }: ImportPreviewViewProps) {
   const creates = preview.rows.filter((r) => r.action === "create").length;
   const updates = preview.rows.filter((r) => r.action === "update").length;

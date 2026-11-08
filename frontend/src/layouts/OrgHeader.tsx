@@ -3,7 +3,6 @@ import { useOrganisation } from "@/api/hooks/useOrganisation";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { Skeleton } from "@/components/ui/skeleton";
 
-/** The top of the menu: Pramaan's mark and the organisation you're working in. */
 export function OrgHeader() {
   const org = useOrganisation();
   return (

@@ -1,4 +1,3 @@
-/** Where the product page's menus and footer point. Section ids are on the landing components. */
 import {
   BadgeCheck,
   FileUp,

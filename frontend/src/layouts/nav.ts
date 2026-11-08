@@ -1,5 +1,3 @@
-/** Where each role can go, grouped as the menu shows it, and each role's home page. The rulebook
- * pages follow the organisation: only the rulebooks it keeps, named in its own words. */
 import {
   BadgeCheck,
   BookOpen,
@@ -30,9 +28,7 @@ export interface NavItem {
   to: string;
   label: string;
   icon: LucideIcon;
-  /** Show how many posters wait in this queue. */
   queue?: PosterScope;
-  /** Mark the item until something is done there, e.g. the organisation's details. */
   attention?: string;
 }
 
@@ -56,7 +52,6 @@ function rulebook(keeps: (id: string) => boolean, words: Vocabulary): NavGroup {
 
 const ALL_POSTERS: NavItem = { to: "/posters", label: "All posters", icon: Files };
 
-/** `gaps`: what head office hasn't yet said about the organisation; its Profile item is marked until then. */
 export function navFor(role: Role, keeps: (id: string) => boolean, words: Vocabulary, gaps: string[] = []): NavGroup[] {
   const book = rulebook(keeps, words);
   if (role === "branch_staff") {

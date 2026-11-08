@@ -128,6 +128,5 @@ def make_ctx(reading: PosterReading | None = None, *, tagged: list[str] | None =
 
 
 def with_person(reading: PosterReading, **changes) -> PosterReading:
-    """The reading with the first person's fields changed."""
     person = reading.people[0].model_copy(update=changes)
     return reading.model_copy(update={"people": [person]})

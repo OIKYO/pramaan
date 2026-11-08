@@ -1,8 +1,3 @@
-/**
- * Upload a new poster and run all its checks (10-30 s on the live reader). While they run, the
- * poster already appears at the top of "My posters" as being checked, so the person can move on;
- * when the checks finish, the real poster replaces it. If the upload fails, the row disappears.
- */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postForm, toForm } from "../client";
 import type { PosterDetail, PosterListItem } from "../types";

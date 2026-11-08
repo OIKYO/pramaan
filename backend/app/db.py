@@ -1,5 +1,4 @@
-"""The Supabase client the backend uses. It holds the secret (service role) key, which bypasses
-row-level security, so it must never leave the server."""
+"""Service-role client: it bypasses row-level security, so it must never leave the server."""
 
 from functools import lru_cache
 
@@ -18,7 +17,6 @@ def get_db() -> Client:
 
 def audit(org_id: str, actor_id: str | None, action: str, target_type: str, target_id: str | None,
           details: dict | None = None) -> None:
-    """Every status change, AI call and team or rulebook change goes in the organisation's audit log."""
     get_db().table("audit_log").insert({
         "org_id": org_id, "actor_id": actor_id, "action": action, "target_type": target_type,
         "target_id": target_id, "details": details or {},

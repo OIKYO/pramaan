@@ -1,10 +1,3 @@
-"""Second read of key numbers with Tesseract.
-
-For every rank, fee, phone number and results figure Gemini reported, crop its box (8% padding),
-upscale 2x, grayscale and threshold, and read it with Tesseract (--psm 7, digits only). If the
-digits differ from Gemini's, or Tesseract can't read the number, a person confirms it (READ-02).
-"""
-
 from collections.abc import Callable
 
 import cv2
@@ -39,7 +32,6 @@ def tesseract_available(cmd: str = "") -> bool:
 
 
 def prepare_crop(image: Image.Image, box_2d: list[int]) -> np.ndarray:
-    """Crop with padding, upscale 2x, grayscale, Otsu threshold; dark text on white for Tesseract."""
     left, top, right, bottom = to_pixels(box_2d, image.width, image.height, pad=PADDING)
     crop = np.array(image.convert("RGB").crop((left, top, max(right, left + 1), max(bottom, top + 1))))
     gray = cv2.cvtColor(crop, cv2.COLOR_RGB2GRAY)

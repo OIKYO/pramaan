@@ -3,12 +3,10 @@ import { Search } from "lucide-react";
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
-  /** What's being searched, read out to screen readers ("Search posters"). */
   label: string;
   placeholder?: string;
 }
 
-/** A search box for filtering a list as you type. */
 export function SearchInput({ value, onChange, label, placeholder = "Search" }: SearchInputProps) {
   return (
     <label className="relative flex w-full items-center sm:w-64">

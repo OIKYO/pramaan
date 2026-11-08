@@ -2,7 +2,6 @@ import { JoinCodePanel } from "@/components/organisation/JoinCodePanel";
 import { InvitePanel } from "@/components/team/InvitePanel";
 import { PageHeader } from "@/components/ui/PageHeader";
 
-/** Regional managers bring their branches' staff in: an invite link for one person, or the join code. */
 export function InviteStaffPage() {
   return (
     <div className="flex flex-col gap-6">

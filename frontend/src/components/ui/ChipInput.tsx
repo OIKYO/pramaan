@@ -8,14 +8,11 @@ interface ChipInputProps {
   values: string[];
   onChange: (values: string[]) => void;
   placeholder: string;
-  /** Return an error message to refuse a value. */
   validate?: (value: string) => string | null;
-  /** What to show inside each chip (e.g. a colour swatch). */
   renderChip?: (value: string) => ReactNode;
   readOnly?: boolean;
 }
 
-/** A short list edited as chips: type and press Enter to add, × to remove. */
 export function ChipInput({ label, values, onChange, placeholder, validate, renderChip, readOnly = false }: ChipInputProps) {
   const [draft, setDraft] = useState("");
   const [error, setError] = useState<string | null>(null);

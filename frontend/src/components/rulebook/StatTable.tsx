@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { DataTable, type Column } from "@/components/ui/DataTable";
 import { formatDate } from "@/lib/labels";
 
-/** The only figures a poster may quote, with their source. */
 export function StatTable({ stats, onEdit }: { stats: ResultStat[]; onEdit?: (stat: ResultStat) => void }) {
   const words = useVocabulary();
   const columns: Column<ResultStat>[] = [

@@ -7,7 +7,6 @@ import { QueryState } from "@/components/ui/QueryState";
 export function RulesPage() {
   const rules = useRules();
   const isHeadOffice = useProfile().role === "head_office";
-  // Only the checks in rulebooks the organisation keeps run on its posters.
   const kept = new Set(rules.data?.rulebooks.filter((b) => b.enabled).map((b) => b.id));
   const active = rules.data?.rules.filter((r) => r.rulebooks.some((b) => kept.has(b)));
   const count = active?.length;

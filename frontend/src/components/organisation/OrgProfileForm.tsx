@@ -11,8 +11,6 @@ import { LoadingRows } from "@/components/ui/States";
 import { toast } from "@/components/ui/Toast";
 import { IndustryPicker, type IndustryValue } from "./IndustryPicker";
 
-/** What the organisation does. It picks the words Pramaan uses and suggests rulebooks; changing it
- * never switches a rulebook on or off by itself. Head office edits it; others see it. */
 export function OrgProfileForm({ org, canEdit }: { org: Organisation; canEdit: boolean }) {
   const catalog = useCatalog().data;
   const update = useUpdateOrganisation();

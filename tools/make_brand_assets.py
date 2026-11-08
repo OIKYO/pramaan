@@ -36,7 +36,7 @@ BLUE, GOLD = "#2C87E8", "#D8A03F"
 CREAM, GREY = "#FBF4E4", "#8E8E8E"
 INK, MUTED, PAPER = "#1F3354", "#5B6B82", "#F8F6F1"
 
-# --- The P mark -------------------------------------------------------------------------------------
+# The P mark
 # Straight parts were measured along the middle of each stroke; the two curves of the bowl are cubic
 # Béziers fitted to it (within 0.4 px). The check mark cuts the bowl: the blue curve ends on a line
 # almost parallel to the check, and the gold curve starts on a near-square cut. Each curve runs a
@@ -78,7 +78,7 @@ def keep_side(cut: tuple, box: tuple = (-100.0, -100.0, 1200.0, 500.0)) -> str:
 
 CLIPS = {name: keep_side(cut) for name, cut in CUTS.items()}
 
-# --- The lettering ----------------------------------------------------------------------------------
+# The lettering
 # (text, font file, font size, baseline, left edge of each letter's ink), all from the PNG.
 WORDMARK = ("PRAMAAN", "Poppins-Medium.ttf", 119.8, 177.0,
             [303.0, 385.2, 467.1, 566.2, 678.1, 772.6, 871.7])

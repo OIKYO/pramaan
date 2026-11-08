@@ -3,8 +3,6 @@ import { parseMarkdown } from "@/lib/markdown";
 import { InlineText } from "./InlineText";
 import { MarkdownView } from "./MarkdownView";
 
-/** One of the website's own pages (product, enterprise, about, legal) from its Markdown, with an
- * "On this page" list that stays in view beside it on wide screens. */
 export function ContentPage({ source }: { source: string }) {
   const blocks = useMemo(() => parseMarkdown(source), [source]);
   const sections = blocks.filter((b) => b.kind === "heading" && b.level === 2);

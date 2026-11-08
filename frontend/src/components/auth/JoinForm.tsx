@@ -11,14 +11,11 @@ import { passwordNeeds } from "@/lib/password";
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-/** "k7mq x3vp" as it's typed -> "K7MQ-X3VP". */
 const formatCode = (raw: string) => {
   const text = raw.replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 8);
   return text.length > 4 ? `${text.slice(0, 4)}-${text.slice(4)}` : text;
 };
 
-/** Join an existing organisation with the code a colleague gave you. You join as branch staff of the
- * branch you pick; head office can change your role later. */
 export function JoinForm() {
   const join = useJoinWithCode();
   const [code, setCode] = useState("");

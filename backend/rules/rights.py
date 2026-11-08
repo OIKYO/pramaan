@@ -1,6 +1,3 @@
-"""Copyright and asset permissions (RIGHTS-01, RIGHTS-02): no stock-photo watermarks, and other
-organisations' names and logos only when head office has approved them as partners."""
-
 from rapidfuzz import fuzz
 
 from rules.registry import Problem, RuleContext, rule

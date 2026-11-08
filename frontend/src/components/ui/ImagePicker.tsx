@@ -12,7 +12,6 @@ interface ImagePickerProps {
   error?: string | null;
 }
 
-/** Drop or choose the poster image, with a full preview. Checks the type and size before upload. */
 export function ImagePicker({ file, onChange, error }: ImagePickerProps) {
   const id = useId();
   const [rejected, setRejected] = useState<string | null>(null);

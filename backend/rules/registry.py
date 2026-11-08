@@ -1,12 +1,3 @@
-"""The rule engine: rules register with @rule, and run_rules() runs every enabled one.
-
-A rule is a plain function that takes a RuleContext and returns the problems it found, as
-Problem objects. Each rule belongs to one or more rulebooks; it runs only when the organisation
-keeps one of them and hasn't switched the rule off. The registry turns them into Findings with the rule's id, kind, severity and
-reason from rule_pack.json. A rule that finds nothing gets one "pass" finding, so the findings
-view can show passed checks too.
-"""
-
 import json
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -24,9 +15,6 @@ RULE_PACK_PATH = Path(__file__).with_name("rule_pack.json")
 
 @dataclass(frozen=True)
 class Words:
-    """How an organisation talks about what its rulebooks hold, so findings use its words:
-    "isn't an approved fee" for a coaching institute, "isn't an approved price" for a shop."""
-
     offering: str = "product"
     offering_plural: str = "products"
     price: str = "price"
@@ -56,7 +44,6 @@ class RuleContext:
     restricted: list[str] = field(default_factory=list)  # claims this industry may never make (LEGAL-02)
 
     def matched(self):
-        """(person, topper) pairs for people confidently matched to the register."""
         for m in self.people:
             if m.status == "match" and m.topper_id in self.toppers:
                 yield self.reading.people[m.person_index], self.toppers[m.topper_id]
@@ -67,8 +54,6 @@ class RuleContext:
 
 @dataclass
 class Problem:
-    """One thing a rule found wrong."""
-
     message: str
     evidence: dict = field(default_factory=dict)
     suggested_fix: str | None = None
@@ -80,8 +65,6 @@ _RULES: dict[str, RuleFn] = {}
 
 
 def rule(rule_id: str) -> Callable[[RuleFn], RuleFn]:
-    """Register a check under its rule pack id."""
-
     def register(fn: RuleFn) -> RuleFn:
         if rule_id in _RULES:
             raise ValueError(f"{rule_id} is registered twice")
@@ -127,13 +110,12 @@ def to_finding(rule_id: str, problem: Problem) -> Finding:
 
 
 def rule_applies(rd: RuleDef, rulebooks: set[str] | None) -> bool:
-    """A rule runs when the organisation keeps one of its rulebooks. None means every rulebook."""
+    """None means every rulebook."""
     return rulebooks is None or not rd.rulebooks or bool(rulebooks & set(rd.rulebooks))
 
 
 def run_rules(ctx: RuleContext, enabled: dict[str, bool] | None = None, rulebooks: set[str] | None = None) -> list[Finding]:
-    """Run every check that is switched on (`enabled`, from rule_settings; missing ids use the pack)
-    and belongs to a rulebook the organisation keeps."""
+    """Rule ids missing from rule_settings use the pack's `enabled`."""
     findings: list[Finding] = []
     for rd in load_rule_pack().rules:
         if not rule_applies(rd, rulebooks) or not (enabled or {}).get(rd.id, rd.enabled):

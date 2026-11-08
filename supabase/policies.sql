@@ -1,14 +1,12 @@
 -- Row-level security for Pramaan. Run after schema.sql.
 --
 -- Every rule starts with "your organisation only": nobody sees or changes another company's data.
--- Inside an organisation (CLAUDE.md section 6):
+-- Inside an organisation:
 --   branch staff      read their own branch's posters; read the rulebook
 --   regional managers read posters from branches in their region; read the rulebook
 --   head office       read everything; edit the rulebook, regions and branches
 -- Posters, versions, findings, reviews, profiles and the audit log are written only by the backend,
 -- which uses the secret (service role) key and bypasses RLS. Clients get no write access to them.
-
--- ============================================================ helpers
 
 -- SECURITY DEFINER so policies can read the caller's profile without recursing into its RLS.
 -- A removed member (deactivated_at set) gets null from all of these, and so loses access at once.
@@ -50,8 +48,6 @@ alter table public.result_stats alter column org_id set default public.my_org();
 alter table public.toppers alter column org_id set default public.my_org();
 alter table public.rule_settings alter column org_id set default public.my_org();
 
--- ============================================================ table privileges
-
 -- Signed-out visitors get nothing. (Signing up goes through the backend.)
 revoke all on all tables in schema public from anon;
 
@@ -85,8 +81,6 @@ grant update (
   full_name, name_variants, exam, exam_year, rank, result_date, course_id, is_minor,
   consent_date, consent_channels, consent_valid_until, guardian_signed
 ) on public.toppers to authenticated;
-
--- ============================================================ row-level security
 
 alter table public.organisations enable row level security;
 alter table public.invites enable row level security;
@@ -172,8 +166,6 @@ create policy "reviews: with the poster" on public.reviews for select to authent
 
 create policy "audit log: head office reads their own" on public.audit_log for select to authenticated
   using (org_id = (select public.my_org()) and (select public.my_role()) = 'head_office');
-
--- ============================================================ storage
 
 -- Poster images: paths are '{poster_id}/v{version}-{hash}.{ext}'. Readable (signed URLs) by anyone
 -- who can see the poster. Uploads go through the backend.

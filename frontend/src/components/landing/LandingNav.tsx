@@ -7,7 +7,6 @@ import { Drawer } from "@/components/ui/Drawer";
 import { ENTERPRISE, PRODUCT } from "./links";
 import { NavMenus } from "./NavMenus";
 
-/** The public pages' top bar. On phones the links fold into one menu. */
 export function LandingNav() {
   const [open, setOpen] = useState(false);
   return (

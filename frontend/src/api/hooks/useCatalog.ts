@@ -1,5 +1,3 @@
-/** What organisations do, the words each industry uses, and the rulebooks. The same for everyone
- * and needed before sign-up, so it is read once and kept. */
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { api } from "../client";
@@ -10,7 +8,6 @@ import { useOrganisation } from "./useOrganisation";
 export const useCatalog = () =>
   useQuery({ queryKey: keys.catalog, queryFn: () => api<Catalog>("/catalog"), staleTime: Infinity, gcTime: Infinity });
 
-/** Used until the catalog arrives, and for an organisation that hasn't said what it does. */
 export const DEFAULT_WORDS: Vocabulary = {
   offerings: "Products and prices",
   offering: "product",
@@ -34,14 +31,12 @@ export function vocabularyFor(catalog: Catalog | undefined, group: string | null
   return catalog.vocabularies[key] ?? catalog.vocabularies.default ?? DEFAULT_WORDS;
 }
 
-/** The words your organisation uses: "Courses and fees", "Menu and prices", "Toppers register". */
 export function useVocabulary(): Vocabulary {
   const catalog = useCatalog().data;
   const org = useOrganisation().data;
   return useMemo(() => vocabularyFor(catalog, org?.industry_group, org?.industry), [catalog, org?.industry_group, org?.industry]);
 }
 
-/** Rulebooks every organisation keeps, plus what each chosen rulebook depends on. */
 export function completeRulebooks(catalog: Catalog | undefined, chosen: string[]): string[] {
   if (!catalog) return chosen;
   const set = new Set(chosen);
@@ -50,8 +45,7 @@ export function completeRulebooks(catalog: Catalog | undefined, chosen: string[]
   return catalog.rulebooks.map((b) => b.id).filter((id) => set.has(id));
 }
 
-/** Whether your organisation keeps a rulebook. Until the organisation loads, everything counts
- * as kept, so menus don't flicker. */
+/** Until the organisation loads, every rulebook counts as kept, so menus don't flicker. */
 export function useKeeps(): (rulebook: string) => boolean {
   const catalog = useCatalog().data;
   const org = useOrganisation().data;
@@ -60,9 +54,7 @@ export function useKeeps(): (rulebook: string) => boolean {
   return (rulebook: string) => kept.has(rulebook);
 }
 
-/** What an organisation like this starts with (the same rule as the server's): the rulebooks everyone
- * keeps, the general ones that act only when a poster shows what they check, and what its industry,
- * subdomain, kind of organisation and focus call for. */
+/** Mirrors suggested_rulebooks() in backend/app/catalog.py. */
 export function suggestedRulebooks(
   catalog: Catalog | undefined,
   org: { industry_group: string | null; industry: string | null; org_type: string | null; focus: string[] },

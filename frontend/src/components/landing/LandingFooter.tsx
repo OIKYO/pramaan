@@ -17,7 +17,6 @@ const COLUMNS = [
 
 const external = (to: string) => to.startsWith("http");
 
-/** The public pages' footer: four columns of links, then the legal line. */
 export function LandingFooter() {
   return (
     <footer className="border-t border-line">

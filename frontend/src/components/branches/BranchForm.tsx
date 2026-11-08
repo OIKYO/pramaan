@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { TextLink } from "@/components/ui/TextLink";
 import { toast } from "@/components/ui/Toast";
 
-/** Add or edit a branch. Its phone and address are what FACT-03 expects on its posters. */
 export function BranchForm({ branch, regions, onDone }: { branch: Branch | null; regions: Region[]; onDone: () => void }) {
   const save = useSaveBranch();
   const remove = useDeleteBranch();

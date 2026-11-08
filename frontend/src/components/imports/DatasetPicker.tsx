@@ -1,7 +1,6 @@
 import { RadioGroup } from "radix-ui";
 import type { Dataset, ImportSpec } from "@/api/types";
 
-/** Choose what to import. Each option says what it holds. */
 export function DatasetPicker({ specs, value, onChange }: { specs: ImportSpec[]; value: Dataset; onChange: (d: Dataset) => void }) {
   return (
     <RadioGroup.Root aria-label="What to import" value={value} onValueChange={(v) => onChange(v as Dataset)} className="flex flex-col gap-1.5">

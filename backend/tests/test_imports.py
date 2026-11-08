@@ -1,5 +1,3 @@
-"""CSV imports: friendly cell reading, row errors that name the line and column, and the plan."""
-
 from app import imports
 from app.imports import Existing, plan
 

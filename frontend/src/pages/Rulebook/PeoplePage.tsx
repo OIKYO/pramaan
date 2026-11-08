@@ -15,7 +15,6 @@ import { EmptyState } from "@/components/ui/States";
 import { download } from "@/lib/csv";
 import { toppersCsv } from "@/lib/rulebookCsv";
 
-/** Everyone posters may show, with their consent: a toppers register, players, members. */
 export function PeoplePage() {
   const words = useVocabulary();
   const toppers = useToppers();
@@ -24,7 +23,6 @@ export function PeoplePage() {
   const [editing, setEditing] = useState<Topper | "new" | null>(null);
   const [query, setQuery] = useState("");
   const needle = query.trim().toLowerCase();
-  // Show the latest copy, so the consent badge updates after an upload.
   const current = editing && editing !== "new" ? (toppers.data?.find((t) => t.id === editing.id) ?? editing) : null;
 
   return (

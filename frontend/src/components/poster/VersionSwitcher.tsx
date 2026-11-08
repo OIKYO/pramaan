@@ -6,12 +6,10 @@ interface VersionSwitcherProps {
   versions: Version[];
   value: number;
   onChange: (version: number) => void;
-  /** The poster's current version, marked in the list. */
   current?: number;
   label?: string;
 }
 
-/** Pick a version of the poster, newest first. Hidden when there is only one version. */
 export function VersionSwitcher({ versions, value, onChange, current, label = "Show version" }: VersionSwitcherProps) {
   if (versions.length < 2) return null;
   return (

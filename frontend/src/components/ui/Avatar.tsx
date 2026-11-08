@@ -8,7 +8,6 @@ const initials = (name: string) =>
     .map((part) => part[0]?.toUpperCase())
     .join("");
 
-/** A person's initials in a circle. No photos: Pramaan doesn't store pictures of people. */
 export function Avatar({ name, size = "md" }: { name: string; size?: "sm" | "md" }) {
   return (
     <span

@@ -1,5 +1,3 @@
-"""Every check passes on a clean poster and fails on the problem it exists to catch."""
-
 from datetime import date
 
 import pytest
@@ -23,9 +21,6 @@ def add_number(reading, kind: str, raw: str, value=None):
     return reading.model_copy(update={"numbers": [*reading.numbers, number]})
 
 
-# ---------------------------------------------------------------- engine
-
-
 def test_rule_pack_has_27_checks_all_with_code():
     pack = load_rule_pack()
     assert len(pack.rules) == 27
@@ -44,9 +39,6 @@ def test_disabled_rules_are_skipped():
     findings = run_rules(make_ctx(), enabled={"ACC-01": False})
     assert "ACC-01" not in {f.rule_id for f in findings}
     assert len(findings) == 26
-
-
-# ---------------------------------------------------------------- claims
 
 
 def test_ccpa01_banned_claim_blocks():
@@ -133,9 +125,6 @@ def test_ccpa06_unapproved_figure_blocks():
     assert found and "42" in found[0].suggested_fix
 
 
-# ---------------------------------------------------------------- facts
-
-
 def test_fact01_wrong_duration_in_course_name_blocks():
     found = problems(make_ctx(add_block(clean_reading(), "2-Year Crash Course for JEE")), "FACT-01")
     assert found and "1 year" in found[0].message
@@ -181,9 +170,6 @@ def test_fact04_expired_facts_warn():
     assert any("figure" in f.message for f in found)
 
 
-# ---------------------------------------------------------------- brand
-
-
 def test_brand01_missing_logo_warns():
     visual = clean_visual().model_copy(update={"logo_score": 0.41})
     found = problems(make_ctx(visual=visual), "BRAND-01")
@@ -224,9 +210,6 @@ def test_ai_flags_warn_and_unknown_rule_ids_are_not_findings():
     assert all(f.severity == "warn" for f in ai)
     assert next(f for f in ai if f.rule_id == "AI-01").suggested_fix.startswith("AI suggestion:")
     assert "CCPA-99" not in {f.rule_id for f in findings}
-
-
-# ---------------------------------------------------------------- access
 
 
 def test_acc01_low_contrast_warns():

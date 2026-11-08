@@ -1,7 +1,3 @@
-"""Approved facts: what the organisation offers and its prices, branch contact details, expiry
-(FACT-01 to FACT-04). An "offering" is a course, a menu item, a membership: whatever the
-organisation sells, called by its own word (ctx.words)."""
-
 import re
 
 from rapidfuzz import fuzz
@@ -16,7 +12,6 @@ PIN_CODE = re.compile(r"\b\d{6}\b")
 
 
 def _names_an_offering(ctx: RuleContext, text: str) -> bool:
-    """The block looks like it names something on offer: "course", "batch", or the organisation's own word."""
     own = re.compile(rf"\b{re.escape(ctx.words.offering)}s?\b", re.IGNORECASE)
     return bool(COURSE_WORDS.search(text) or own.search(text))
 

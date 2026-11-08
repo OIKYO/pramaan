@@ -103,7 +103,6 @@ BRAND_KIT = {
 
 
 def ensure_user(db, email: str, password: str, full_name: str) -> str:
-    """Create the auth user, or reset its password if it already exists. Returns the user id."""
     existing = {u.email: u for u in db.auth.admin.list_users()}
     if email in existing:
         user_id = existing[email].id
@@ -116,7 +115,6 @@ def ensure_user(db, email: str, password: str, full_name: str) -> str:
 
 
 def consent_pdf(topper: dict) -> bytes:
-    """A one-page fictional consent form, so the consent bucket has something real to serve."""
     page = Image.new("RGB", (1240, 1754), "white")
     d = ImageDraw.Draw(page)
     big, body = ImageFont.load_default(size=44), ImageFont.load_default(size=30)

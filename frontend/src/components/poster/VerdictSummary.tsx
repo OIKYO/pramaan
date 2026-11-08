@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
-/** The verdict in one sentence, and how many findings of each kind are still open. */
 export function VerdictSummary({ version }: { version: Version }) {
   const open = version.findings.filter((f) => f.status === "open");
   const count = (severity: string) => open.filter((f) => f.severity === severity).length;

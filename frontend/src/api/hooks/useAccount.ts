@@ -1,10 +1,8 @@
-/** Your own account: signing up a new organisation, your name, and choosing your password. */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { patchJson, postJson } from "../client";
 import { supabase } from "../supabase";
 import type { SignupRequest } from "../types";
 
-/** Create an organisation (you become its head office), then sign straight in. */
 export const useSignup = () =>
   useMutation({
     mutationFn: async (body: SignupRequest) => {
@@ -14,7 +12,6 @@ export const useSignup = () =>
     },
   });
 
-/** Choose a new password. Clears the "temporary password" flag on your profile. */
 export function useChangePassword() {
   const qc = useQueryClient();
   return useMutation({
@@ -25,7 +22,6 @@ export function useChangePassword() {
   });
 }
 
-/** Change your own name. Role and branch are head office's to change. */
 export function useUpdateMyName() {
   const qc = useQueryClient();
   return useMutation({
@@ -34,8 +30,6 @@ export function useUpdateMyName() {
   });
 }
 
-/** Delete your own account: your name and email are removed and you're signed out everywhere.
- * Refused (with a reason) for an organisation's only head office. */
 export function useDeleteMyAccount() {
   return useMutation({
     mutationFn: async () => {

@@ -1,4 +1,3 @@
-/** Invite links and the organisation's join code, for head office and regional managers. */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, postJson } from "../client";
 import type { Invite, InviteCreate, InviteCreated } from "../types";
@@ -7,7 +6,6 @@ import { restore, snapshot } from "./optimistic";
 
 export const useInvites = () => useQuery({ queryKey: keys.invites, queryFn: () => api<Invite[]>("/invites") });
 
-/** A single-use link. The link itself comes back only now, so the caller shows it straight away. */
 export function useCreateInvite() {
   const qc = useQueryClient();
   return useMutation({
@@ -16,7 +14,6 @@ export function useCreateInvite() {
   });
 }
 
-/** Cancel an invite: it disappears at once and comes back if the server refuses. */
 export function useRevokeInvite() {
   const qc = useQueryClient();
   return useMutation({
@@ -34,7 +31,6 @@ export function useRevokeInvite() {
 export const useJoinCode = (enabled = true) =>
   useQuery({ queryKey: keys.joinCode, queryFn: () => api<{ code: string }>("/organisation/join-code"), enabled });
 
-/** Replace the join code. The old one is hidden at once; the new one shows when the server sends it. */
 export function useRefreshJoinCode() {
   const qc = useQueryClient();
   return useMutation({

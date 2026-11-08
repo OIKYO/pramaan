@@ -7,7 +7,6 @@ const FEATURES = [
   { icon: BadgeCheck, title: "People approve", text: "Branches fix and resubmit. Regional managers review, then head office gives final approval." },
 ];
 
-/** What happens to a poster, in four cells. The 1px gaps over the line colour draw the grid. */
 export function FeatureStrip() {
   return (
     <section aria-label="What Pramaan does" className="grid gap-px border-y border-line bg-line sm:grid-cols-2 lg:grid-cols-4">

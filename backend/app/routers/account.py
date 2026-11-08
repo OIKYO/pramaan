@@ -1,6 +1,3 @@
-"""The signed-in person's own account: their name, choosing a password (required after a temporary
-one), and deleting the account. Role and branch are head office's to change, on the Team page."""
-
 from typing import Annotated
 
 from datetime import datetime, timezone

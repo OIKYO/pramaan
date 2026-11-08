@@ -49,7 +49,6 @@ def rows(headers: dict, path: str) -> list | None:
 
 
 def other_organisation(db, northfield_hq: dict) -> None:
-    """Sign up a throwaway organisation and check neither side can see or touch the other's data."""
     password = secrets.token_urlsafe(16)
     email = f"rls-check-{secrets.token_hex(4)}@example.org"
     created = signup(SignupRequest(organisation_name="RLS check (temporary)", full_name="Check Person",

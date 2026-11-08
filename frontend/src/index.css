@@ -6,7 +6,6 @@
 /* dark: utilities follow the app's theme switch, not only the system setting. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* Expose the tokens as Tailwind utilities. */
 @theme inline {
   --font-sans: var(--font-body);
   --font-mono: var(--font-body);

@@ -1,5 +1,3 @@
-"""Invite links, the organisation's join code, and joining with either. See app/invites.py."""
-
 from datetime import datetime, timezone
 from typing import Annotated
 
@@ -39,9 +37,6 @@ def _branch_region(org_id: str, branch_id: str | None) -> str | None:
         return None
     rows = get_db().table("branches").select("region_id").eq("id", branch_id).eq("org_id", org_id).execute().data
     return rows[0]["region_id"] if rows else None
-
-
-# ---------------------------------------------------------------- invite links
 
 
 @router.post("/invites", response_model=InviteCreated, status_code=201)
@@ -132,9 +127,6 @@ def accept_invite(token: str, body: JoinWithInvite, request: Request) -> JoinRes
     db.table("invites").update({"used_at": _now().isoformat(), "used_by": user_id}).eq("id", row["id"]).execute()
     audit(row["org_id"], user_id, "joined_with_invite", "invite", row["id"], {"role": row["role"]})
     return JoinResult(email=email, organisation=row["organisations"]["name"])
-
-
-# ---------------------------------------------------------------- the join code
 
 
 def _org_by_code(code: str) -> dict:

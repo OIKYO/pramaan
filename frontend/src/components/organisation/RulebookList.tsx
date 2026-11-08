@@ -14,8 +14,6 @@ const GROUPS = [
   { behaviour: "domain", title: "For particular industries", text: "Rules that apply only in some industries." },
 ] as const;
 
-/** Every rulebook in three groups, on or off for this organisation. Switching shows at once and goes
- * back if the server refuses; one that another needs stays on while that one is on. */
 export function RulebookList({ org, canEdit }: { org: Organisation; canEdit: boolean }) {
   const catalog = useCatalog().data;
   const rules = useRules().data;

@@ -1,5 +1,3 @@
-"""The status machine and permission rules (CLAUDE.md section 7)."""
-
 import pytest
 
 from app import state
@@ -30,9 +28,6 @@ def refused(fn, *args) -> int:
     return caught.value.status
 
 
-# ---------------------------------------------------------------- the happy path
-
-
 def test_full_flow_staff_submit_regional_approve_head_office_final_approve():
     t = state.submit(STAFF, poster("checked"))
     assert (t.status, t.review_stage, t.action) == ("in_review", "regional", "submitted")
@@ -46,9 +41,6 @@ def test_send_back_then_new_version():
     t = state.review(REGIONAL, poster("in_review", "regional"), "send_back", BLOCKED, "Fix the rank")
     assert (t.status, t.review_stage) == ("changes_requested", None)
     assert state.check_new_version(STAFF, poster("changes_requested")).status == "draft"
-
-
-# ---------------------------------------------------------------- the rules
 
 
 def test_nobody_approves_their_own_poster():

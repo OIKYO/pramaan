@@ -12,7 +12,6 @@ import { TopperTagger } from "./TopperTagger";
 import { UploadProgress } from "./UploadProgress";
 
 interface PosterFormProps {
-  /** "new" asks for a title and channel too; "version" keeps the poster's. */
   mode: "new" | "version";
   channel?: Channel;
   defaults?: { caption: string; alt_text: string; tagged_topper_ids: string[] };
@@ -22,8 +21,6 @@ interface PosterFormProps {
 
 const CHANNELS = (Object.keys(CHANNEL_LABEL) as Channel[]).map((value) => ({ value, label: CHANNEL_LABEL[value] }));
 
-/** The image beside its details (caption, alt text, channel, students shown), then "Run checks".
- * Side by side when there's room, stacked in a narrow drawer or on a phone. */
 export function PosterForm({ mode, channel: fixedChannel, defaults, pending, onSubmit }: PosterFormProps) {
   const [title, setTitle] = useState("");
   const [channel, setChannel] = useState<Channel>(fixedChannel ?? "instagram");

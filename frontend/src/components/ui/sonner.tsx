@@ -2,7 +2,6 @@ import { CircleCheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 import { useTheme } from "@/lib/theme";
 
-/** Toasts follow the app's theme and use the same surface, line and radius as everything else. */
 const Toaster = (props: ToasterProps) => {
   const { theme } = useTheme();
   return (

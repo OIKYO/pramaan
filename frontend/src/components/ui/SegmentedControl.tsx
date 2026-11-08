@@ -6,9 +6,7 @@ export interface Segment<T extends string> {
   value: T;
   label: string;
   icon?: LucideIcon;
-  /** Show only the icon; the label is still read out and shown on hover. */
   iconOnly?: boolean;
-  /** A small number after the label, e.g. how many posters a filter holds. */
   count?: number;
 }
 
@@ -20,7 +18,6 @@ interface SegmentedControlProps<T extends string> {
   size?: "sm" | "md";
 }
 
-/** Pick one of a few options in a row (channel, theme, list filter). Arrow keys move between them. */
 export function SegmentedControl<T extends string>({ label, value, onChange, options, size = "md" }: SegmentedControlProps<T>) {
   return (
     <RadioGroup.Root

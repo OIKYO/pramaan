@@ -1,10 +1,3 @@
-"""Settings, read once from environment variables.
-
-In development, values come from backend/.env (loaded here, so `uvicorn`, `pytest` and the
-scripts all see the same settings). In production (Render), they come from the service's
-environment. Real environment variables always win over the file.
-"""
-
 import os
 from dataclasses import dataclass
 from functools import lru_cache
@@ -15,7 +8,6 @@ REPO_DIR = BACKEND_DIR.parent
 
 
 def load_env_file(path: Path) -> None:
-    """Minimal .env reader: KEY=value lines, # comments. Doesn't override real env vars."""
     if not path.exists():
         return
     for raw in path.read_text(encoding="utf-8").splitlines():
@@ -42,8 +34,6 @@ class Settings:
 
 
 def parse_origins(value: str) -> tuple[str, ...]:
-    """Comma-separated origins for CORS. Forgives the usual slips: spaces, quotes, a trailing
-    slash, or a bare domain like `pramaanapp.vercel.app` (taken as https)."""
     origins = []
     for item in value.split(","):
         origin = item.strip().strip('"').strip("'").rstrip("/")

@@ -1,7 +1,3 @@
-"""Bring an organisation's existing records in from CSV: branches, courses, results figures, toppers
-and team members. Upload once to preview (nothing is saved), fix any errors, then confirm.
-A file is written only when every row is valid. The checking lives in app/imports.py."""
-
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
@@ -62,7 +58,7 @@ def _existing(dataset: str, org_id: str) -> imports.Existing:
 
 
 def _write(dataset: str, plan: imports.Plan, existing: imports.Existing, org_id: str) -> tuple[int, int, list[dict]]:
-    """Save every planned row. Returns (created, updated, temporary passwords for new members)."""
+    """Returns (created, updated, temporary passwords for new members)."""
     db = get_db()
     created = updated = 0
     credentials: list[dict[str, str]] = []

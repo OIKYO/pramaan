@@ -29,7 +29,6 @@ export function PosterDetailPage() {
       {(detail) => {
         const versionNo = shown ?? detail.current_version;
         const version = detail.versions.find((v) => v.version === versionNo) ?? detail.versions[detail.versions.length - 1];
-        // Confirming and overriding apply to the current version only.
         const actions = (version.version === detail.current_version ? detail.allowed_actions : []) as PosterAction[];
         return (
           <div className="flex flex-col gap-6">

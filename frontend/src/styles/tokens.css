@@ -1,15 +1,6 @@
 /*
- * Design tokens: every colour, size and duration in the app, for both themes. Components use them
- * through Tailwind classes (bg-surface, text-ink, border-line, bg-primary, text-blocked...).
- *
- * Light: cool greys, Prussian blue #14213D for headings and the primary button, orange #FCA311
- * for focus, selection and "needs you".
- * Midnight: onyx, with no blue anywhere. Neutral greys step up from the canvas, the primary button
- * is off-white, and the accent is a warm amber. Severity colours are matte.
- * Severity colours carry meaning in both: red blocks, amber warns, green passed, and "needs a
- * person" is blue in light and a neutral grey in midnight.
- *
- * data-theme on <html> picks the set (lib/theme.ts). Switching changes one attribute.
+ * Every colour, size and duration in the app, for both themes. data-theme on <html> picks the set
+ * (lib/theme.ts); components use the tokens through Tailwind classes.
  */
 :root,
 [data-theme="light"] {
@@ -100,12 +91,10 @@
   --font-body: "Mona Sans", system-ui, sans-serif;
   --display-stretch: 112.5%;
 
-  /* Shape and motion */
   --radius: 0.375rem;
   --duration-fast: 120ms;
   --duration-base: 200ms;
 
-  /* Layout */
   --sidebar-width: 15rem;
   --content-width: 76rem;
 

@@ -3,7 +3,6 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "./button";
 import { Skeleton } from "./skeleton";
 
-/** Nothing to show yet: say why, and offer the next step. */
 export function EmptyState({ title, children, action, icon: Icon = Inbox }: {
   title: string;
   children?: ReactNode;
@@ -20,7 +19,6 @@ export function EmptyState({ title, children, action, icon: Icon = Inbox }: {
   );
 }
 
-/** Something failed: say what happened, and offer to try again. */
 export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   const message = error instanceof Error ? error.message : "Something went wrong.";
   return (
@@ -37,13 +35,12 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
   );
 }
 
-/** Placeholder rows while data loads. They appear only after a short wait, so fast loads don't flicker. */
+/** Shown only after a short wait, so fast loads don't flicker. */
 export function LoadingRows({ rows = 4 }: { rows?: number }) {
   const [shown, setShown] = useState(false);
   const [slow, setSlow] = useState(false);
   useEffect(() => {
     const show = setTimeout(() => setShown(true), 150);
-    // Pramaan's free server sleeps when nobody has used it for a while; waking takes up to a minute.
     const late = setTimeout(() => setSlow(true), 4000);
     return () => {
       clearTimeout(show);
@@ -63,7 +60,6 @@ export function LoadingRows({ rows = 4 }: { rows?: number }) {
   );
 }
 
-/** A message that fills the screen: a page that crashed, or a profile that couldn't load. */
 export function ScreenMessage({ children }: { children: ReactNode }) {
   return (
     <div className="grid min-h-dvh place-items-center bg-canvas p-6">

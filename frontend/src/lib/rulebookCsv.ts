@@ -1,4 +1,3 @@
-/** Rulebook exports, in the same columns as the imports, so an export can be edited and imported back. */
 import type { Branch, Course, Profile, Region, ResultStat, Topper } from "@/api/types";
 import { toCsv } from "./csv";
 

@@ -18,8 +18,6 @@ interface Step {
   importable?: Dataset;
 }
 
-/** A new organisation's setup, worked out from what it has added so far and the rulebooks it
- * keeps. Gone once it's all done. */
 export function SetupChecklist() {
   const org = useOrganisation().data;
   const kit = useBrandKit().data;

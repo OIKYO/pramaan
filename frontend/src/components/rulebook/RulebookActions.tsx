@@ -11,7 +11,6 @@ interface RulebookActionsProps {
   canEdit: boolean;
 }
 
-/** Export to CSV for everyone; import and add for head office. The export reads back in as an import. */
 export function RulebookActions({ dataset, onExport, onAdd, addLabel, canEdit }: RulebookActionsProps) {
   return (
     <>

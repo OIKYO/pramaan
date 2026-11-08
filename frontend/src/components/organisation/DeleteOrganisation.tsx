@@ -9,7 +9,6 @@ import { Modal } from "@/components/ui/Modal";
 import { Panel } from "@/components/ui/Panel";
 import { Spinner } from "@/components/ui/Spinner";
 
-/** Delete the whole organisation. Head office types its name to confirm; everything goes at once. */
 export function DeleteOrganisation({ org }: { org: Organisation }) {
   const remove = useDeleteOrganisation();
   const [open, setOpen] = useState(false);

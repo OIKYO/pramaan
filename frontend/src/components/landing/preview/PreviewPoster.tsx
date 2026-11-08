@@ -7,7 +7,6 @@ const TONE = {
   needs_human: { on: "border-info bg-info/15 ring-4 ring-info/25", off: "border-info/70" },
 } as const;
 
-/** The example poster with a box over each problem. Clicking a box picks its finding. */
 export function PreviewPoster({ selected, onSelect }: { selected: number | null; onSelect: (n: number) => void }) {
   return (
     <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-md border border-line">

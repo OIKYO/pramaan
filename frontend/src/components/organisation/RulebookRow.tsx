@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 
-/** Where each rulebook's records are kept. Dates and offers keep none: their checks need only the poster. */
 const PAGE: Record<string, string> = {
   brand: "/rulebook/brand", contacts: "/organisation/branches", claims: "/rulebook/brand", rights: "/rulebook/brand",
   legal: "/rulebook/brand", offerings: "/rulebook/offerings", figures: "/rulebook/figures", people: "/rulebook/people",
@@ -17,16 +16,13 @@ interface RulebookRowProps {
   on: boolean;
   suggested: boolean;
   checks: Rule[];
-  /** Why it can't be switched: "Always on", or the rulebook that needs it. */
   lockedBy: string | null;
-  /** The rulebooks switching it on brings with it. */
   adds: string[];
   canEdit: boolean;
   pending: boolean;
   onToggle: (on: boolean) => void;
 }
 
-/** One rulebook: what it holds, its checks, and its switch. */
 export function RulebookRow({ book, name, on, suggested, checks, lockedBy, adds, canEdit, pending, onToggle }: RulebookRowProps) {
   const meta = [
     checks.length > 0 && `${checks.length} ${checks.length === 1 ? "check" : "checks"}: ${checks.map((r) => r.id).join(", ")}`,

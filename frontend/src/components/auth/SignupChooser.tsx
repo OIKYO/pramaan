@@ -10,7 +10,6 @@ const MODES: Segment<Mode>[] = [
   { value: "join", label: "Join with a code", icon: UserPlus },
 ];
 
-/** Making an account: start a new organisation, or join one with its code. ?join opens the second. */
 export function SignupChooser({ onCreated }: { onCreated: () => void }) {
   const [params, setParams] = useSearchParams();
   const mode: Mode = params.has("join") ? "join" : "create";

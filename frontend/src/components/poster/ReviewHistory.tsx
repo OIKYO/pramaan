@@ -2,7 +2,6 @@ import type { Review } from "@/api/types";
 import { formatDateTime, REVIEW_ACTION_LABEL } from "@/lib/labels";
 import { cn } from "@/lib/utils";
 
-/** Who did what to the poster, and what they said, oldest first. Entries still saving say so. */
 export function ReviewHistory({ reviews }: { reviews: Review[] }) {
   return (
     <ol className="flex max-w-2xl flex-col">

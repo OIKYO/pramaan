@@ -6,7 +6,6 @@ import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/Toast";
 
-/** Head office renames the organisation. The registered name on posters lives in the brand kit. */
 export function OrganisationForm({ org }: { org: Organisation }) {
   const rename = useRenameOrganisation();
   const [name, setName] = useState(org.name);

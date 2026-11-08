@@ -10,7 +10,6 @@ interface FileDropProps {
   disabled?: boolean;
 }
 
-/** Drop a file here, or choose one. For CSVs and PDFs; posters use ImagePicker (with a preview). */
 export function FileDrop({ accept, title, hint, onFile, disabled = false }: FileDropProps) {
   const id = useId();
   const [dragging, setDragging] = useState(false);

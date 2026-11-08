@@ -1,5 +1,3 @@
-/** Every page and who may open it. Pages load on demand, so the first screen downloads only what it
- * needs; while the next page loads, the current one stays put and a thin bar shows progress. */
 import { Navigate, createBrowserRouter, type RouteObject } from "react-router";
 import { LoadingRows, ScreenMessage } from "@/components/ui/States";
 import { AppShell } from "@/layouts/AppShell";
@@ -30,19 +28,15 @@ export const router = createBrowserRouter([
       page("/signup", () => import("@/pages/Signup/SignupPage").then((m) => ({ Component: m.SignupPage }))),
     ],
   },
-  // Any address Pramaan doesn't know, signed in or not.
   { path: "*", element: <NotFoundPage />, errorElement: <ErrorPage /> },
-  // Invite links: open to everyone; the page itself handles someone already signed in.
   { path: "/join/:token", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Join/JoinPage").then((m) => ({ Component: m.JoinPage })) },
-  // The website's own pages: open to everyone, signed in or not. Their text is in src/content.
   { path: "/product", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Content/ProductPage").then((m) => ({ Component: m.ProductPage })) },
   { path: "/enterprise", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Content/EnterprisePage").then((m) => ({ Component: m.EnterprisePage })) },
   { path: "/about", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Content/AboutPage").then((m) => ({ Component: m.AboutPage })) },
-  // Open to everyone, signed in or not.
   { path: "/legal/:doc", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Legal/LegalPage").then((m) => ({ Component: m.LegalPage })) },
   {
@@ -90,7 +84,6 @@ export const router = createBrowserRouter([
       page("/rulebook/offerings", () => import("@/pages/Rulebook/OfferingsPage").then((m) => ({ Component: m.OfferingsPage }))),
       page("/rulebook/figures", () => import("@/pages/Rulebook/FiguresPage").then((m) => ({ Component: m.FiguresPage }))),
       page("/rulebook/people", () => import("@/pages/Rulebook/PeoplePage").then((m) => ({ Component: m.PeoplePage }))),
-      // The names these pages had before rulebooks followed the industry.
       { path: "/rulebook/courses", element: <Navigate to="/rulebook/offerings" replace /> },
       { path: "/rulebook/results", element: <Navigate to="/rulebook/figures" replace /> },
       { path: "/rulebook/toppers", element: <Navigate to="/rulebook/people" replace /> },

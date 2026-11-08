@@ -1,4 +1,3 @@
-/** Head office's overview and the audit log. */
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../client";
 import { supabase } from "../supabase";
@@ -11,7 +10,6 @@ interface AuditRow extends Omit<AuditEntry, "actor_name"> {
   profiles: { full_name: string } | null;
 }
 
-/** The latest 200 audit entries. Row-level security limits this to head office. */
 export const useAuditLog = () =>
   useQuery({
     queryKey: keys.audit,

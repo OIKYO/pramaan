@@ -8,7 +8,6 @@ const TONE: Record<Severity, string> = {
   pass: "bg-passed text-on-tone",
 };
 
-/** The number that ties a finding in the list to its box on the poster, in the finding's colour. */
 export function FindingNumber({ number, severity, muted = false }: { number: number; severity: Severity; muted?: boolean }) {
   return (
     <span

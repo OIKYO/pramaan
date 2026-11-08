@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-/** Seconds since this appeared, counting up: an honest progress signal when the real progress is unknown. */
 export function Elapsed() {
   const [seconds, setSeconds] = useState(0);
   useEffect(() => {

@@ -9,8 +9,6 @@ const NOTES = {
   sendBack: "In Pramaan this goes back to the Siliguri branch with both findings. This example sends nothing.",
 };
 
-/** An example of the poster page, marked as one: a fictional test poster with its problems boxed, the
- * findings beside it, and the reviewer's buttons. It works, but nothing here touches a server. */
 export function ProductPreview() {
   const [selected, setSelected] = useState<number | null>(1);
   const [note, setNote] = useState<keyof typeof NOTES>("idle");

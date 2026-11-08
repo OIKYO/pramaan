@@ -5,7 +5,6 @@ const STEPS = ["Checked", "Regional review", "Head office", "Approved"];
 
 type StepState = "done" | "current" | "returned" | "todo";
 
-/** Where each step stands for a poster's status. */
 function stepsFor(status: PosterStatus, stage: ReviewStage | null): { states: StepState[]; note: string } {
   const at = (current: number, state: StepState = "current") =>
     STEPS.map((_, i): StepState => (i < current ? "done" : i === current ? state : "todo"));
@@ -32,7 +31,6 @@ const BAR: Record<StepState, string> = {
   todo: "bg-line",
 };
 
-/** The poster's path from checks to approval, as four segments, with one line on where it is now. */
 export function StatusTrack({ status, stage }: { status: PosterStatus; stage: ReviewStage | null }) {
   const { states, note } = stepsFor(status, stage);
   return (

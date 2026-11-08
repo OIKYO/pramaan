@@ -1,6 +1,3 @@
-"""The rule pack: each rulebook (and whether the organisation keeps it), and each check with its
-on/off setting from the rule_settings table."""
-
 from typing import Annotated
 
 from fastapi import APIRouter, Depends

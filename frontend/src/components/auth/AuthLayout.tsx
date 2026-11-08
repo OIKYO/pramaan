@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 
-/** Sign in, sign up and choosing a password: one narrow column, nothing else to read. */
 export function AuthLayout({ children, aside }: { children: ReactNode; aside?: ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col bg-canvas">

@@ -13,9 +13,6 @@ import { FormFooter } from "./FormFooter";
 
 const TYPES: Record<CourseType, string> = { classroom: "Classroom", crash: "Crash course", test_series: "Test series", online: "Online" };
 
-/** Add or edit something the organisation offers. FACT-01, FACT-02 and CCPA-05 check posters
- * against these. A type (classroom, crash...) is asked only of education; a duration where the
- * industry uses one or the exam results rulebook needs it. */
 export function CourseForm({ course, onDone }: { course: Course | null; onDone: () => void }) {
   const save = useSaveCourse();
   const remove = useDeleteCourse();

@@ -1,7 +1,3 @@
-"""Legal and regulatory compliance (LEGAL-01, LEGAL-02): the disclaimers head office requires on every
-poster, and claims the organisation's industry may never make (listed per industry in
-app/catalog.json)."""
-
 from rapidfuzz import fuzz
 
 from rules.registry import Problem, RuleContext, rule

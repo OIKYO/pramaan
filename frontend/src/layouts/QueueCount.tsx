@@ -1,6 +1,5 @@
 import { usePosterList, type PosterScope } from "@/api/hooks/usePosters";
 
-/** How many posters wait in a queue, beside its menu item. Nothing when the queue is empty. */
 export function QueueCount({ scope }: { scope: PosterScope }) {
   const count = usePosterList(scope).data?.length ?? 0;
   if (count === 0) return null;

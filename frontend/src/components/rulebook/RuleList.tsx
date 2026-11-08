@@ -7,8 +7,6 @@ import { toast } from "@/components/ui/Toast";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { KIND_LABEL, SEVERITY } from "@/lib/labels";
 
-/** The checks in the organisation's rulebooks, each with why it exists and an on/off switch.
- * Switching shows at once; it goes back if the database refuses (only head office may). */
 export function RuleList({ pack, canEdit }: { pack: RulePack; canEdit: boolean }) {
   const toggle = useToggleRule();
   const words = useVocabulary();
@@ -46,8 +44,7 @@ export function RuleList({ pack, canEdit }: { pack: RulePack; canEdit: boolean }
     },
   ];
 
-  // One section per rulebook the organisation keeps, in rule pack order. A rule in two rulebooks
-  // (FACT-04) shows under the first one that is kept.
+  // A rule in two rulebooks (FACT-04) shows under the first one that is kept.
   const kept = pack.rulebooks.filter((b) => b.enabled);
   const placed = new Set<string>();
   const sections = kept.map((book) => {

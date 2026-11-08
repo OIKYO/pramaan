@@ -1,6 +1,3 @@
-"""Who is on the poster? Match each person the reader saw against the toppers register by name,
-then compare with the students the branch staff tagged. No face recognition: names and tags only."""
-
 from rapidfuzz import fuzz
 from rapidfuzz.utils import default_process
 
@@ -35,7 +32,6 @@ def match_people(reading: PosterReading, toppers: list[Topper]) -> list[PersonMa
 def identity_findings(
     reading: PosterReading, matches: list[PersonMatch], tagged_ids: list[str], toppers: dict[str, Topper]
 ) -> list[Finding]:
-    """READ-03 findings: uncertain names, people nobody tagged, and tags with nobody on the poster."""
     found: list[Finding] = []
     detected = set()
     for m in matches:

@@ -6,7 +6,6 @@ import { toast } from "@/components/ui/Toast";
 
 const TYPES = ["image/png", "image/jpeg", "image/webp", "image/svg+xml"];
 
-/** The logo the BRAND-01 check looks for. Uploading replaces it straight away. */
 export function LogoField({ orgId, path, canEdit }: { orgId: string; path: string | null; canEdit: boolean }) {
   const upload = useUploadLogo();
   const id = useId();

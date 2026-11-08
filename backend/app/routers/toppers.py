@@ -1,5 +1,4 @@
-"""Consent files: head office uploads them to the private bucket and opens them through
-short-lived signed URLs. They never go to the AI and no client can read the bucket directly."""
+"""Consent files never go to the AI, and no client can read their bucket directly."""
 
 from datetime import datetime
 from typing import Annotated

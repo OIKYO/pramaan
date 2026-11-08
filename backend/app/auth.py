@@ -1,9 +1,3 @@
-"""Who is calling: verify the Supabase access token, then load the profile and role.
-
-The frontend sends `Authorization: Bearer <access token>` from supabase-js. The token's signature
-is checked against the project's published keys (JWKS), so a forged or expired token is refused.
-"""
-
 from fastapi import Depends, Header, HTTPException
 
 from app.db import get_db
@@ -29,8 +23,6 @@ def current_user(authorization: str | None = Header(default=None)) -> Profile:
 
 
 def require(*roles: Role):
-    """Dependency: the signed-in user, who must have one of these roles."""
-
     def dependency(user: Profile = Depends(current_user)) -> Profile:
         if user.role not in roles:
             raise HTTPException(403, "Your role can't do this.")

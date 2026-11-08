@@ -1,5 +1,5 @@
-"""A small in-memory rate limit for the public join endpoints, so nobody can guess join codes by
-trying thousands. One server process, so memory is enough; it resets when the server restarts."""
+"""Rate limit for the public join endpoints, so join codes can't be guessed by brute force.
+In memory: enough for one server process."""
 
 from collections import deque
 from time import monotonic

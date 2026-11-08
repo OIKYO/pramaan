@@ -6,11 +6,9 @@ interface PanelProps {
   description?: ReactNode;
   actions?: ReactNode;
   children: ReactNode;
-  /** Leave out the inner padding, for tables and lists that run edge to edge. */
   flush?: boolean;
 }
 
-/** A bordered section of a page with an optional title row. Panels sit side by side; they don't nest. */
 export function Panel({ title, description, actions, children, flush = false }: PanelProps) {
   return (
     <section className="flex min-w-0 flex-col rounded-lg border border-line bg-surface">

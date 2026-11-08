@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/Panel";
 import { download } from "@/lib/csv";
 
-/** The columns a file needs, with an example of each, and the template to start from. */
 export function ColumnGuide({ spec }: { spec: ImportSpec }) {
   return (
     <Panel

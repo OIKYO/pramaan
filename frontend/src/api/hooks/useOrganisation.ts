@@ -1,4 +1,3 @@
-/** The organisation, its regions and branches, and how far its setup has got. */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { patchJson, postJson } from "../client";
 import { supabase } from "../supabase";
@@ -16,7 +15,7 @@ async function rows<T>(query: PromiseLike<{ data: unknown; error: { message: str
   return data as T;
 }
 
-/** Every column members may read. The join code isn't one: it comes from the API (useJoinCode). */
+/** No join_code: members can't read it; it comes from the API (useJoinCode). */
 const ORG_COLUMNS = "id, name, industry_group, industry, org_type, focus, rulebooks, created_by, created_at";
 
 export const useOrganisation = () =>
@@ -49,7 +48,6 @@ function useWrite<TArgs>(key: readonly unknown[], call: (args: TArgs) => Promise
 
 const byName = (list: Region[]) => [...list].sort((x, y) => x.name.localeCompare(y.name));
 
-/** Add a region, or rename one (with its id). It shows in the list at once and goes back if refused. */
 export function useSaveRegion() {
   const qc = useQueryClient();
   return useMutation({
@@ -66,7 +64,6 @@ export function useSaveRegion() {
   });
 }
 
-/** Delete an empty region. It leaves the list at once and comes back if refused. */
 export function useDeleteRegion() {
   const qc = useQueryClient();
   return useMutation({
@@ -88,8 +85,6 @@ export const useSaveBranch = () =>
 
 export const useDeleteBranch = () => useWrite(keys.branches, (id: string) => rows(supabase.from("branches").delete().eq("id", id).select("id")));
 
-/** Head office changes what the organisation does, or which rulebooks it keeps. The server checks
- * it against the catalog and adds the rulebooks every organisation keeps. */
 export function useUpdateOrganisation() {
   const qc = useQueryClient();
   return useMutation({
@@ -109,8 +104,6 @@ export function useUpdateOrganisation() {
   });
 }
 
-/** What head office still has to tell Pramaan about the organisation, in words ("industry", "kind
- * of organisation"). Empty once it's complete, and while it loads, so no marker flashes. */
 export function useProfileGaps(): string[] {
   const org = useOrganisation().data;
   if (!org) return [];
@@ -120,7 +113,6 @@ export function useProfileGaps(): string[] {
   return gaps;
 }
 
-/** Delete the whole organisation, then sign out. Head office only; the name must be typed again. */
 export function useDeleteOrganisation() {
   return useMutation({
     mutationFn: async (confirm_name: string) => {

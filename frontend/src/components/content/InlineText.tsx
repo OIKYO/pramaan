@@ -3,8 +3,6 @@ import { Link } from "react-router";
 
 const TOKEN = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\)|`[^`]+`)/g;
 
-/** A line of the website's own Markdown with **bold**, [links](/to) and `code`. Links inside the app
- * stay in the app; others open in a new tab. */
 export function InlineText({ text }: { text: string }) {
   const parts: ReactNode[] = text.split(TOKEN).map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**")) {

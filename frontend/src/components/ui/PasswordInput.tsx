@@ -4,7 +4,6 @@ import { PASSWORD_RULES, passwordNeeds, passwordScore } from "@/lib/password";
 import { cn } from "@/lib/utils";
 import { Input } from "./input";
 
-/** How long someone can stop typing before the field shows what's missing in red. */
 const PAUSE_MS = 1400;
 
 interface PasswordInputProps {
@@ -12,22 +11,14 @@ interface PasswordInputProps {
   value: string;
   onChange: (value: string) => void;
   autoComplete?: "new-password" | "current-password";
-  /** Set after a submit attempt, so a missing requirement shows in red at once. */
   insist?: boolean;
-  /** A line under the field before typing starts, e.g. "Note it down somewhere safe". */
   note?: string;
 }
 
-/**
- * A new password, checked as it's typed. It names only the next thing to fix ("Add a number"), fills
- * three small bars as each requirement is met, and turns red if the person stops typing with
- * something still missing. A tick shows when it's good. The eye shows or hides what was typed.
- */
 export function PasswordInput({ label, value, onChange, autoComplete = "new-password", insist = false, note }: PasswordInputProps) {
   const id = useId();
   const [visible, setVisible] = useState(false);
   const [paused, setPaused] = useState(false);
-  // Each keystroke clears "paused"; a quiet spell sets it again.
   const type = (next: string) => {
     setPaused(false);
     onChange(next);

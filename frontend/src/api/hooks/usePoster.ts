@@ -1,6 +1,3 @@
-/** One poster: its detail, and every action on it. All go through the backend, which runs the checks
- * and enforces the status machine. Actions that need no checks show their result at once
- * (optimistic) and settle on the server's answer; if the server refuses, the screen goes back. */
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { api, postForm, postJson, toForm } from "../client";
 import type { Channel, PosterDetail } from "../types";
@@ -12,7 +9,6 @@ const getPoster = (id: string) => api<PosterDetail>(`/posters/${id}`);
 export const usePoster = (id: string) =>
   useQuery({ queryKey: keys.poster(id), queryFn: () => getPoster(id), enabled: Boolean(id) });
 
-/** Start loading a poster when a person points at it in a list, so the page opens without a wait. */
 export function usePrefetchPoster() {
   const qc = useQueryClient();
   return (id: string) => void qc.prefetchQuery({ queryKey: keys.poster(id), queryFn: () => getPoster(id) });
@@ -20,9 +16,7 @@ export function usePrefetchPoster() {
 
 interface Change<TArgs> {
   call: (args: TArgs) => Promise<PosterDetail>;
-  /** The poster this changes (if known before the server answers). */
   target?: (args: TArgs, qc: QueryClient) => PosterDetail | undefined;
-  /** What the poster will look like once the server agrees. */
   predict?: (detail: PosterDetail, args: TArgs) => PosterDetail;
 }
 
@@ -57,7 +51,6 @@ export interface NewPosterInput extends VersionInput {
   channel: Channel;
 }
 
-/** Upload a fixed version; the checks run again (10-30 s), so there is nothing to predict. */
 export const useNewVersion = (posterId: string) =>
   usePosterChange({
     call: (input: VersionInput) => postForm<PosterDetail>(`/posters/${posterId}/versions`, toForm({ ...input })),
@@ -96,7 +89,6 @@ export const useReviewPoster = (posterId: string) =>
     },
   });
 
-/** A reviewer confirms a reading that needed a person. */
 export const useResolveFinding = () =>
   usePosterChange({
     call: ({ findingId, note }: { findingId: string; note: string }) =>
@@ -105,7 +97,6 @@ export const useResolveFinding = () =>
     predict: (d, { findingId, note }) => withFinding(d, findingId, { status: "resolved", override_reason: note }),
   });
 
-/** Head office overrides a blocking finding, with a reason. */
 export const useOverrideFinding = () =>
   usePosterChange({
     call: ({ findingId, note }: { findingId: string; note: string }) =>

@@ -10,7 +10,6 @@ interface ModalProps {
   footer?: ReactNode;
 }
 
-/** A centred dialog for a short decision, e.g. "Send back" with a comment. */
 export function Modal({ open, onOpenChange, title, description, children, footer }: ModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

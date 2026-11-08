@@ -1,5 +1,3 @@
-"""Accessibility: text contrast and alt text (ACC-01, ACC-02)."""
-
 from rules.registry import Problem, RuleContext, rule
 from rules.text import evidence
 

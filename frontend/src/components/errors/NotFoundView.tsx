@@ -3,7 +3,6 @@ import { useSession } from "@/api/hooks/useSession";
 import { Button } from "@/components/ui/button";
 import { HOME } from "@/layouts/nav";
 
-/** "This page doesn't exist", with the way back: your dashboard if you're signed in, the home page if not. */
 export function NotFoundView() {
   const { profile } = useSession();
   return (

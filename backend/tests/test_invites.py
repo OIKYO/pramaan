@@ -1,5 +1,3 @@
-"""Who can invite whom, join codes, invite expiry, and the password rule."""
-
 from datetime import datetime, timedelta, timezone
 
 import pytest

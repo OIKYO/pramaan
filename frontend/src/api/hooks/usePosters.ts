@@ -1,5 +1,3 @@
-/** Poster lists, read straight from Supabase. Row-level security decides what each person sees:
- * branch staff their branch, regional managers their region, head office everything. */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../supabase";
 import type { PosterListItem } from "../types";
@@ -40,10 +38,8 @@ function toListItem(row: ListRow): PosterListItem {
   };
 }
 
-/** Which posters a list shows. */
 export type PosterScope = "all" | "regional_review" | "final_approval";
 
-/** Whether a poster belongs in a list. The queries below and optimistic updates both use this. */
 export function fitsScope(poster: Pick<PosterListItem, "status" | "review_stage">, scope: PosterScope): boolean {
   if (scope === "regional_review") return poster.status === "in_review" && poster.review_stage === "regional";
   if (scope === "final_approval") return poster.status === "in_review" && poster.review_stage === "head_office";
@@ -60,6 +56,5 @@ async function listPosters(scope: PosterScope): Promise<PosterListItem[]> {
   return (data as unknown as ListRow[]).map(toListItem);
 }
 
-/** Every poster this person can see (for branch staff: their branch's posters). */
 export const usePosterList = (scope: PosterScope = "all") =>
   useQuery({ queryKey: keys.posterList(scope), queryFn: () => listPosters(scope) });

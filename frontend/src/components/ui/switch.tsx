@@ -2,7 +2,6 @@ import * as React from "react";
 import { cn } from "cn";
 import { Switch as SwitchPrimitive } from "radix-ui";
 
-/** On/off: a strong amber when on, grey when off. The thumb slides because the person flipped it. */
 function Switch({ className, ...props }: React.ComponentProps<typeof SwitchPrimitive.Root>) {
   return (
     <SwitchPrimitive.Root

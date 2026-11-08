@@ -1,11 +1,3 @@
-"""Creating sign-ins for an organisation's people. Used by signup, the Team page and CSV imports.
-
-New members get a temporary password that head office passes on (shown once, never stored by us).
-They must choose their own the first time they sign in, so the temporary one stops working quickly.
-Pramaan doesn't send email: free email sending is rate-limited, and head office already knows how
-to reach its staff.
-"""
-
 import secrets
 
 from fastapi import HTTPException
@@ -19,7 +11,6 @@ def temporary_password() -> str:
 
 
 def create_login(db, email: str, password: str, full_name: str) -> str:
-    """A confirmed Supabase sign-in. Returns the user id; refuses an email that's already taken."""
     try:
         created = db.auth.admin.create_user({
             "email": email, "password": password, "email_confirm": True, "user_metadata": {"full_name": full_name},
@@ -36,7 +27,7 @@ def create_login(db, email: str, password: str, full_name: str) -> str:
 
 def add_profile(db, user_id: str, org_id: str, full_name: str, email: str, role: str,
                 branch_id: str | None, region_id: str | None, needs_password_change: bool) -> dict:
-    """The member's profile; if it can't be saved, the sign-in is removed so nothing is left half-made."""
+    """If the profile can't be saved, the sign-in is removed, so nothing is left half-made."""
     try:
         return db.table("profiles").insert({
             "id": user_id, "org_id": org_id, "full_name": full_name, "email": email, "role": role,
@@ -50,7 +41,6 @@ def add_profile(db, user_id: str, org_id: str, full_name: str, email: str, role:
 
 
 def placement(db, org_id: str, role: str, branch_id: str | None, region_id: str | None) -> tuple[str | None, str | None]:
-    """Check that branch staff have a branch and regional managers a region, in this organisation."""
     if role == "branch_staff":
         if not branch_id or not db.table("branches").select("id").eq("id", branch_id).eq("org_id", org_id).execute().data:
             raise HTTPException(422, "Branch staff need a branch. Choose one of your branches.")

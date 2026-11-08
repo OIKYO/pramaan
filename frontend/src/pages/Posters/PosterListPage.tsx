@@ -15,11 +15,9 @@ interface PosterListPageProps {
   emptyText: string;
   actions?: ReactNode;
   showBranch?: boolean;
-  /** Offer a status filter and search (for the longer lists). */
   browsable?: boolean;
 }
 
-/** Layout shared by My posters, All posters, Review queue and Final approvals. */
 export function PosterListPage({ scope, crumbs, title, description, emptyTitle, emptyText, actions, showBranch, browsable }: PosterListPageProps) {
   const posters = usePosterList(scope);
   return (

@@ -6,8 +6,6 @@ import { cn } from "@/lib/utils";
 import { navFor } from "./nav";
 import { QueueCount } from "./QueueCount";
 
-/** The menu for a role, with the rulebooks the organisation keeps. The current page is marked
- * with a bar in the accent colour. */
 export function NavList({ role, onNavigate }: { role: Role; onNavigate?: () => void }) {
   const keeps = useKeeps();
   const words = useVocabulary();

@@ -3,7 +3,6 @@ import { DataTable, type Column } from "@/components/ui/DataTable";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { auditLabel, formatDateTime } from "@/lib/labels";
 
-/** One line on what an entry recorded: the model and image for AI calls, a note or the new state otherwise. */
 function summary(details: Record<string, unknown>): string {
   if (typeof details.model === "string") return `Model ${details.model}, image ${String(details.image_sha256 ?? "").slice(0, 12)}…`;
   if (typeof details.note === "string") return details.note;
@@ -28,7 +27,6 @@ const columns: Column<AuditEntry>[] = [
   { header: "Details", cell: (e) => <span className="wrap-break-word text-muted-text">{summary(e.details)}</span> },
 ];
 
-/** Every status change, AI call and team or data change, newest first. */
 export function AuditTable({ entries }: { entries: AuditEntry[] }) {
   return <DataTable caption="Audit log" columns={columns} rows={entries} rowKey={(e) => String(e.id)} />;
 }

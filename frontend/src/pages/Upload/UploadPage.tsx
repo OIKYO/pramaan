@@ -4,7 +4,6 @@ import { PosterForm } from "@/components/poster/PosterForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { toast } from "@/components/ui/Toast";
 
-/** Branch staff upload a poster. It shows in My posters at once; when the checks finish, its page opens. */
 export function UploadPage() {
   const upload = usePosterUpload();
   const navigate = useNavigate();

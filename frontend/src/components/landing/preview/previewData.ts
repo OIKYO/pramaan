@@ -1,6 +1,4 @@
-/** What Pramaan found on test-posters/03-wrong-rank.png (fictional), for the product page's example.
- * The passed list is every other check in a coaching institute's rulebooks.
- * Boxes come from its fixture reading, as top, left, height and width in % of the poster. */
+/** Findings for test-posters/03-wrong-rank.png (fictional). Boxes are top, left, height and width in % of the poster. */
 import type { Severity } from "@/api/types";
 
 export interface PreviewFinding {

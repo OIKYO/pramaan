@@ -1,6 +1,3 @@
-"""Claims and people: banned promises, consent, ranks and required details (coaching ads), approved
-figures, and the AI's disguised-guarantee flags (CCPA-01 to CCPA-06, AI-01)."""
-
 from rapidfuzz import fuzz
 
 from rules.registry import Problem, RuleContext, rule
@@ -119,7 +116,6 @@ def _inside(inner: list[int], outer: list[int]) -> bool:
 
 
 def _rank_box(ctx: RuleContext, person, shown: float) -> list[int]:
-    """Point at the rank itself when the reader boxed it, so the finding marks the exact number."""
     for number in ctx.reading.numbers:
         if (number.kind == "rank" and number_value(number.raw_text, number.value) == shown
                 and _inside(number.box_2d, person.box_2d)):

@@ -8,8 +8,6 @@ import { toast } from "@/components/ui/Toast";
 import { dateOrNull } from "@/lib/lists";
 import { FormFooter } from "./FormFooter";
 
-/** Add or edit an approved figure. CCPA-06 only accepts figures listed here. The exam is asked
- * only of education. */
 export function StatForm({ stat, onDone }: { stat: ResultStat | null; onDone: () => void }) {
   const save = useSaveResultStat();
   const remove = useDeleteResultStat();

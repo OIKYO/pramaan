@@ -1,12 +1,3 @@
-/**
- * The only place animations are defined. Motion answers a person's action (switching the theme,
- * opening the passed checks, finding the problem they clicked); it is never decoration. No hover
- * lifts, no entrance fades on load, no looping effects. Motion itself is imported only here and in
- * components/ui; other code calls these helpers.
- *
- * Durations mirror --duration-* in styles/tokens.css; change both together.
- * Everything here stops for people who ask their device, or Settings, to reduce motion.
- */
 import type { Transition } from "motion/react";
 import { reduceMotionHere } from "./preferences";
 
@@ -16,14 +7,12 @@ const ease: [number, number, number, number] = [0.2, 0, 0, 1];
 const reduceMotion = () =>
   reduceMotionHere() || (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
-/** A panel that appears because the person asked for it (e.g. "Show passed checks"). */
 export const reveal = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   transition: { duration: durations.base, ease } satisfies Transition,
 };
 
-/** A section that opens or closes because the person asked (Collapse). */
 export const collapse = {
   initial: { height: 0, opacity: 0 },
   animate: { height: "auto", opacity: 1 },
@@ -31,14 +20,11 @@ export const collapse = {
   transition: { duration: durations.base, ease } satisfies Transition,
 };
 
-/** Menus, popovers and panels that open from a trigger: a short fade and lift, in CSS (tw-animate),
- * for Radix parts that animate on data-state. Used by components/ui and the product page's menus. */
 export const popClasses =
   "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 " +
   "data-[state=open]:zoom-in-[0.98] data-[state=closed]:zoom-out-[0.98] data-[side=bottom]:slide-in-from-top-1 " +
   "data-[side=top]:slide-in-from-bottom-1 duration-150 motion-reduce:animate-none";
 
-/** A notice that slides up from the bottom of the screen when it first appears (CookieNotice). */
 export const slideUp = {
   initial: { opacity: 0, y: 16 },
   animate: { opacity: 1, y: 0 },
@@ -46,21 +32,18 @@ export const slideUp = {
   transition: { duration: durations.slow, ease } satisfies Transition,
 };
 
-/** The thin bar at the top while the next page loads. It eases most of the way, then waits. */
 export const loadingBar = {
   initial: { scaleX: 0 },
   animate: { scaleX: 0.85 },
   transition: { duration: 2.4, ease: [0.1, 0.6, 0.3, 1] } satisfies Transition,
 };
 
-/** Cross-fade the whole page when the theme changes, where the browser supports it. */
 export function swapTheme(apply: () => void) {
   const doc = document as Document & { startViewTransition?: (update: () => void) => unknown };
   if (!doc.startViewTransition || reduceMotion()) apply();
   else doc.startViewTransition(apply);
 }
 
-/** Bring the finding a person picked on the poster into view. */
 export function scrollToItem(element: Element | null) {
   element?.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "nearest" });
 }

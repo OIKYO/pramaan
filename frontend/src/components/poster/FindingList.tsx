@@ -23,7 +23,6 @@ interface FindingListProps {
 
 const GROUPS: Exclude<Severity, "pass">[] = ["block", "needs_human", "warn"];
 
-/** Problems grouped by how serious they are (numbered to match the poster), the AI's questions, then passes. */
 export function FindingList(props: FindingListProps) {
   const { problems, passes, questions, ruleNames, selected, onSelect } = props;
   const [showPasses, setShowPasses] = useState(false);

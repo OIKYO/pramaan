@@ -1,5 +1,3 @@
-/** Joining an organisation without being signed in: with an invite link, or with its join code.
- * Both create the account and then sign straight in. */
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api, postJson } from "../client";
 import { supabase } from "../supabase";
@@ -21,7 +19,6 @@ export const useAcceptInvite = (token: string) =>
     },
   });
 
-/** The organisation a code belongs to, once the code is complete (8 letters and numbers). */
 export const useCodePreview = (code: string) =>
   useQuery({
     queryKey: ["join", "code", code],

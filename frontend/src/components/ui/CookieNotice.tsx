@@ -14,8 +14,6 @@ function seen(): boolean {
   }
 }
 
-/** A small card in the bottom-left corner, once per browser, saying what Pramaan keeps in the browser.
- * There's nothing to refuse: only what signing in and the theme need, and no tracking. */
 export function CookieNotice() {
   const [open, setOpen] = useState(false);
   useEffect(() => {

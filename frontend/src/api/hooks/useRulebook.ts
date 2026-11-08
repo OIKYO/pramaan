@@ -1,6 +1,3 @@
-/** Head office's rulebook: brand kit, courses, results figures, toppers and rule switches.
- * Read and edited through Supabase; row-level security lets only head office write.
- * Edits show at once (optimistic) and roll back if the database refuses them. */
 import { useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { api, postForm } from "../client";
 import { supabase } from "../supabase";
@@ -26,7 +23,6 @@ async function rows<T>(query: PromiseLike<{ data: unknown; error: { message: str
   return data as T;
 }
 
-/** A rulebook change: shown at once with `predict`, rolled back on error, then fetched fresh. */
 function useSave<TArgs, TData>(key: QueryKey, call: (args: TArgs) => Promise<unknown>, predict?: (data: TData, args: TArgs) => TData) {
   const qc = useQueryClient();
   return useMutation({
@@ -42,7 +38,6 @@ function useSave<TArgs, TData>(key: QueryKey, call: (args: TArgs) => Promise<unk
   });
 }
 
-/** Replace a row by id, or add it with a temporary id until the database gives it a real one. */
 function upsertRow<T extends { id: string }>(list: T[], edit: Partial<T>, blank: Omit<T, "id">): T[] {
   if (edit.id) return list.map((row) => (row.id === edit.id ? { ...row, ...edit } : row));
   return [...list, { ...blank, ...edit, id: `new-${Date.now()}` } as T];
@@ -50,9 +45,6 @@ function upsertRow<T extends { id: string }>(list: T[], edit: Partial<T>, blank:
 
 const removeRow = <T extends { id: string }>(list: T[], id: string) => list.filter((row) => row.id !== id);
 
-// ---------------------------------------------------------------- brand kit
-
-/** Your organisation's brand kit (row-level security returns only yours). */
 export const useBrandKit = () =>
   useQuery({
     queryKey: keys.brandKit,
@@ -69,18 +61,15 @@ export const useSaveBrandKit = () =>
 
 export const logoUrl = (path: string) => supabase.storage.from("brand").getPublicUrl(path).data.publicUrl;
 
-/** Upload a new logo into your organisation's folder and point the brand kit at it. */
 export const useUploadLogo = () =>
   useSave(keys.brandKit, async ({ orgId, file }: { orgId: string; file: File }) => {
     const ext = file.name.split(".").pop()?.toLowerCase() || "png";
     const path = `${orgId}/logo-${Date.now()}.${ext}`;
-    // Every logo gets a new path, so no upsert: an upsert also needs read and update rights on the bucket.
+    // No upsert: Storage treats it as insert + select + update, and this bucket only allows insert.
     const { error } = await supabase.storage.from("brand").upload(path, file, { contentType: file.type });
     if (error) throw new Error(`The logo wasn't uploaded: ${error.message}`);
     return rows(supabase.from("brand_kit").update({ logo_path: path }).eq("org_id", orgId).select("org_id"));
   });
-
-// ---------------------------------------------------------------- courses and results figures
 
 export const useCourses = () =>
   useQuery({ queryKey: keys.courses, queryFn: () => rows<Course[]>(supabase.from("courses").select("*").order("name")) });
@@ -119,8 +108,6 @@ export const useSaveResultStat = () =>
 export const useDeleteResultStat = () =>
   useSave(keys.resultStats, (id: string) => rows(supabase.from("result_stats").delete().eq("id", id).select("id")), removeRow<ResultStat>);
 
-// ---------------------------------------------------------------- toppers register
-
 export const useToppers = () =>
   useQuery({
     queryKey: keys.toppers,
@@ -142,7 +129,6 @@ export const useSaveTopper = () =>
     (list: Topper[], edit) => upsertRow<Topper>(list, edit, blankTopper),
   );
 
-/** Head office uploads a signed consent PDF; it goes to the private bucket via the backend. */
 export const useUploadConsent = () =>
   useSave(
     keys.toppers,
@@ -154,11 +140,8 @@ export const useUploadConsent = () =>
     (list: Topper[], { topperId }) => list.map((t) => (t.id === topperId ? { ...t, has_consent: true } : t)),
   );
 
-/** A short-lived link to a consent file (head office only). */
 export const useConsentLink = () =>
   useMutation({ mutationFn: (topperId: string) => api<{ url: string; expires_in: number }>(`/toppers/${topperId}/consent-url`) });
-
-// ---------------------------------------------------------------- rules
 
 export const useRules = () => useQuery({ queryKey: keys.rules, queryFn: () => api<RulePack>("/rules") });
 

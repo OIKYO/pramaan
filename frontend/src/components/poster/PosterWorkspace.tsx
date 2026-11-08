@@ -15,7 +15,6 @@ interface PosterWorkspaceProps {
   actions: PosterAction[];
 }
 
-/** The heart of the app: the poster with numbered boxes, beside the verdict and the findings that explain them. */
 export function PosterWorkspace({ title, version, ruleNames, actions }: PosterWorkspaceProps) {
   const [selected, setSelected] = useState<number | null>(null);
   const resolve = useResolveFinding();

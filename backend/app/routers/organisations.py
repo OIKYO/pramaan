@@ -1,10 +1,3 @@
-"""Organisations: signing up, what the organisation does, and which rulebooks it keeps.
-
-Whoever signs up becomes the organisation's head office. Everything they add is visible only
-inside their organisation. The industry they choose suggests rulebooks and sets the words the app
-uses; head office can add or remove rulebooks at any time.
-"""
-
 import logging
 from typing import Annotated
 
@@ -35,7 +28,6 @@ def catalog() -> Catalog:
 
 
 def _profile(group: str | None, industry: str | None, org_type: str | None, focus: list[str]) -> dict:
-    """A checked profile as database columns. 400 with a plain message if it doesn't fit the catalog."""
     try:
         group, industry, org_type, focus = check_profile(group or "", industry or "", org_type or "", focus)
     except ProfileError as exc:
@@ -131,8 +123,7 @@ def delete_organisation(body: DeleteOrganisation, user: HeadOffice) -> Response:
     for bucket in ("consent", "brand"):
         _remove(db, bucket, _files_under(db, bucket, org["id"]))
     members = [m["id"] for m in db.table("profiles").select("id").eq("org_id", org["id"]).execute().data]
-    # Posters (with their versions, findings and reviews) and the audit log first: they point at the
-    # people who made them, so they must go before the people do. Then everything else with the organisation.
+    # Posters and the audit log point at the people who made them, so they go before the people do.
     db.table("posters").delete().eq("org_id", org["id"]).execute()
     db.table("audit_log").delete().eq("org_id", org["id"]).execute()
     db.table("organisations").delete().eq("id", org["id"]).execute()

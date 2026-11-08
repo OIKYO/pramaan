@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import { useNavigation } from "react-router";
 import { loadingBar } from "@/lib/motion";
 
-/** A thin orange line at the top of the screen while the next page loads. */
 export function NavProgress() {
   const loading = useNavigation().state !== "idle";
   if (!loading) return null;

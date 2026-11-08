@@ -14,7 +14,6 @@ interface RegionListProps {
   canEdit: boolean;
 }
 
-/** Every region with its branches and managers, and a box to add another. Changes show at once. */
 export function RegionList({ regions, branches, members, canEdit }: RegionListProps) {
   const save = useSaveRegion();
   const remove = useDeleteRegion();

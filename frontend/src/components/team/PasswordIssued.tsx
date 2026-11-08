@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { CopyField } from "@/components/ui/CopyField";
 import { Modal } from "@/components/ui/Modal";
 
-/** The one time a temporary password is shown. Head office passes it on privately. */
 export function PasswordIssued({ issued, onClose }: { issued: MemberCreated | null; onClose: () => void }) {
   const name = issued?.member.full_name.split(" ")[0] ?? "them";
   const signIn = `${window.location.origin}/login`;

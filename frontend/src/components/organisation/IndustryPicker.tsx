@@ -17,7 +17,6 @@ interface Option {
   custom?: boolean;
 }
 
-/** Every subdomain whose name, or whose industry's name, contains the search. */
 function search(catalog: Catalog, query: string): Option[] {
   const q = query.trim().toLowerCase();
   return catalog.industries.flatMap((g) => {
@@ -28,11 +27,6 @@ function search(catalog: Catalog, query: string): Option[] {
   });
 }
 
-/**
- * What the organisation does: one search across 30 industries and their 500-odd subdomains,
- * grouped by industry. Anything not listed can be typed in, and then placed under the closest
- * industry, so nobody is forced into the wrong box.
- */
 export function IndustryPicker({ catalog, value, onChange, invalid = false }: {
   catalog: Catalog;
   value: IndustryValue;

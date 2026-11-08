@@ -8,7 +8,6 @@ import { Spinner } from "@/components/ui/Spinner";
 import { toast } from "@/components/ui/Toast";
 import { passwordNeeds } from "@/lib/password";
 
-/** Choose a new password, checked as it's typed, then typed again. */
 export function PasswordForm({ submitLabel = "Change password", onDone }: { submitLabel?: string; onDone?: () => void }) {
   const change = useChangePassword();
   const [password, setPassword] = useState("");

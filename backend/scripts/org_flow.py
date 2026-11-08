@@ -29,7 +29,6 @@ TOPPERS = ("full_name,exam,exam_year,rank,result_date,course,consent_date,consen
 
 
 def strong_password() -> str:
-    """Random, with the number and special character every password needs."""
     return secrets.token_urlsafe(12) + "-7"
 
 

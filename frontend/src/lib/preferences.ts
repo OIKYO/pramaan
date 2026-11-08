@@ -1,7 +1,3 @@
-/**
- * Preferences kept in this browser, beside the theme (lib/theme.ts). For now: fewer animations,
- * for people who want them off here without changing their whole device.
- */
 import { useSyncExternalStore } from "react";
 
 const KEY = "pramaan-reduce-motion";

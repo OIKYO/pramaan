@@ -15,7 +15,6 @@ interface NoteDialogProps {
   onConfirm: (note: string) => void;
 }
 
-/** Asks for a written note before an action that needs one: send back, confirm a reading, override. */
 export function NoteDialog({ open, onOpenChange, title, description, label, confirmLabel, pending, onConfirm }: NoteDialogProps) {
   const [note, setNote] = useState("");
   const [tried, setTried] = useState(false);

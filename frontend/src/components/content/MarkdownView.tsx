@@ -10,10 +10,8 @@ const HEADING = {
   4: "scroll-mt-24 pt-1 text-base font-semibold",
 } as const;
 
-/** A paragraph that is only an app link, like "[Create organisation](/signup)", becomes a button. */
 const ONLY_LINK = /^\[([^\]]+)\]\((\/[^)]*)\)$/;
 
-/** Renders parsed Markdown (lib/markdown.ts) in the site's type. Headings carry ids for #links. */
 export function MarkdownView({ blocks }: { blocks: Block[] }) {
   return (
     <div className="flex flex-col gap-5 text-base leading-relaxed text-ink">

@@ -14,7 +14,6 @@ import { LogoField } from "./LogoField";
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
 
-/** The brand kit, edited in place by head office and read by everyone else. */
 export function BrandKitEditor({ kit, canEdit }: { kit: BrandKit; canEdit: boolean }) {
   const save = useSaveBrandKit();
   const keeps = useKeeps();

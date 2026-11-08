@@ -1,6 +1,5 @@
 import { ToneBadge } from "@/components/ui/ToneBadge";
 
-/** Each role in one line of the real queues: a branch's poster, then a region's review. */
 export function Branches() {
   return (
     <section id="branches" className="grid scroll-mt-20 gap-10 border-b border-line px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:gap-16 lg:px-12">

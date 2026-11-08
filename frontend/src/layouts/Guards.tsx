@@ -6,8 +6,6 @@ import { SetPasswordScreen } from "@/components/account/SetPasswordScreen";
 import { ErrorState, LoadingRows, ScreenMessage } from "@/components/ui/States";
 import { HOME } from "./nav";
 
-/** Signed-in users only; everyone else goes to the sign-in page. Someone still on a temporary
- * password must choose their own first. */
 export function RequireSignIn({ children }: { children: ReactNode }) {
   const { status, profile, profileError, signOut } = useSession();
   const location = useLocation();
@@ -30,22 +28,17 @@ export function RequireSignIn({ children }: { children: ReactNode }) {
   return children;
 }
 
-/** Pages for some roles only; others go to their own home page. Wraps `children`, or the
- * nested routes when used as a layout route. */
 export function RequireRole({ roles, children }: { roles: readonly Role[]; children?: ReactNode }) {
   const { profile } = useSession();
   if (profile && !roles.includes(profile.role)) return <Navigate to={HOME[profile.role]} replace />;
   return children ?? <Outlet />;
 }
 
-/** "/" for a signed-in person: their role's home page. */
 export function RoleHome() {
   const { profile } = useSession();
   return <Navigate to={profile ? HOME[profile.role] : "/login"} replace />;
 }
 
-/** The product page, sign-in and sign-up: signed-in people go straight to their work (or back to
- * the page they were sent away from). */
 export function PublicOnly() {
   const { status, profile } = useSession();
   const location = useLocation();

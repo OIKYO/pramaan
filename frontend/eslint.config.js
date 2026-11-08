@@ -11,11 +11,9 @@ const motionOnlyInUi = {
   })),
 };
 
-/** Classes a page may use: flex, grid and gap, with alignment and spans, at any breakpoint. */
 const LAYOUT_CLASS =
   /^(?:(?:sm|md|lg|xl|2xl|max-sm|max-md|max-lg|max-xl|@[a-z0-9]+):)*(?:flex|inline-flex|grid|inline-grid|flex-(?:row|col|wrap|row-reverse|col-reverse|nowrap|1|auto|initial|none)|grid-cols-\S+|grid-rows-\S+|grid-flow-\S+|col-\S+|row-\S+|gap(?:-[xy])?-\S+|items-\S+|justify-\S+|content-\S+|self-\S+|justify-self-\S+|place-\S+|order-\S+)$/;
 
-/** Pages do layout only: every class on a page must be a flex, grid or gap class. */
 const layoutOnly = {
   meta: {
     type: "problem",
@@ -41,7 +39,6 @@ const layoutOnly = {
   },
 };
 
-/** No monospace type anywhere: one family, with tabular figures for numbers. */
 const noMonospace = {
   meta: { type: "problem", messages: { mono: "Pramaan uses one typeface. Drop “{{name}}”; use tabular-nums for numbers." } },
   create(context) {
@@ -79,13 +76,11 @@ export default defineConfig([
     rules: { "type/no-monospace": "error" },
   },
   {
-    // Motion is allowed only where animations are defined.
     files: ["src/**/*.{ts,tsx}"],
     ignores: ["src/lib/motion.ts", "src/components/ui/**"],
     rules: { "no-restricted-imports": ["error", motionOnlyInUi] },
   },
   {
-    // Data comes only from src/api/hooks: no fetch or Supabase outside src/api.
     files: ["src/**/*.{ts,tsx}"],
     ignores: ["src/api/**"],
     rules: {
@@ -100,7 +95,6 @@ export default defineConfig([
     },
   },
   {
-    // Pages do layout only: no inline styles, and classes limited to flex, grid and gap.
     files: ["src/pages/**/*.{ts,tsx}"],
     plugins: { pramaan: { rules: { "layout-only": layoutOnly } } },
     rules: {

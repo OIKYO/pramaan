@@ -6,7 +6,6 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { QueryState } from "@/components/ui/QueryState";
 import { EmptyState } from "@/components/ui/States";
 
-/** Regions group branches: each regional manager reviews the posters of every branch in theirs. */
 export function RegionsPage() {
   const regions = useRegions();
   const branches = useBranches().data ?? [];

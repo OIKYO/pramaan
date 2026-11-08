@@ -2,7 +2,6 @@ import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./button";
 
-/** A value to pass on (a temporary password), with a copy button. */
 export function CopyField({ value, label }: { value: string; label: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {

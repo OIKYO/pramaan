@@ -1,8 +1,4 @@
-"""The one place Gemini's box convention is converted to pixels.
-
-Gemini gives boxes as box_2d = [ymin, xmin, ymax, xmax], each scaled 0-1000 to the image height
-(y) or width (x). Note the order: y before x.
-"""
+"""Gemini gives box_2d as [ymin, xmin, ymax, xmax], each 0-1000. This is the one place it becomes pixels."""
 
 
 def to_pixels(box_2d: list[int], width: int, height: int, pad: float = 0.0) -> tuple[int, int, int, int]:
@@ -21,7 +17,6 @@ def to_pixels(box_2d: list[int], width: int, height: int, pad: float = 0.0) -> t
 
 
 def from_pixels(left: float, top: float, right: float, bottom: float, width: int, height: int) -> list[int]:
-    """The inverse: pixel corners to box_2d."""
     return [
         round(top * 1000 / height), round(left * 1000 / width),
         round(bottom * 1000 / height), round(right * 1000 / width),

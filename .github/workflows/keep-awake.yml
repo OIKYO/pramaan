@@ -1,13 +1,6 @@
-# Keeps the live demo awake.
-# Render's free instance sleeps after 15 minutes without traffic, and the first request after that waits
-# about a minute. Supabase pauses a free project after a week without use. Every 10 minutes this calls the
-# API's health check with a database read, which keeps both awake. If the API or the database is down,
-# the run fails and GitHub emails the repo owner.
-#
-# Free for a public repo. Kept awake all month, the API uses about 720 of Render's 750 free hours.
-# GitHub runs free scheduled jobs late or skips them when busy, so this is now the backup: the main
-# keep-awake job runs inside Supabase (supabase/migrations/2026-11-08d_keep_awake.sql).
-# To stop it: Actions > Keep awake > "..." > Disable workflow.
+# Backup keep-awake: calls /health?db=true every 10 minutes so neither Render nor Supabase sleeps.
+# The main job runs inside Supabase (supabase/migrations/2026-11-08d_keep_awake.sql), because GitHub
+# runs free scheduled jobs late or skips them.
 name: Keep awake
 
 on:

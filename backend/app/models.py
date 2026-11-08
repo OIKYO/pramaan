@@ -1,13 +1,9 @@
-"""Pydantic models: what the reader returns, the reference data the rules check against, and
-the findings they produce. API request/response models live at the bottom."""
-
 import re
 from datetime import date, datetime
 from typing import Annotated, Literal
 
 from pydantic import AfterValidator, BaseModel, Field, field_validator
 
-# ============================================================ the reading (Gemini's output)
 
 # Gemini's box convention: [ymin, xmin, ymax, xmax], each 0-1000 of the image height/width.
 Box2D = list[int]
@@ -86,9 +82,6 @@ class BrandSeen(_Boxed):
 PosterReading.model_rebuild()
 
 
-# ============================================================ reference data (head office's rulebook)
-
-
 class BrandKit(BaseModel):
     registered_name: str
     helpline: str
@@ -146,9 +139,6 @@ class Branch(BaseModel):
     address: str
 
 
-# ============================================================ pipeline intermediate results
-
-
 class PersonMatch(BaseModel):
     """Who a person on the poster is, according to the toppers register."""
 
@@ -178,8 +168,6 @@ class VisualReport(BaseModel):
     logo_score: float | None = None
     contrast: list[ContrastReading] = []
 
-
-# ============================================================ findings
 
 Kind = Literal["code", "ai", "reader"]
 Severity = Literal["block", "warn", "pass", "needs_human"]
@@ -227,8 +215,6 @@ class RulePack(BaseModel):
     rules: list[RuleDef]
     reader_checks: list[RuleDef]
 
-
-# ============================================================ API shapes (used by app/routers)
 
 Role = Literal["branch_staff", "regional_manager", "head_office"]
 Channel = Literal["print", "instagram", "whatsapp"]
@@ -354,8 +340,6 @@ class NoteRequest(BaseModel):
     note: str = Field(min_length=1, max_length=2000)
 
 
-# ============================================================ organisations, team and imports
-
 def _strong_password(value: str) -> str:
     """At least 8 characters, with a number and a special character (the frontend checks as people type)."""
     if not re.search(r"\d", value):
@@ -380,9 +364,6 @@ class SignupRequest(BaseModel):
     industry: str | None = Field(default=None, max_length=80, description="A subdomain of that industry, or the organisation's own words")
     org_type: str | None = None
     focus: list[str] = []
-
-
-# ============================================================ what an organisation does (GET /catalog)
 
 
 class SubdomainSpecial(BaseModel):
@@ -547,9 +528,6 @@ class DatasetSpecOut(BaseModel):
     key: str
     columns: list[ImportColumn]
     template: str = Field(description="A CSV with the header and one example row")
-
-
-# ============================================================ invites and join codes
 
 
 class InviteCreate(BaseModel):

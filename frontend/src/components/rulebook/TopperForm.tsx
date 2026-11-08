@@ -12,8 +12,6 @@ import { CHANNEL_LABEL, capitalise } from "@/lib/labels";
 import { dateOrNull, joinList, splitList } from "@/lib/lists";
 import { FormFooter } from "./FormFooter";
 
-/** Edit a person's consent details, and with the exam results rulebook their result too.
- * CCPA-02 to CCPA-05 check posters against these. */
 export function TopperForm({ topper, onDone }: { topper: Topper | null; onDone: () => void }) {
   const save = useSaveTopper();
   const courses = useCourses();

@@ -1,6 +1,3 @@
-"""Head office manages the organisation's people: add, change role or branch, reset a password,
-remove or restore access. The list itself is read through Supabase (row-level security)."""
-
 from datetime import datetime
 from typing import Annotated
 

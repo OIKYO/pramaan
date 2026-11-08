@@ -1,5 +1,3 @@
-"""Poster routes: upload (runs the checks), new versions, submit, review, and the detail view."""
-
 import io
 import logging
 from typing import Annotated
@@ -27,9 +25,6 @@ SIGNED_URL_SECONDS = 3600
 SEVERITY_ORDER = {"block": 0, "needs_human": 1, "warn": 2, "pass": 3}
 
 
-# ============================================================ helpers shared with findings.py
-
-
 def load_state(poster_id: str) -> state.PosterState:
     rows = get_db().table("posters").select("*, branches(region_id)").eq("id", poster_id).limit(1).execute().data
     if not rows:
@@ -53,7 +48,6 @@ def finding_states(version_id: str) -> list[state.FindingState]:
 
 def apply(poster: state.PosterState, transition: state.Transition, actor: Profile, *, version_id: str | None = None,
           comment: str | None = None, details: dict | None = None) -> None:
-    """Move the poster to its new status, and record it in reviews and the audit log."""
     db = get_db()
     db.table("posters").update({"status": transition.status, "review_stage": transition.review_stage}).eq("id", poster.id).execute()
     db.table("reviews").insert({"poster_id": poster.id, "version_id": version_id, "actor_id": actor.id,
@@ -108,9 +102,6 @@ def build_detail(poster_id: str, user: Profile) -> PosterDetail:
     )
 
 
-# ============================================================ upload and checks
-
-
 def read_image(upload: UploadFile) -> tuple[bytes, str, str]:
     data = upload.file.read(MAX_IMAGE_BYTES + 1)
     if len(data) > MAX_IMAGE_BYTES:
@@ -138,7 +129,6 @@ def valid_tags(tagged: list[str], org_id: str) -> list[str]:
 
 def add_version(poster: state.PosterState, version: int, data: bytes, mime: str, ext: str, filename: str,
                 caption: str, alt_text: str, tags: list[str], actor: Profile) -> str:
-    """Store the image and the version row, run the checks, save the findings, mark the poster checked."""
     db = get_db()
     sha = image_sha256(data)
     path = f"{poster.id}/v{version}-{sha[:12]}.{ext}"

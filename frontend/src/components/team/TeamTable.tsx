@@ -17,7 +17,6 @@ interface TeamTableProps {
   onSetAccess: (member: Profile, active: boolean) => void;
 }
 
-/** Everyone in the organisation: role, where they work, and whether they can sign in. */
 export function TeamTable({ members, branches, regions, myId, onEdit, onResetPassword, onSetAccess }: TeamTableProps) {
   const where = (m: Profile) =>
     m.role === "branch_staff"

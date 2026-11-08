@@ -1,10 +1,3 @@
-"""Pixel checks: palette (k-means in Lab), logo (multi-scale template match) and text contrast
-(k-means with k=2 inside each text box, then the WCAG ratio).
-
-The OpenCV random seed is fixed before every k-means, so the same poster always gives the same
-result. Thresholds are applied by the rules (rules/brand.py, rules/access.py), not here.
-"""
-
 import cv2
 import numpy as np
 from PIL import Image
@@ -99,11 +92,8 @@ def contrast_ratio(a, b) -> float:
 
 
 def block_contrast(img: np.ndarray, box_2d: list[int]) -> tuple[float, str, str] | None:
-    """k-means with k=2 on the pixels in a text box: the larger cluster is the background.
-
-    Returns None when the box holds no text to measure: the reader's box missed the text and
-    landed on plain background, which k=2 would otherwise report as 1:1 "contrast".
-    """
+    """The larger of two k-means clusters is the background. None when the box missed the text and
+    landed on plain background, which k=2 would otherwise report as 1:1 contrast."""
     left, top, right, bottom = to_pixels(box_2d, img.shape[1], img.shape[0])
     crop = img[top:bottom, left:right]
     if crop.shape[0] < 4 or crop.shape[1] < 4:

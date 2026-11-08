@@ -1,7 +1,3 @@
-"""The pipeline end to end on the test posters (fixture readings, real pixels), plus the box
-conversion, the Tesseract comparison logic and the reader's retry and failure handling.
-No test calls Gemini or needs Tesseract installed."""
-
 import json
 from dataclasses import replace
 
@@ -50,7 +46,6 @@ def test_each_poster_fails_exactly_its_planted_checks(entry):
     assert failed == set(entry["expect"]), [f.message for f in result.findings if f.severity != "pass"]
     assert result.reader_model == f"fixture:{entry['name']}"
     assert result.ai_call is None  # fixture mode never calls an AI
-    # 17 checks + 3 reader checks, each with at least one row (passes included).
     assert {f.rule_id for f in result.findings} >= {"READ-01", "READ-02", "READ-03"}
     assert len({f.rule_id for f in result.findings}) == 30
 
@@ -88,18 +83,12 @@ def test_without_tesseract_the_second_read_is_flagged_not_skipped():
     assert read02.severity == "needs_human" and "Tesseract" in read02.message
 
 
-# ---------------------------------------------------------------- boxes
-
-
 def test_box_conversion_round_trips_and_uses_y_first():
     assert to_pixels([100, 200, 300, 400], width=1000, height=2000) == (200, 200, 400, 600)
     assert from_pixels(200, 200, 400, 600, width=1000, height=2000) == [100, 200, 300, 400]
     # 8% padding grows the box and is clamped to the image.
     assert to_pixels([0, 0, 1000, 1000], 100, 100, pad=0.08) == (0, 0, 100, 100)
     assert to_pixels([400, 400, 500, 500], 1000, 1000, pad=0.1) == (390, 390, 510, 510)
-
-
-# ---------------------------------------------------------------- second read
 
 
 @pytest.mark.parametrize(("raw", "second", "kind", "agree"), [
@@ -134,9 +123,6 @@ def test_prepare_crop_gives_dark_text_on_white():
     footer_phone = [n for n in reader.read_fixture("01-clean").reading.numbers if n.kind == "phone"][-1]
     crop = ocr.prepare_crop(image, footer_phone.box_2d)  # cream text on navy in the footer
     assert crop.mean() > 127  # inverted to mostly white
-
-
-# ---------------------------------------------------------------- reader
 
 
 def test_invalid_output_is_retried_then_given_up():

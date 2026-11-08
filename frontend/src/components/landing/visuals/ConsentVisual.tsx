@@ -1,7 +1,6 @@
 import { FileCheck2, Lock } from "lucide-react";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 
-/** A still of one consent record: what it covers, and that the file stays with head office. */
 export function ConsentVisual() {
   return (
     <div aria-hidden className="flex flex-col gap-4 rounded-lg border border-line bg-surface p-4">

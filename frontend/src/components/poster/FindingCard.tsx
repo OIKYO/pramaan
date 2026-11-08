@@ -19,7 +19,6 @@ interface FindingCardProps {
   onOverride: (note: string) => void;
 }
 
-/** One problem: what's wrong, the rule it breaks and why, and how to fix it. */
 export function FindingCard({ problem, ruleName, selected, onSelect, canResolve, canOverride, onResolve, onOverride }: FindingCardProps) {
   const { number, finding, box } = problem;
   const [asking, setAsking] = useState<"resolve" | "override" | null>(null);

@@ -10,8 +10,6 @@
 --   4. rewrites every row-level-security policy as "your organisation only".
 begin;
 
--- ============================================================ 1. organisations
-
 create table public.organisations (
   id uuid primary key default gen_random_uuid(),
   name text not null check (char_length(btrim(name)) between 2 and 120),
@@ -20,8 +18,6 @@ create table public.organisations (
 );
 
 insert into public.organisations (id, name) values ('00000000-0000-4000-8000-000000000001', 'Northfield Academy');
-
--- ============================================================ 2. org_id everywhere
 
 do $$
 declare t text;
@@ -56,8 +52,6 @@ alter table public.brand_kit drop column id;
 alter table public.brand_kit add primary key (org_id);
 alter table public.rule_settings drop constraint rule_settings_pkey, add primary key (org_id, rule_id);
 
--- ============================================================ 3. no references across organisations
-
 alter table public.regions add constraint regions_id_org_key unique (id, org_id);
 alter table public.branches add constraint branches_id_org_key unique (id, org_id);
 alter table public.courses add constraint courses_id_org_key unique (id, org_id);
@@ -83,8 +77,6 @@ alter table public.toppers drop constraint toppers_course_id_fkey;
 create index posters_by_org on public.posters (org_id, updated_at desc);
 create index audit_log_by_org on public.audit_log (org_id, created_at desc);
 create index profiles_by_org on public.profiles (org_id);
-
--- ============================================================ 4. helpers and policies
 
 -- The caller's organisation. Null for a removed member, so they lose all access at once.
 create function public.my_org() returns uuid

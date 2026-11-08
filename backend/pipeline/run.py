@@ -1,10 +1,5 @@
-"""The check pipeline for one poster version (CLAUDE.md section 8).
-
-    check_poster()  read -> second read -> match names -> visual checks -> rule engine
-                    Pure: everything it needs is passed in, so tests run it without a database.
-    load_reference(), cached_reading(), save_result()
-                    The database side: what check_poster needs, and where its results go.
-"""
+"""check_poster() is pure (read -> second read -> match names -> visual checks -> rules), so tests
+run it without a database. load_reference(), cached_reading() and save_result() are the database side."""
 
 import hashlib
 import io
@@ -38,8 +33,7 @@ class PosterInput:
 
 @dataclass
 class Reference:
-    """Head office's rulebooks, as the checks need them. `rulebooks` is None in tests that want
-    every check; for an organisation it is the set it keeps."""
+    """`rulebooks` is None in tests that want every check."""
 
     brand_kit: BrandKit
     courses: list[Course]
@@ -96,7 +90,6 @@ def check_poster(
     image = load_image(poster.image)
     today = today or datetime.now(IST).date()
 
-    # 1. Read: a saved reading of the same image, a fixture, or one AI call.
     ai_call = None
     if cached:
         reading, model = cached
@@ -122,22 +115,18 @@ def check_poster(
         if live:
             ai_call = _ai_call(settings, sha, poster, attempts=result.attempts, model=model, error="; ".join(result.errors))
 
-    # 2. Second read of key numbers.
     if digit_reader == "auto":
         digit_reader = default_digit_reader(settings)
     findings = ocr.cross_check(image, reading, digit_reader)
 
-    # 3. Who is shown, when the organisation keeps a register of people.
     matches = []
     if ref.keeps("people"):
         matches = match_people(reading, list(ref.toppers.values()))
         findings += identity_findings(reading, matches, poster.tagged_topper_ids, ref.toppers)
 
-    # 4. Pixels: palette, logo, contrast.
     report = visual.analyse(image, reading, ref.brand_kit.palette, ref.logo)
 
-    # 5. The checks in the rulebooks the organisation keeps. Data from a rulebook it doesn't keep
-    #    is left out, so no other check leans on it.
+    # Data from a rulebook the organisation doesn't keep is left out, so no check leans on it.
     ctx = RuleContext(
         reading=reading, people=matches, tagged_topper_ids=poster.tagged_topper_ids, brand_kit=ref.brand_kit,
         courses=ref.courses if ref.keeps("offerings") else [],
@@ -151,7 +140,6 @@ def check_poster(
 
 
 def _ai_call(settings: Settings, sha: str, poster: PosterInput, *, attempts, model=None, error="") -> dict:
-    """What the audit log records about an AI call: model, image hash, what was sent, when."""
     return {
         "model": model or settings.gemini_model,
         "image_sha256": sha,
@@ -161,9 +149,6 @@ def _ai_call(settings: Settings, sha: str, poster: PosterInput, *, attempts, mod
         "error": error or None,
         "at": datetime.now(IST).isoformat(),
     }
-
-
-# ============================================================ database side
 
 
 @lru_cache
@@ -178,7 +163,6 @@ def _logo(db_url: str, path: str) -> Image.Image | None:
 
 
 def load_reference(db, branch_id: str, org_id: str) -> Reference:
-    """The poster's organisation's rulebooks, and its branch. Nothing from other organisations."""
     from app.catalog import complete, restricted_claims, words
 
     org = db.table("organisations").select("industry_group, industry, rulebooks").eq("id", org_id).single().execute().data
@@ -203,8 +187,7 @@ def load_reference(db, branch_id: str, org_id: str) -> Reference:
 
 
 def cached_reading(db, sha: str, caption: str, live: bool, org_id: str) -> tuple[PosterReading, str] | None:
-    """A saved reading of the same image and caption in the same organisation, so the same poster
-    isn't sent to the AI twice."""
+    """So the same poster isn't sent to the AI twice."""
     rows = (db.table("poster_versions").select("reading, reader_model, posters!inner(org_id)")
             .eq("posters.org_id", org_id)
             .eq("image_sha256", sha).eq("caption", caption).not_.is_("reading", "null")
@@ -217,7 +200,6 @@ def cached_reading(db, sha: str, caption: str, live: bool, org_id: str) -> tuple
 
 
 def save_result(db, version_id: str, result: CheckResult, actor_id: str | None, org_id: str) -> None:
-    """Store the reading and every finding (passes too), and log any AI call."""
     db.table("findings").delete().eq("version_id", version_id).execute()
     db.table("poster_versions").update({
         "reading": result.reading.model_dump(mode="json") if result.reading else None,

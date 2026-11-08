@@ -1,13 +1,3 @@
-"""What an organisation does, and which rulebooks it keeps.
-
-catalog.json lists industries (30 groups and their subdomains), kinds of organisation, what they
-use Pramaan for, and the words each industry uses ("Courses and fees" for a coaching institute,
-"Menu and prices" for a restaurant). The rulebooks themselves are defined in rules/rule_pack.json.
-
-An organisation's industry only suggests rulebooks and picks the words; head office decides which
-rulebooks are on. Rules in a rulebook that is off never run.
-"""
-
 import json
 from functools import lru_cache
 from pathlib import Path
@@ -28,7 +18,6 @@ def industry_group(group_id: str | None) -> dict | None:
 
 
 def vocabulary(group_id: str | None, industry: str | None) -> dict:
-    """The words for an industry: the group's, with a subdomain's own where it has them."""
     catalog = load_catalog()
     group = industry_group(group_id)
     key = (group or {}).get("vocabulary", "default")
@@ -50,8 +39,6 @@ def required_rulebooks() -> list[str]:
 
 
 def complete(rulebooks: list[str]) -> list[str]:
-    """Add the rulebooks every organisation keeps, and anything a chosen rulebook depends on,
-    in the rule pack's order."""
     chosen = set(rulebooks) | set(required_rulebooks())
     for book in load_rule_pack().rulebooks:
         if book.id in chosen:
@@ -60,9 +47,6 @@ def complete(rulebooks: list[str]) -> list[str]:
 
 
 def suggested_rulebooks(group_id: str | None, industry: str | None, org_type: str | None, focus: list[str]) -> list[str]:
-    """What an organisation like this starts with: the rulebooks everyone keeps, the general ones that
-    act only when a poster shows what they check, and what its industry, subdomain, kind of
-    organisation and focus call for."""
     catalog = load_catalog()
     group = industry_group(group_id) or {}
     picks = [b.id for b in load_rule_pack().rulebooks if b.default_on]
@@ -76,7 +60,6 @@ def suggested_rulebooks(group_id: str | None, industry: str | None, org_type: st
 
 
 def restricted_claims(group_id: str | None) -> tuple[str, list[str]]:
-    """The industry's name and the claims its ads may never make (LEGAL-02)."""
     group = industry_group(group_id) or {}
     return group.get("name", ""), group.get("restricted", [])
 
@@ -86,8 +69,6 @@ class ProfileError(ValueError):
 
 
 def check_profile(group_id: str, industry: str, org_type: str, focus: list[str]) -> tuple[str, str, str, list[str]]:
-    """Validate and tidy an organisation profile. A subdomain that isn't listed is kept as the
-    organisation typed it, so nobody is forced into the wrong box."""
     catalog = load_catalog()
     group = industry_group(group_id)
     if not group:

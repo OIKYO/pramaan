@@ -21,8 +21,6 @@ const REASONS: { title: string; text: string; visual: ReactNode }[] = [
   },
 ];
 
-/** The heading stays in view on the left while the three reasons, each beside a still of the part
- * of Pramaan that delivers it, scroll past on the right. */
 export function WhyPramaan() {
   return (
     <section id="why" className="grid scroll-mt-20 gap-10 border-b border-line px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:gap-16 lg:px-12">

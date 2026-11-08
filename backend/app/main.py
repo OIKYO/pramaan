@@ -1,5 +1,3 @@
-"""FastAPI app: CORS and routers. Route logic lives in app/routers/."""
-
 import logging
 
 from fastapi import FastAPI, Response
@@ -12,7 +10,6 @@ from rules.registry import load_rule_pack
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 settings = get_settings()
-# Shown in the Render log, so a missing frontend origin is easy to spot.
 logging.getLogger("pramaan").info("CORS allows: %s", ", ".join(settings.allowed_origins) or "nothing")
 load_rule_pack()  # fail at startup, not on the first poster, if the rule pack and code disagree
 
@@ -47,7 +44,7 @@ def health(response: Response, db: bool = False) -> dict:
         try:
             get_db().table("regions").select("id").limit(1).execute()
             body["database"] = "ok"
-        except Exception:  # report it plainly; the job then fails and GitHub emails the owner
+        except Exception:
             logging.getLogger("pramaan").exception("health check: database unreachable")
             response.status_code = 503
             body.update(ok=False, database="unreachable")

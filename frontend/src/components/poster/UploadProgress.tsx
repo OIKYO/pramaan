@@ -1,8 +1,6 @@
 import { Elapsed } from "@/components/ui/Elapsed";
 import { Spinner } from "@/components/ui/Spinner";
 
-/** While the checks run. The steps are what happens, not a fake progress bar: the server doesn't
- * report progress, so the honest signal is the time so far. */
 export function UploadProgress({ canLeave }: { canLeave: boolean }) {
   return (
     <div role="status" className="flex flex-col gap-3 rounded-md border border-line bg-surface-sunken/50 p-4 text-sm">

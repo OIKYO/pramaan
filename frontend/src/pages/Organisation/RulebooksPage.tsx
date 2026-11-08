@@ -4,8 +4,6 @@ import { RulebookList } from "@/components/organisation/RulebookList";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { QueryState } from "@/components/ui/QueryState";
 
-/** Head office chooses what Pramaan checks: each rulebook holds approved records and the checks
- * that use them. */
 export function RulebooksPage() {
   const org = useOrganisation();
   const isHeadOffice = useProfile().role === "head_office";

@@ -5,7 +5,6 @@ import { Panel } from "@/components/ui/Panel";
 import { LoadingRows } from "@/components/ui/States";
 import { auditLabel, formatDateTime } from "@/lib/labels";
 
-/** The latest things that happened in the organisation. */
 export function RecentActivity() {
   const log = useAuditLog();
   return (

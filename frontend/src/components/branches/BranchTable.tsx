@@ -2,7 +2,6 @@ import type { Branch, Region } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { DataTable, type Column } from "@/components/ui/DataTable";
 
-/** The organisation's branches, with the contact details their posters are checked against. */
 export function BranchTable({ branches, regions, onEdit }: { branches: Branch[]; regions: Region[]; onEdit?: (branch: Branch) => void }) {
   const columns: Column<Branch>[] = [
     {

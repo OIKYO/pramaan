@@ -1,4 +1,3 @@
-/** Bringing existing records in from CSV: what can be imported, a preview, then the import. */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, postForm } from "../client";
 import type { Dataset, ImportPreview, ImportSpec } from "../types";
@@ -14,7 +13,6 @@ const AFFECTS: Record<Dataset, readonly unknown[][]> = {
   members: [[...keys.members]],
 };
 
-/** Upload a CSV. With commit false, nothing is saved: the answer says what would change and what's wrong. */
 export function useImport() {
   const qc = useQueryClient();
   return useMutation({

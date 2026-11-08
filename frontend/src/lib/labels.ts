@@ -1,4 +1,3 @@
-/** Words shown for statuses, severities and roles, in one place. Sentence case throughout. */
 import type { Tone } from "@/components/ui/ToneBadge";
 import type { Channel, PosterStatus, ReviewStage, Role, Severity } from "@/api/types";
 
@@ -51,12 +50,10 @@ export const formatDateTime = (iso: string) =>
 export const formatDate = (iso: string) =>
   new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso));
 
-/** "fee" -> "Fee", for headings built from an organisation's own words. */
 export const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 export const formatInr = (amount: number) => `₹${new Intl.NumberFormat("en-IN").format(amount)}`;
 
-/** Audit log actions in words. Anything new falls back to its name with spaces. */
 const AUDIT_ACTION: Record<string, string> = {
   ai_call: "AI read a poster",
   poster_created: "uploaded a poster",

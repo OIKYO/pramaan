@@ -1,4 +1,3 @@
-/** Stays at the top of the profile until head office has said what the organisation does. */
 export function ProfileGapsNotice({ gaps }: { gaps: string[] }) {
   if (gaps.length === 0) return null;
   return (

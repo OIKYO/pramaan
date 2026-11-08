@@ -4,7 +4,6 @@ import { NavProgress } from "@/components/ui/NavProgress";
 import { MobileBar } from "./MobileBar";
 import { Sidebar } from "./Sidebar";
 
-/** The frame around every signed-in page: the menu for the person's role, and the page itself. */
 export function AppShell() {
   const { role } = useProfile();
   return (

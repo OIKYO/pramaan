@@ -2,7 +2,6 @@ import { useInsights } from "@/api/hooks/useInsights";
 import { usePosterList } from "@/api/hooks/usePosters";
 import { Stat } from "@/components/ui/Stat";
 
-/** What needs head office today, each number a link to the list behind it. */
 export function OverviewStats() {
   const finals = usePosterList("final_approval").data;
   const regional = usePosterList("regional_review").data;

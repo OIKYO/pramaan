@@ -9,12 +9,10 @@ interface DrawerProps {
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
-  /** "left" for navigation on phones; "right" (default) for editing and uploading. */
   side?: "left" | "right";
   wide?: boolean;
 }
 
-/** A side panel for editing a record, uploading a new version, or the menu on phones. */
 export function Drawer({ open, onOpenChange, title, description, children, footer, side = "right", wide = false }: DrawerProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

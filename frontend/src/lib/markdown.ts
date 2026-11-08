@@ -1,14 +1,8 @@
-/**
- * Just enough Markdown for the website's own pages (src/content): headings, paragraphs, bullet and
- * numbered lists. Inline marks (**bold**, [links](/to), `code`) are handled by InlineText. It builds
- * plain data, never HTML, so nothing in a page can inject markup.
- */
 export type Block =
   | { kind: "heading"; level: 1 | 2 | 3 | 4; text: string; id: string }
   | { kind: "paragraph"; text: string }
   | { kind: "list"; ordered: boolean; items: string[] };
 
-/** "Two readers, clear decisions" -> "two-readers-clear-decisions", for #links to a section. */
 export const slug = (text: string) =>
   text.toLowerCase().replace(/\*\*|`/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 

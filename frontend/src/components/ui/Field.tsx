@@ -5,11 +5,9 @@ interface FieldProps {
   label: string;
   hint?: ReactNode;
   error?: string | null;
-  /** The control. Field gives it an id and links the hint or error to it. */
   children: ReactElement<{ id?: string; "aria-describedby"?: string; "aria-invalid"?: boolean }>;
 }
 
-/** A labelled form control with a hint underneath, replaced by the error when there is one. */
 export function Field({ label, hint, error, children }: FieldProps) {
   const id = useId();
   const noteId = `${id}-note`;

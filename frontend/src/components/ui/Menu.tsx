@@ -10,17 +10,13 @@ export interface MenuItem {
   icon?: LucideIcon;
   danger?: boolean;
   disabled?: boolean;
-  /** Shows a dot: for picking one of a few options, like the theme. */
   checked?: boolean;
-  /** Shows a dot that asks for attention, e.g. details still to fill in. Says why to screen readers. */
   attention?: string;
 }
 
-/** A row that opens a second menu beside it, e.g. Theme → Light, Midnight, Match this device. */
 export interface SubMenu {
   label: string;
   icon?: LucideIcon;
-  /** Shown on the right of the row: the current choice. */
   value?: string;
   items: MenuItem[];
 }
@@ -51,7 +47,6 @@ function Row({ item }: { item: MenuItem }) {
   );
 }
 
-/** A dropdown of actions for a row or the account. Arrow keys move, Enter picks, Esc closes. */
 export function Menu({ trigger, items, label, align = "end", side = "bottom" }: MenuProps) {
   return (
     <DropdownMenu.Root>

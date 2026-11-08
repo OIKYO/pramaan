@@ -9,7 +9,6 @@ import { JoinCodePanel } from "./JoinCodePanel";
 import { OrganisationForm } from "./OrganisationForm";
 import { OrgProfileForm } from "./OrgProfileForm";
 
-/** The organisation's name and what it does, with the rulebooks it keeps beside them. */
 export function OrganisationProfile({ org, canEdit }: { org: Organisation; canEdit: boolean }) {
   const catalog = useCatalog().data;
   const words = useVocabulary();

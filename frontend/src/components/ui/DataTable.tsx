@@ -5,9 +5,7 @@ import { cn } from "@/lib/utils";
 export interface Column<T> {
   header: string;
   cell: (row: T) => ReactNode;
-  /** Right-align numbers, dates and buttons. */
   align?: "end";
-  /** Keep the column as narrow as its content. */
   shrink?: boolean;
 }
 
@@ -16,18 +14,15 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   rows: T[];
   rowKey: (row: T) => string;
-  /** Make the whole row open a page. Rows with links shouldn't hold buttons. */
+  /** The link covers the whole row, so rows with links shouldn't hold buttons. */
   rowLink?: (row: T) => { to: string; label: string } | null;
-  /** A person pointed at or focused a row: start loading what it opens. */
   onRowIntent?: (row: T) => void;
-  /** Dim a row (e.g. someone whose access was removed). */
   muted?: (row: T) => boolean;
 }
 
 const phoneLabel =
   "max-md:before:mb-0.5 max-md:before:block max-md:before:text-xs max-md:before:text-muted-text max-md:before:content-[attr(data-label)]";
 
-/** A compact table on wide screens; labelled, stacked rows on phones. */
 export function DataTable<T>({ caption, columns, rows, rowKey, rowLink, onRowIntent, muted }: DataTableProps<T>) {
   return (
     <div className="overflow-hidden rounded-lg border border-line bg-surface">

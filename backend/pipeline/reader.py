@@ -1,12 +1,3 @@
-"""Read a poster: one Gemini call per poster version, returning a validated PosterReading.
-
-- Gemini gets the image and the caption, a JSON response schema and temperature 0.
-- Invalid output is retried up to 2 times. If Gemini itself fails (quota, outage), the backup
-  reader on Groq gets the same prompt. If everything fails, ReaderError is raised and the
-  pipeline records a READ-01 finding for a person, instead of crashing.
-- READER_MODE=fixture loads tests/fixtures/readings/<name>.json instead: no AI calls.
-"""
-
 import base64
 import json
 import logging
@@ -105,7 +96,6 @@ def _gemini(image: bytes, mime_type: str, prompt: str, settings: Settings) -> st
 
 
 def _groq(image: bytes, mime_type: str, prompt: str, settings: Settings) -> str:
-    """Backup reader: an OpenAI-compatible vision model on Groq, with JSON output."""
     schema = json.dumps(PosterReading.model_json_schema())
     image_url = f"data:{mime_type};base64,{base64.b64encode(image).decode()}"
     response = httpx.post(
@@ -127,8 +117,8 @@ def _groq(image: bytes, mime_type: str, prompt: str, settings: Settings) -> str:
 
 
 def _try(name: str, call, errors: list[str], wait=time.sleep) -> tuple[PosterReading | None, int]:
-    """Up to MAX_ATTEMPTS calls. Invalid output is retried. A failing service is retried once, after a
-    short wait, only if it said the failure is temporary (503); otherwise the next reader takes over."""
+    """Invalid output is retried. A failing service is retried once, after a short wait, only if it
+    said the failure is temporary (503); otherwise the next reader takes over."""
     retried_service = False
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:

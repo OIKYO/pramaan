@@ -1,6 +1,3 @@
-"""Offers, discounts and terms (OFFER-01 to OFFER-03). They act only when a poster makes an offer: a
-discount, scholarship, cashback, early-bird price, coupon or fee waiver."""
-
 import re
 
 from rules.registry import Problem, RuleContext, rule

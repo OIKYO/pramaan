@@ -1,8 +1,4 @@
-/**
- * Light or midnight theme. The choice is saved in this browser; "system" follows the device.
- * index.html sets data-theme before the first paint (no flash), and this keeps it in step after.
- * Every colour is a CSS variable (styles/tokens.css), so switching changes one attribute.
- */
+/** index.html sets data-theme before the first paint (no flash); this keeps it in step after. */
 import { useSyncExternalStore } from "react";
 import { swapTheme } from "./motion";
 
@@ -52,7 +48,6 @@ const subscribe = (listener: () => void) => {
   return () => listeners.delete(listener);
 };
 
-/** The person's choice, the theme in use, and a setter. */
 export function useTheme() {
   const current = useSyncExternalStore(subscribe, () => choice);
   const theme = useSyncExternalStore(subscribe, () => resolve(choice));

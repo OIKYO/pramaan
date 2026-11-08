@@ -13,8 +13,6 @@ import { passwordNeeds } from "@/lib/password";
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-/** A new company signs up and says what it does. Whoever signs up becomes its head office; the
- * industry picks Pramaan's words and the rulebooks it starts with. */
 export function SignupForm({ onCreated }: { onCreated: () => void }) {
   const signup = useSignup();
   const catalog = useCatalog();

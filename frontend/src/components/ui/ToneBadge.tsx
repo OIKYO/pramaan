@@ -21,7 +21,6 @@ const DOTS: Record<Tone, string> = {
   accent: "bg-accent",
 };
 
-/** A small label: red blocks, blue needs a person, amber warns, green passed, grey is neutral. */
 export function ToneBadge({ tone, children, dot = false }: { tone: Tone; children: ReactNode; dot?: boolean }) {
   return (
     <span className={cn("inline-flex h-5 items-center gap-1.5 rounded-sm px-1.5 text-xs font-medium whitespace-nowrap", TONES[tone])}>

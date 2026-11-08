@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/Toast";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 
-/** Head office uploads the signed consent PDF and opens it through a link that expires in 2 minutes.
- * Consent files are never sent to the AI. */
 export function ConsentPanel({ topper }: { topper: Topper }) {
   const upload = useUploadConsent();
   const link = useConsentLink();

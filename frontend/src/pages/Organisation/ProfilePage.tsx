@@ -5,7 +5,6 @@ import { ProfileGapsNotice } from "@/components/organisation/ProfileGapsNotice";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { QueryState } from "@/components/ui/QueryState";
 
-/** The organisation itself: its name, what it does, and the rulebooks it keeps. */
 export function ProfilePage() {
   const org = useOrganisation();
   const gaps = useProfileGaps();

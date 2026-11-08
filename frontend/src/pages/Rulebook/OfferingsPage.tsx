@@ -14,7 +14,6 @@ import { EmptyState } from "@/components/ui/States";
 import { download } from "@/lib/csv";
 import { coursesCsv } from "@/lib/rulebookCsv";
 
-/** Courses and fees, Menu and prices, Memberships and fees: whatever the organisation offers. */
 export function OfferingsPage() {
   const words = useVocabulary();
   const courses = useCourses();

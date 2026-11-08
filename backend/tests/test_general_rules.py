@@ -1,6 +1,3 @@
-"""The four general rulebooks: dates, offers, rights and legal. Each check passes on the clean poster
-(which has no dates, offers or other organisations) and fails on the problem it exists to catch."""
-
 from app.models import BrandSeen
 from tests.builders import BRAND_KIT, clean_reading, make_ctx
 from tests.test_rules import add_block, problems
@@ -13,7 +10,7 @@ def poster(*lines: str):
     return reading
 
 
-# ---------------------------------------------------------------- dates (TODAY is 7 Nov 2026)
+# TODAY is 7 Nov 2026
 
 def test_event01_impossible_dates_block():
     assert not problems(make_ctx(), "EVENT-01")
@@ -43,8 +40,6 @@ def test_event03_deadlines_that_have_passed_block():
     assert not problems(make_ctx(poster("Doors close at the end of 31 October 2026")), "EVENT-03")  # not a deadline word
 
 
-# ---------------------------------------------------------------- offers
-
 def test_offer01_offers_need_an_end_date():
     assert not problems(make_ctx(), "OFFER-01")
     assert problems(make_ctx(poster("Early-bird discount: 20% off", "T&C apply")), "OFFER-01")
@@ -65,8 +60,6 @@ def test_offer03_discounts_must_add_up():
     assert len(saved) == 1 and "saves ₹12,000" in saved[0].message
 
 
-# ---------------------------------------------------------------- rights
-
 def test_rights01_stock_watermarks_block():
     assert not problems(make_ctx(), "RIGHTS-01")
     found = problems(make_ctx(poster("shutterstock · 2215559811")), "RIGHTS-01")
@@ -81,8 +74,6 @@ def test_rights02_other_organisations_must_be_approved_partners():
     ctx.brand_kit = BRAND_KIT.model_copy(update={"approved_partners": ["IIT Bombay"]})
     assert not problems(ctx, "RIGHTS-02")
 
-
-# ---------------------------------------------------------------- legal
 
 def test_legal01_required_disclaimers_must_be_printed():
     ctx = make_ctx()

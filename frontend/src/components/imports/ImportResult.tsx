@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/Panel";
 import { download, toCsv } from "@/lib/csv";
 
-/** After an import: what changed and, for new team members, their temporary passwords (shown once). */
 export function ImportResult({ result, onAnother }: { result: ImportPreview; onAnother: () => void }) {
   const credentials = result.credentials;
   return (

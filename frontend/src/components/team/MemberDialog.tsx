@@ -14,7 +14,6 @@ import { ROLE_LABEL } from "@/lib/labels";
 interface MemberDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Editing someone, or null to add a new person. */
   member: Profile | null;
   branches: Branch[];
   regions: Region[];
@@ -24,7 +23,6 @@ interface MemberDialogProps {
 
 const ROLES = (Object.keys(ROLE_LABEL) as Role[]).map((value) => ({ value, label: ROLE_LABEL[value] }));
 
-/** Add a person, or change someone's role and where they work. */
 export function MemberDialog({ open, onOpenChange, member, branches, regions, pending, onSubmit }: MemberDialogProps) {
   const [form, setForm] = useState<MemberInput>({
     full_name: member?.full_name ?? "", email: member?.email ?? "", role: member?.role ?? "branch_staff",

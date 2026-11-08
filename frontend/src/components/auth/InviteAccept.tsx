@@ -13,7 +13,6 @@ import { passwordNeeds } from "@/lib/password";
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-/** Someone opened an invite link: say who invited them to what, and make their account. */
 export function InviteAccept({ token }: { token: string }) {
   const preview = useInvitePreview(token);
   const accept = useAcceptInvite(token);

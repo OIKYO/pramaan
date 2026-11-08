@@ -14,8 +14,6 @@ interface RegionRowProps {
   onDelete: () => void;
 }
 
-/** One region: its branches and regional managers, renamed in place. A region can be deleted only
- * once it has no branches. */
 export function RegionRow({ region, branches, managers, canEdit, onRename, onDelete }: RegionRowProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(region.name);

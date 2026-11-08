@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/Modal";
 import { Spinner } from "@/components/ui/Spinner";
 
-/** One row of the Security panel: delete your own account, after saying plainly what that does. */
 export function DeleteAccount() {
   const remove = useDeleteMyAccount();
   const [open, setOpen] = useState(false);

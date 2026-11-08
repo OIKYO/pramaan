@@ -1,6 +1,3 @@
-"""What an organisation does decides the words and suggests rulebooks; the rulebooks it keeps decide
-which checks run."""
-
 import pytest
 
 from app.catalog import (

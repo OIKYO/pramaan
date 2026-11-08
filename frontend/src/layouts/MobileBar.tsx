@@ -7,7 +7,6 @@ import { AccountMenu } from "./AccountMenu";
 import { NavList } from "./NavList";
 import { OrgHeader } from "./OrgHeader";
 
-/** On phones and small tablets: the organisation and a menu button; the menu slides in from the left. */
 export function MobileBar({ role }: { role: Role }) {
   const [open, setOpen] = useState(false);
   return (

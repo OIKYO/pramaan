@@ -1,4 +1,3 @@
-/** React Query cache keys, in one place so mutations invalidate the right lists. */
 export const keys = {
   profile: (userId: string) => ["profile", userId] as const,
   organisation: ["organisation"] as const,

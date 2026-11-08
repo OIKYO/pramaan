@@ -15,7 +15,6 @@ const MATCHES: Record<Filter, (p: PosterListItem) => boolean> = {
 };
 const LABELS: Record<Filter, string> = { all: "All", changes: "Not yet submitted", review: "In review", approved: "Approved" };
 
-/** Posters with a status filter (with counts) and a search across title, branch and author. */
 export function PosterList({ posters, showBranch = false }: { posters: PosterListItem[]; showBranch?: boolean }) {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");

@@ -1,5 +1,3 @@
-/** Calls to the Pramaan backend, signed with the user's Supabase session.
- * Components never call fetch directly; they use the hooks in src/api/hooks. */
 import { supabase } from "./supabase";
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
@@ -44,8 +42,6 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   return (await response.json()) as T;
 }
 
-/** Nudge the server awake as soon as the site opens, so it's ready by the time someone signs in.
- * The free server sleeps after a quiet spell. Fire and forget: nothing waits for it. */
 export function wakeApi() {
   fetch(`${API_URL}/health`).catch(() => undefined);
 }
@@ -58,7 +54,6 @@ export const patchJson = <T>(path: string, body: unknown) =>
 
 export const postForm = <T>(path: string, form: FormData) => api<T>(path, { method: "POST", body: form });
 
-/** A multipart form from plain values: arrays become repeated fields, files stay files. */
 export function toForm(input: Record<string, unknown>): FormData {
   const form = new FormData();
   for (const [key, value] of Object.entries(input)) {

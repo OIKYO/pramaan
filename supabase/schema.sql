@@ -5,8 +5,6 @@
 -- are unique within an organisation, and two-column foreign keys (id, org_id) make it impossible for
 -- a branch, profile, poster or topper to point into another organisation.
 
--- ============================================================ enums
-
 create type public.user_role as enum ('branch_staff', 'regional_manager', 'head_office');
 create type public.poster_status as enum ('draft', 'checked', 'in_review', 'changes_requested', 'approved');
 create type public.review_stage as enum ('regional', 'head_office');
@@ -15,8 +13,6 @@ create type public.finding_kind as enum ('code', 'ai', 'reader');
 create type public.severity as enum ('block', 'warn', 'pass', 'needs_human');
 create type public.finding_status as enum ('open', 'resolved', 'overridden');
 create type public.course_type as enum ('classroom', 'crash', 'test_series', 'online');
-
--- ============================================================ organisations and people
 
 create table public.organisations (
   id uuid primary key default gen_random_uuid(),
@@ -70,8 +66,6 @@ create table public.profiles (
   constraint profiles_region_same_org foreign key (region_id, org_id) references public.regions (id, org_id)
 );
 create index profiles_by_org on public.profiles (org_id);
-
--- ============================================================ rulebook (head office's approved facts)
 
 create table public.brand_kit (
   org_id uuid primary key references public.organisations (id) on delete cascade, -- one per organisation
@@ -139,7 +133,7 @@ create table public.toppers (
   constraint toppers_course_same_org foreign key (course_id, org_id) references public.courses (id, org_id)
 );
 
--- Which of the 17 checks each organisation has switched on. The checks live in backend/rules/rule_pack.json.
+-- Which checks each organisation has switched on. The checks live in backend/rules/rule_pack.json.
 create table public.rule_settings (
   org_id uuid not null references public.organisations (id) on delete cascade,
   rule_id text not null,
@@ -148,8 +142,6 @@ create table public.rule_settings (
   updated_at timestamptz not null default now(),
   primary key (org_id, rule_id)
 );
-
--- ============================================================ posters and checks
 
 create table public.posters (
   id uuid primary key default gen_random_uuid(),
@@ -235,8 +227,6 @@ create table public.audit_log (
 create index audit_log_by_time on public.audit_log (created_at desc);
 create index audit_log_by_org on public.audit_log (org_id, created_at desc);
 
--- ============================================================ triggers
-
 create function public.touch_updated_at() returns trigger
 language plpgsql set search_path = ''
 as $$
@@ -252,8 +242,6 @@ create trigger brand_kit_touch before update on public.brand_kit
   for each row execute function public.touch_updated_at();
 create trigger rule_settings_touch before update on public.rule_settings
   for each row execute function public.touch_updated_at();
-
--- ============================================================ storage buckets
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types) values
   ('posters', 'posters', false, 15728640, array['image/png', 'image/jpeg', 'image/webp']),

@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 
-/** Save and cancel for a rulebook drawer, with an optional delete on the left. */
 export function FormFooter({ pending, onCancel, onDelete, deleteLabel = "Delete" }: {
   pending: boolean;
   onCancel: () => void;

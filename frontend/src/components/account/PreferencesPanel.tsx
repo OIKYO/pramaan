@@ -11,7 +11,6 @@ const THEMES: Segment<ThemeChoice>[] = [
   { value: "system", label: THEME_LABEL.system, icon: Monitor },
 ];
 
-/** How Pramaan looks and moves in this browser. */
 export function PreferencesPanel() {
   const { choice, setTheme } = useTheme();
   const [reduce, setReduce] = useReduceMotion();

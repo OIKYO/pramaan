@@ -6,13 +6,10 @@ interface StatProps {
   label: string;
   value: ReactNode;
   hint?: string;
-  /** Mark it as needing someone's attention. */
   attention?: boolean;
-  /** Open the list behind the number. */
   to?: string;
 }
 
-/** One number with its label, optionally a link to what it counts. */
 export function Stat({ label, value, hint, attention = false, to }: StatProps) {
   const body = (
     <>

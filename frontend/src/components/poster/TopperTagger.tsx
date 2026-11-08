@@ -10,8 +10,6 @@ interface TopperTaggerProps {
   onChange: (ids: string[]) => void;
 }
 
-/** Staff tag the people shown on the poster. Pramaan doesn't recognise faces. Hidden for an
- * organisation that doesn't keep a register of people. */
 export function TopperTagger({ value, onChange }: TopperTaggerProps) {
   const keeps = useKeeps();
   const words = useVocabulary();

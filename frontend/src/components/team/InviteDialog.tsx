@@ -13,8 +13,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Spinner } from "@/components/ui/Spinner";
 import { ROLE_LABEL, formatDate } from "@/lib/labels";
 
-/** Make a single-use invite link for one person. Head office invites anyone; a regional manager
- * invites branch staff for branches in their region. The link is shown once, with copy and share. */
 export function InviteDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const me = useProfile();
   const create = useCreateInvite();

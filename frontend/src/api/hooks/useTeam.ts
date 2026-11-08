@@ -1,5 +1,3 @@
-/** The organisation's people. Reading goes through Supabase; adding people, changing roles,
- * passwords and access go through the backend, which also manages their sign-in. */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { postJson, api } from "../client";
 import { supabase } from "../supabase";
@@ -41,7 +39,6 @@ function useMemberChange<TArgs, TResult>(call: (args: TArgs) => Promise<TResult>
   });
 }
 
-/** Add someone. The result holds their temporary password: show it once. */
 export const useAddMember = () => useMemberChange((input: MemberInput) => postJson<MemberCreated>("/members", input));
 
 export const useUpdateMember = () =>

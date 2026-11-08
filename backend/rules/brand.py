@@ -1,5 +1,3 @@
-"""Brand: logo, palette, registered name and helpline, tone of voice (BRAND-01 to BRAND-04)."""
-
 from rapidfuzz import fuzz
 
 from rules.registry import Problem, RuleContext, rule

@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { DataTable, type Column } from "@/components/ui/DataTable";
 import { capitalise, formatDate, formatInr } from "@/lib/labels";
 
-/** What the organisation offers (courses, menu items, memberships), with price and expiry, in its
- * own words. Durations show where the industry uses them. Head office can edit each one. */
 export function CourseTable({ courses, onEdit }: { courses: Course[]; onEdit?: (course: Course) => void }) {
   const words = useVocabulary();
   const showDuration = words.durations || courses.some((c) => c.duration_label);

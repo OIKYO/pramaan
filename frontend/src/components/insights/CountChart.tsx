@@ -2,7 +2,6 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recha
 import type { CountItem } from "@/api/types";
 import { Panel } from "@/components/ui/Panel";
 
-/** A horizontal bar chart of counts. Colours are theme tokens, so it follows light and midnight. */
 export function CountChart({ title, items, colour = "var(--color-ink)", empty }: {
   title: string;
   items: CountItem[];

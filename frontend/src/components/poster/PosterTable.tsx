@@ -6,7 +6,6 @@ import { ToneBadge } from "@/components/ui/ToneBadge";
 import { CHANNEL_LABEL, formatDateTime } from "@/lib/labels";
 import { StatusPill } from "./StatusPill";
 
-/** What's still open on a poster, as one tag. */
 function issues(poster: PosterListItem) {
   if (poster.pending) return <span className="text-muted-text">Not known yet</span>;
   if (poster.blocking > 0) return <ToneBadge tone="blocked">{poster.blocking} blocking</ToneBadge>;
@@ -14,8 +13,6 @@ function issues(poster: PosterListItem) {
   return <ToneBadge tone="passed">None open</ToneBadge>;
 }
 
-/** Posters with where they are in review and what's still open. A row opens the poster; pointing
- * at it starts loading the poster, so it opens without a wait. */
 export function PosterTable({ posters, showBranch = false }: { posters: PosterListItem[]; showBranch?: boolean }) {
   const prefetch = usePrefetchPoster();
   const columns: Column<PosterListItem>[] = [

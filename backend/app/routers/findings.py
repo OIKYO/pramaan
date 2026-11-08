@@ -1,5 +1,3 @@
-"""Reviewers confirm uncertain readings; head office overrides blocking findings."""
-
 from datetime import datetime
 from typing import Annotated
 

@@ -3,7 +3,6 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { PasswordForm } from "./PasswordForm";
 
-/** First sign-in with a temporary password: choose your own before anything else. */
 export function SetPasswordScreen() {
   const { profile, signOut } = useSession();
   return (

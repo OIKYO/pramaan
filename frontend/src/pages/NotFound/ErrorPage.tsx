@@ -2,7 +2,6 @@ import { isRouteErrorResponse, useRouteError } from "react-router";
 import { ErrorState, ScreenMessage } from "@/components/ui/States";
 import { NotFoundPage } from "./NotFoundPage";
 
-/** Shown when a page crashes, instead of a blank screen. */
 export function ErrorPage() {
   const error = useRouteError();
   if (isRouteErrorResponse(error) && error.status === 404) return <NotFoundPage />;

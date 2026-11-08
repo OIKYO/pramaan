@@ -6,7 +6,6 @@ const BOOKS = [
   { name: "Impact figures", note: "For NGOs", on: false },
 ];
 
-/** A still of the Rulebooks page for a coaching institute: what's on, and one that isn't. */
 export function RulebookVisual() {
   return (
     <div aria-hidden className="flex flex-col rounded-lg border border-line bg-surface">

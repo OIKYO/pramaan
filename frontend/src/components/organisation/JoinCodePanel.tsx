@@ -8,8 +8,6 @@ import { Panel } from "@/components/ui/Panel";
 import { Spinner } from "@/components/ui/Spinner";
 import { toast } from "@/components/ui/Toast";
 
-/** The organisation's join code: people enter it when they create their account, and join as branch
- * staff of the branch they pick. Only people inside the organisation see it; head office can replace it. */
 export function JoinCodePanel({ canRefresh }: { canRefresh: boolean }) {
   const code = useJoinCode();
   const refresh = useRefreshJoinCode();

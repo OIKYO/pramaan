@@ -1,5 +1,3 @@
-"""Head office's overview: where problems come from, which rules fire, which get overridden."""
-
 from collections import Counter
 from typing import Annotated
 

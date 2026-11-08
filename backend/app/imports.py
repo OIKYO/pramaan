@@ -1,10 +1,3 @@
-"""CSV imports: read a file, check every cell, and plan what to create or update. No database here,
-so all of it is unit-tested; routers/imports.py loads what exists and writes the plan.
-
-A file is accepted only when every row is valid. Errors name the line and the column, and say how
-to write the value, so a spreadsheet can be fixed and uploaded again.
-"""
-
 import csv
 import io
 import re
@@ -84,9 +77,6 @@ SPECS: dict[str, Spec] = {
 }
 
 
-# ---------------------------------------------------------------- reading one cell
-
-
 def _int(raw: str) -> int:
     text = re.sub(r"[₹,\s]|rs\.?|inr", "", raw, flags=re.I)
     if not re.fullmatch(r"-?\d+", text):
@@ -162,13 +152,8 @@ def read_cell(kind: str, raw: str):
     return raw.strip()
 
 
-# ---------------------------------------------------------------- reading a file
-
-
 @dataclass
 class Existing:
-    """What the organisation already has, by lower-case name (or email)."""
-
     keys: dict[str, str] = field(default_factory=dict)  # this dataset: key -> id
     regions: dict[str, str] = field(default_factory=dict)
     branches: dict[str, str] = field(default_factory=dict)
@@ -177,7 +162,6 @@ class Existing:
     rankings: bool = False  # the exam results rulebook is on, so people need their exam, rank and result date
 
 
-# Other names spreadsheets use for a column.
 ALIASES = {"price": "fee_inr", "price_inr": "fee_inr", "fee": "fee_inr", "type": "course_type"}
 
 
@@ -234,7 +218,7 @@ def plan(dataset: str, data: bytes, existing: Existing) -> Plan:
             break
         raw = {name: (raw_row.get(headers[name]) or "").strip() if name in headers else "" for name in names}
         if not any(raw.values()):
-            continue  # blank line
+            continue
         values, ok = {}, True
         for column in spec.columns:
             cell = raw[column.name]
@@ -267,7 +251,6 @@ def plan(dataset: str, data: bytes, existing: Existing) -> Plan:
 
 
 def _row_rules(dataset: str, v: dict, existing: Existing) -> list[tuple[str | None, str]]:
-    """Checks across columns and against what the organisation already has."""
     problems = []
     if dataset == "courses":
         if v["is_paid"] and v["fee_inr"] is None:
@@ -303,7 +286,6 @@ def _row_rules(dataset: str, v: dict, existing: Existing) -> list[tuple[str | No
 
 
 def template(dataset: str) -> str:
-    """A CSV with the header and one example row."""
     spec = SPECS[dataset]
     out = io.StringIO()
     writer = csv.writer(out, lineterminator="\n")

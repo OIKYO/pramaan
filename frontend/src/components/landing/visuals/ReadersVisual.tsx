@@ -1,4 +1,3 @@
-/** A still of the second read: the same number read by two readers, and what happens when they differ. */
 export function ReadersVisual() {
   const rows = [
     { what: "Fee", first: "₹48,000", second: "₹48,000", same: true },

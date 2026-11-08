@@ -6,7 +6,6 @@ import { VersionSwitcher } from "./VersionSwitcher";
 
 const ruleIds = (v: Version) => new Set(problemsOf(v).map((p) => p.finding.rule_id));
 
-/** Two versions side by side, with which problems were fixed and which are new. */
 export function VersionCompare({ versions }: { versions: Version[] }) {
   const [left, setLeft] = useState(Math.max(1, versions.length - 1));
   const [right, setRight] = useState(versions.length);

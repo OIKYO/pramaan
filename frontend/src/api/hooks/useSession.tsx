@@ -10,19 +10,16 @@ export const PROFILE_COLUMNS =
   "id, org_id, full_name, role, branch_id, region_id, email, needs_password_change, deactivated_at, created_at";
 
 interface SessionState {
-  /** "loading" until Supabase has restored any saved session. */
   status: "loading" | "signed_out" | "signed_in";
   session: Session | null;
   profile: Profile | null;
   profileError: string | null;
   signIn: (email: string, password: string) => Promise<void>;
-  /** Sign out here, or on every device you're signed in on. */
   signOut: (everywhere?: boolean) => Promise<void>;
 }
 
 const SessionContext = createContext<SessionState | null>(null);
 
-/** Sign-in errors in words people understand. */
 function friendly(message: string): string {
   if (message === "Invalid login credentials") return "That email and password don't match an account.";
   if (/banned/i.test(message)) return "Head office has removed your access to Pramaan. Ask them if you need it back.";
@@ -34,7 +31,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    // The free API server sleeps when idle; start waking it as soon as anyone opens the site.
+    // Render's free server sleeps when idle; start waking it as soon as the site opens.
     wakeApi();
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
     const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next));
@@ -76,7 +73,6 @@ export function useSession(): SessionState {
   return value;
 }
 
-/** The signed-in user's profile. Only use below a signed-in route guard. */
 export function useProfile(): Profile {
   const { profile } = useSession();
   if (!profile) throw new Error("useProfile needs a signed-in user");

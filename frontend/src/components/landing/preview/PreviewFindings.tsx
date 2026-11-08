@@ -6,10 +6,7 @@ import { ToneBadge } from "@/components/ui/ToneBadge";
 import { cn } from "@/lib/utils";
 import { FINDINGS, PASSED } from "./previewData";
 
-/** The example's findings. Clicking one picks it (and its box on the poster); the passed checks open
- * into a list. */
 export function PreviewFindings({ selected, onSelect }: { selected: number | null; onSelect: (n: number) => void }) {
-  // Open on wide screens, where there's room beside the poster; closed on phones.
   const [showPassed, setShowPassed] = useState(() => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
   return (
     <div className="flex flex-col gap-3">

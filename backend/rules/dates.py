@@ -1,9 +1,3 @@
-"""Dates, deadlines and availability (EVENT-01 to EVENT-03). They act only when a poster shows a date.
-
-Dates are found in the poster's text and caption, written as "14 March 2027", "Sunday, 14th Mar
-2027", "March 14, 2027" or "14/03/2027" (day first, as in India).
-"""
-
 import calendar
 import re
 from dataclasses import dataclass

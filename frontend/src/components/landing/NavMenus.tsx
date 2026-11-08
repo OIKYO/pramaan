@@ -46,7 +46,6 @@ function LinkGrid({ links }: { links: LandingLink[] }) {
   );
 }
 
-/** The top bar's menus. They open on hover with a mouse, on tap on a phone, and with the keyboard. */
 export function NavMenus() {
   return (
     <N.Root delayDuration={60} className="hidden flex-1 md:flex" aria-label="Product">

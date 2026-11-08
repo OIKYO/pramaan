@@ -1,5 +1,4 @@
-/** Helpers that shape a version's findings for display. The order here sets the numbers shown on
- * the poster boxes and in the findings list, so both always agree. */
+/** The order of findings here sets the numbers on the poster boxes and in the findings list. */
 import type { Finding, Version } from "@/api/types";
 
 export type Box = [number, number, number, number]; // [ymin, xmin, ymax, xmax], 0-1000
@@ -19,7 +18,6 @@ export function boxOf(finding: Finding): Box | null {
   return ymax > ymin && xmax > xmin ? [ymin, xmin, ymax, xmax] : null; // caption flags use [0,0,0,0]
 }
 
-/** Everything that isn't a pass, most serious first, numbered from 1. */
 export function problemsOf(version: Version): Problem[] {
   return version.findings
     .filter((f) => f.severity !== "pass")
@@ -29,6 +27,5 @@ export function problemsOf(version: Version): Problem[] {
 
 export const passesOf = (version: Version) => version.findings.filter((f) => f.severity === "pass");
 
-/** Findings that stop approval until fixed, confirmed or overridden. */
 export const openBlockingOf = (version: Version) =>
   version.findings.filter((f) => f.status === "open" && (f.severity === "block" || f.severity === "needs_human"));

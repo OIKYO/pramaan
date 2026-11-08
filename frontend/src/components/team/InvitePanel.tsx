@@ -9,7 +9,6 @@ import { toast } from "@/components/ui/Toast";
 import { ROLE_LABEL, formatDate } from "@/lib/labels";
 import { InviteDialog } from "./InviteDialog";
 
-/** Invite links waiting to be used, and a button to make one. Cancelling removes it at once. */
 export function InvitePanel() {
   const invites = useInvites();
   const revoke = useRevokeInvite();

@@ -32,7 +32,6 @@ def check(label: str, ok: bool, extra: str = "") -> None:
 
 
 def report_non_json(response: httpx.Response) -> None:
-    """A crashed or restarting server answers with a proxy page, not JSON. Say so plainly."""
     if "application/json" not in response.headers.get("content-type", ""):
         response.read()
         print(f"NOTE {response.request.method} {response.request.url.path} answered HTTP "

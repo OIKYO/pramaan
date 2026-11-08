@@ -4,7 +4,6 @@ import { RecentActivity } from "@/components/overview/RecentActivity";
 import { SetupChecklist } from "@/components/overview/SetupChecklist";
 import { PageHeader } from "@/components/ui/PageHeader";
 
-/** Head office's home: setup until it's done, then what needs attention and what just happened. */
 export function OverviewPage() {
   const org = useOrganisation().data;
   return (

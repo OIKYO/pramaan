@@ -1,4 +1,4 @@
-"""The poster status machine and who may do what (CLAUDE.md section 7). Pure functions, no database.
+"""Poster status machine and permissions. Pure functions, no database.
 
     create version -> draft -(pipeline done)-> checked
     checked -(branch submits)-> in_review [regional]
@@ -7,8 +7,8 @@
     changes_requested -(branch uploads a new version)-> draft -> checked -> ...
     in_review/head_office -(head office final approve)-> approved
 
-The backend uses the secret key, which bypasses row-level security, so every function here also
-checks that the user may see the poster at all (the same rule as policies.sql).
+The backend bypasses row-level security, so every function here also checks that the user may
+see the poster at all (the same rule as policies.sql).
 """
 
 from dataclasses import dataclass
@@ -23,8 +23,6 @@ STATUS_LABEL = {
 
 
 class Refused(Exception):
-    """The action isn't allowed. `status` is the HTTP status; `message` says why and what to do."""
-
     def __init__(self, status: int, message: str):
         super().__init__(message)
         self.status = status
@@ -53,7 +51,7 @@ class FindingState:
 class Transition:
     status: str
     review_stage: str | None
-    action: str  # what goes into reviews.action
+    action: str
 
 
 def can_view(user: Profile, poster: PosterState) -> bool:
@@ -97,7 +95,6 @@ def check_new_version(user: Profile, poster: PosterState) -> Transition:
 
 
 def checked() -> Transition:
-    """The pipeline finished (whatever it found)."""
     return Transition("checked", None, "checked")
 
 
@@ -144,7 +141,6 @@ def review(user: Profile, poster: PosterState, action: str, findings: list[Findi
 
 
 def resolve(user: Profile, poster: PosterState, finding: FindingState, note: str) -> None:
-    """A reviewer confirms a reading the pipeline wasn't sure about."""
     _must_view(user, poster)
     if user.role not in ("regional_manager", "head_office"):
         raise Refused(403, "Only reviewers can confirm a reading.")
@@ -169,7 +165,6 @@ def override(user: Profile, poster: PosterState, finding: FindingState, reason: 
 
 
 def allowed_actions(user: Profile, poster: PosterState, findings: list[FindingState]) -> list[str]:
-    """What the UI should offer this user now."""
     attempts = {
         "new_version": lambda: check_new_version(user, poster),
         "submit": lambda: submit(user, poster),

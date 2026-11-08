@@ -30,8 +30,6 @@ function groupByBox(problems: Problem[]): { box: Box; items: Problem[] }[] {
   return [...groups.values()].sort((a, b) => area(b.box) - area(a.box));
 }
 
-/** The poster with a numbered box over each problem. Click a box to open its finding; the
- * other boxes step back so the chosen one stands out. */
 export function PosterCanvas({ imageUrl, title, problems, selected, onSelect }: PosterCanvasProps) {
   return (
     <figure className="relative overflow-hidden rounded-md border border-line bg-surface-sunken">
@@ -45,9 +43,8 @@ export function PosterCanvas({ imageUrl, title, problems, selected, onSelect }: 
       {groupByBox(problems).map(({ box, items }) => {
         const [ymin, xmin, ymax, xmax] = box;
         const at = items.findIndex((p) => p.number === selected);
-        const top = items[0].finding; // most serious first
+        const top = items[0].finding;
         const settled = items.every((p) => p.finding.status !== "open");
-        // Clicking a shared box steps through its findings, then lets go.
         const next = at === -1 ? items[0].number : (items[at + 1]?.number ?? null);
         return (
           <button

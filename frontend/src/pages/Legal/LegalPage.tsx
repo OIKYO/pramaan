@@ -8,7 +8,6 @@ import { NotFoundPage } from "@/pages/NotFound/NotFoundPage";
 
 const DOCS: Record<string, string> = { privacy, terms, cookies };
 
-/** Privacy, terms and cookies, open to everyone, signed in or not. The text is in src/content. */
 export function LegalPage() {
   const doc = DOCS[useParams().doc ?? ""];
   if (!doc) return <NotFoundPage />;

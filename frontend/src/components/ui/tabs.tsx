@@ -2,7 +2,6 @@ import * as React from "react";
 import { cn } from "cn";
 import { Tabs as TabsPrimitive } from "radix-ui";
 
-/** Tabs drawn as labels on a line; the open tab is underlined in the accent colour. */
 function Tabs({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) {
   return <TabsPrimitive.Root data-slot="tabs" className={cn("flex flex-col gap-5", className)} {...props} />;
 }

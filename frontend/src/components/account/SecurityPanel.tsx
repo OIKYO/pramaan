@@ -7,7 +7,6 @@ import { Panel } from "@/components/ui/Panel";
 import { DeleteAccount } from "./DeleteAccount";
 import { PasswordForm } from "./PasswordForm";
 
-/** Your password, and signing out of every device at once (for a lost phone or a shared computer). */
 export function SecurityPanel() {
   const { signOut } = useSession();
   const [changing, setChanging] = useState(false);

@@ -13,16 +13,10 @@ import {
 } from "./BrandLogo.paths";
 
 interface BrandLogoProps {
-  /** "full": the P mark with the name and tagline. "mark": the P alone, for tight spaces. */
   variant?: "full" | "mark";
   className?: string;
 }
 
-/**
- * Pramaan's logo, drawn inline so it follows the theme: the name takes the current text colour
- * (set it with a text-* class) and the tagline the muted text colour. Size it with a w-* class.
- * The shapes come from tools/make_brand_assets.py.
- */
 export function BrandLogo({ variant = "full", className }: BrandLogoProps) {
   // Clip-path ids must be unique on the page, and several logos can be on screen at once.
   const id = `pramaan-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;

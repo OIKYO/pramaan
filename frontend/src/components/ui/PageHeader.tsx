@@ -8,7 +8,6 @@ export interface Crumb {
 }
 
 interface PageHeaderProps {
-  /** Where the page sits, e.g. Rulebook › Courses and fees. The last crumb is this page. */
   crumbs?: Crumb[];
   title: ReactNode;
   description?: ReactNode;
@@ -16,7 +15,6 @@ interface PageHeaderProps {
   actions?: ReactNode;
 }
 
-/** The top of every page: where you are, the page's name, and its main actions. */
 export function PageHeader({ crumbs, title, description, meta, actions }: PageHeaderProps) {
   return (
     <header className="flex flex-col gap-3">
