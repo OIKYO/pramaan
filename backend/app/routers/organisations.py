@@ -8,14 +8,16 @@ uses; head office can add or remove rulebooks at any time.
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 
 from app.auth import require
 from app.catalog import (
     OTHER_INDUSTRY, ProfileError, check_profile, check_rulebooks, complete, load_catalog, suggested_rulebooks,
 )
 from app.db import audit, get_db
-from app.models import Catalog, OrganisationOut, OrganisationUpdate, Profile, SignupRequest, SignupResult
+from app.models import (
+    Catalog, DeleteOrganisation, OrganisationOut, OrganisationUpdate, Profile, SignupRequest, SignupResult,
+)
 from app.team import add_profile, create_login
 from rules.registry import load_rule_pack
 
@@ -97,3 +99,47 @@ def update_organisation(body: OrganisationUpdate, user: HeadOffice) -> Organisat
     before = {k: current.get(k) for k in changes}
     audit(user.org_id, user.id, "organisation_updated", "organisation", user.org_id, {"before": before, "after": changes})
     return OrganisationOut(**{**current, **row, "rulebooks": complete(row["rulebooks"] or [])})
+
+
+def _files_under(db, bucket: str, folder: str) -> list[str]:
+    """Every file below a folder in a storage bucket (folders nest two deep at most)."""
+    paths = []
+    for entry in db.storage.from_(bucket).list(folder) or []:
+        path = f"{folder}/{entry['name']}"
+        if entry.get("id"):
+            paths.append(path)
+        else:
+            paths += [f"{path}/{child['name']}" for child in db.storage.from_(bucket).list(path) or [] if child.get("id")]
+    return paths
+
+
+def _remove(db, bucket: str, paths: list[str]) -> None:
+    for start in range(0, len(paths), 100):
+        db.storage.from_(bucket).remove(paths[start:start + 100])
+
+
+@router.post("/organisation/delete", status_code=204)
+def delete_organisation(body: DeleteOrganisation, user: HeadOffice) -> Response:
+    """Delete the organisation and everything in it, at once: its records, posters, consent files,
+    logo, audit log and every member's sign-in. It can't be undone."""
+    db = get_db()
+    org = db.table("organisations").select("id, name").eq("id", user.org_id).single().execute().data
+    if body.confirm_name.strip() != org["name"]:
+        raise HTTPException(400, "Type the organisation's name exactly as it's written to confirm.")
+    images = db.table("poster_versions").select("image_path, posters!inner(org_id)").eq("posters.org_id", org["id"]).execute().data
+    _remove(db, "posters", [row["image_path"] for row in images])
+    for bucket in ("consent", "brand"):
+        _remove(db, bucket, _files_under(db, bucket, org["id"]))
+    members = [m["id"] for m in db.table("profiles").select("id").eq("org_id", org["id"]).execute().data]
+    # Posters (with their versions, findings and reviews) and the audit log first: they point at the
+    # people who made them, so they must go before the people do. Then everything else with the organisation.
+    db.table("posters").delete().eq("org_id", org["id"]).execute()
+    db.table("audit_log").delete().eq("org_id", org["id"]).execute()
+    db.table("organisations").delete().eq("id", org["id"]).execute()
+    for member_id in members:
+        try:
+            db.auth.admin.delete_user(member_id)
+        except Exception:
+            log.exception("Couldn't delete the sign-in %s of deleted organisation %s", member_id, org["id"])
+    log.info("Organisation %s (%s) deleted by %s with %d members", org["name"], org["id"], user.id, len(members))
+    return Response(status_code=204)

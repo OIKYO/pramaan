@@ -615,3 +615,7 @@ class JoinResult(BaseModel):
 
 class JoinCode(BaseModel):
     code: str
+
+
+class DeleteOrganisation(BaseModel):
+    confirm_name: str = Field(description="The organisation's name, typed again to confirm")

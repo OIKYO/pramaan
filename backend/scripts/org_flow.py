@@ -142,8 +142,9 @@ def main() -> None:
         r = httpx.get(f"{api}/join/code/{code.lower().replace('-', ' ')}", timeout=60)
         check("the join code finds the organisation and its branches", r.status_code == 200 and r.json()["branches"][0]["id"] == branch["id"])
         coder_email = f"coded-{secrets.token_hex(4)}@example.org"
+        coder_password = strong_password()
         r = httpx.post(f"{api}/join/code", json={"code": code, "branch_id": branch["id"], "full_name": "Kiran Rawat",
-                                                  "email": coder_email, "password": strong_password()}, timeout=60)
+                                                  "email": coder_email, "password": coder_password}, timeout=60)
         check("someone joins with the code", r.status_code == 201, r.text[:200])
         users += [p["id"] for p in db.table("profiles").select("id").eq("email", coder_email).execute().data]
         new_code = hq.post("/organisation/join-code").json()["code"]
@@ -165,6 +166,18 @@ def main() -> None:
         check("head office removes someone's access", r.status_code == 200 and r.json()["deactivated_at"])
         check("...and their next request is refused", staff.get("/rules").status_code in (401, 403))
         check("head office can't remove itself", hq.post(f"/members/{users[0]}/deactivate").status_code == 409)
+
+        # Deleting an account, then the whole organisation
+        coder = client(api, token(coder_email, coder_password))
+        check("someone deletes their own account", coder.post("/me/delete").status_code == 204)
+        check("...and can't sign in again", token(coder_email, coder_password) is None)
+        check("the only head office can't delete their account", hq.post("/me/delete").status_code == 409)
+        check("deleting the organisation needs its exact name",
+              hq.post("/organisation/delete", json={"confirm_name": "Brightpath"}).status_code == 400)
+        r = hq.post("/organisation/delete", json={"confirm_name": "Brightpath Tutorials (test)"})
+        check("head office deletes the organisation", r.status_code == 204, r.text[:200])
+        check("...and nothing of it is left", not db.table("organisations").select("id").eq("id", org_id).execute().data
+              and not db.table("profiles").select("id").eq("org_id", org_id).execute().data)
     finally:
         for poster in db.table("posters").select("id").eq("org_id", org_id).execute().data:
             for v in db.table("poster_versions").select("image_path").eq("poster_id", poster["id"]).execute().data:
@@ -173,7 +186,10 @@ def main() -> None:
         db.table("audit_log").delete().eq("org_id", org_id).execute()
         db.table("organisations").delete().eq("id", org_id).execute()
         for user_id in users:
-            db.auth.admin.delete_user(user_id)
+            try:
+                db.auth.admin.delete_user(user_id)
+            except Exception:
+                pass  # already gone with the organisation
 
     failed = [label for ok, label in results if not ok]
     print(f"\n{len(results) - len(failed)} passed, {len(failed)} failed")
