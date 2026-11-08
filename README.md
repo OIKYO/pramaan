@@ -16,7 +16,7 @@ Team **HEISEN-DE-BUG** · CodeNexus India 2026 (We Code Coders) · problem state
 - App: **https://pramaanapp.vercel.app**
 - API: https://pramaan-api-6p3b.onrender.com ([`/health`](https://pramaan-api-6p3b.onrender.com/health), [API docs](https://pramaan-api-6p3b.onrender.com/docs))
 
-The API runs on Render's free tier, which sleeps when idle. A scheduled GitHub Action ([keep-awake.yml](.github/workflows/keep-awake.yml)) calls it every 10 minutes to keep it awake; if a request still waits about a minute, the API was asleep. Open `/health` a minute before a demo to be sure.
+The API runs on Render's free tier, which sleeps after 15 idle minutes. Supabase's scheduler calls `/health?db=true` every 10 minutes to keep it awake ([2026-11-08d_keep_awake.sql](supabase/migrations/2026-11-08d_keep_awake.sql)); a scheduled GitHub Action ([keep-awake.yml](.github/workflows/keep-awake.yml)) does the same as a backup. The site also nudges the API awake as soon as someone opens it. If a page still says the server is waking up, wait a minute. Open `/health` a minute before a demo to be sure.
 
 ### Demo accounts (all fictional)
 

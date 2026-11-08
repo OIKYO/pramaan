@@ -44,6 +44,12 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   return (await response.json()) as T;
 }
 
+/** Nudge the server awake as soon as the site opens, so it's ready by the time someone signs in.
+ * The free server sleeps after a quiet spell. Fire and forget: nothing waits for it. */
+export function wakeApi() {
+  fetch(`${API_URL}/health`).catch(() => undefined);
+}
+
 export const postJson = <T>(path: string, body: unknown) =>
   api<T>(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 

@@ -5,7 +5,8 @@
 # the run fails and GitHub emails the repo owner.
 #
 # Free for a public repo. Kept awake all month, the API uses about 720 of Render's 750 free hours.
-# GitHub may start scheduled runs a few minutes late, so now and then the API may still have dozed off.
+# GitHub runs free scheduled jobs late or skips them when busy, so this is now the backup: the main
+# keep-awake job runs inside Supabase (supabase/migrations/2026-11-08d_keep_awake.sql).
 # To stop it: Actions > Keep awake > "..." > Disable workflow.
 name: Keep awake
 

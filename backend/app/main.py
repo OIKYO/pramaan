@@ -28,6 +28,13 @@ for module in (organisations, account, members, invites, imports, posters, findi
     app.include_router(module.router)
 
 
+@app.get("/")
+def home() -> dict:
+    """What this address is, for anyone who opens it in a browser."""
+    return {"name": "Pramaan API", "about": "Checks branch posters against head office's rulebooks.",
+            "app": "https://pramaanapp.vercel.app", "docs": "/docs", "health": "/health"}
+
+
 @app.get("/health")
 def health(response: Response, db: bool = False) -> dict:
     """Uptime check. Render's free instance sleeps; call this a minute before a demo.

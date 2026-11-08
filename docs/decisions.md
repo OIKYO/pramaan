@@ -181,3 +181,11 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
   - *Retention and deletion:* the policy describes processes that now exist. Head office can delete the whole organisation (`POST /organisation/delete`, the name typed again), which removes its posters' images, consent files, logo and every member's sign-in. Anyone can delete their own account (`POST /me/delete`): name and email removed, sign-in disabled, their posters and reviews kept as a former member's. An organisation's only head office can't delete their account and leave it headless.
   - *Contact:* the GitHub issues page, with a way to ask for private contact. A contact email is still to be decided and isn't made up.
 - **CSV export** was already there, so the Enterprise page says so.
+
+## Keeping the API awake, take two (8 Nov, later)
+
+- **GitHub's scheduler isn't reliable enough.** The keep-awake workflow is set to every 10 minutes, but GitHub ran it 3 times in a day: free scheduled jobs are delayed or dropped when GitHub is busy. Render then slept, and the first page after a quiet spell showed loading placeholders for about a minute.
+- **Supabase's scheduler does it now.** `pg_cron` with `pg_net` (both free on Supabase) calls `/health?db=true` every 10 minutes from inside the database (`supabase/migrations/2026-11-08d_keep_awake.sql`). The GitHub workflow stays as a backup and an uptime alert.
+- **The site helps too.** It calls `/health` the moment anyone opens it, so the server is waking while they read or type; and any loading state that lasts more than 4 seconds says the server may be waking and how long that takes.
+- **The API's bare address** now answers with its name and links instead of "Not Found".
+

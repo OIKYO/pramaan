@@ -40,12 +40,24 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
 /** Placeholder rows while data loads. They appear only after a short wait, so fast loads don't flicker. */
 export function LoadingRows({ rows = 4 }: { rows?: number }) {
   const [shown, setShown] = useState(false);
+  const [slow, setSlow] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => setShown(true), 150);
-    return () => clearTimeout(timer);
+    const show = setTimeout(() => setShown(true), 150);
+    // Pramaan's free server sleeps when nobody has used it for a while; waking takes up to a minute.
+    const late = setTimeout(() => setSlow(true), 4000);
+    return () => {
+      clearTimeout(show);
+      clearTimeout(late);
+    };
   }, []);
   return (
     <div className="flex flex-col gap-2" role="status" aria-busy="true" aria-label="Loading">
+      {slow && (
+        <p className="flex items-center gap-2 pb-1 text-sm text-muted-text">
+          <span aria-hidden className="size-2 animate-pulse rounded-full bg-control-on motion-reduce:animate-none" />
+          Still loading. If Pramaan hasn't been used for a while, its server takes up to a minute to wake up.
+        </p>
+      )}
       {shown && Array.from({ length: rows }, (_, i) => <Skeleton key={i} className="h-11 w-full" />)}
     </div>
   );
