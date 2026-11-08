@@ -1,6 +1,6 @@
 # Pramaan: copy brief
 
-This file is for a copywriter (a person, or ChatGPT). It explains everything about Pramaan that the website's text may say, how it should sound, and exactly which pieces of text are needed. Paste the whole file into the chat and ask for the sections in **Part 4**, in the format in **Part 5**.
+This file is for a copywriter. It explains everything about Pramaan that the website's text may say, how it should sound, and exactly which pieces of text are needed. Hand over the whole file and ask for the sections in **Part 4**, in the format in **Part 5**.
 
 **The one rule that matters most:** write only what is true. Everything you need is in Part 2. If something isn't there (a customer count, a certification, a security standard, an uptime promise, an email address, a company address), don't invent it. Leave a note like `[NEED: …]` instead.
 

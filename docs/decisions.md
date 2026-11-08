@@ -150,7 +150,7 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 
 ## General rulebooks and the organisation profile (8 Nov, later)
 
-- **Four general rulebooks, ten checks, all in code.** Following the suggestion Oikyo gathered (with ChatGPT), the rulebooks list stays short (11) but each holds several checks:
+- **Four general rulebooks, ten checks, all in code.** Following the suggestions Oikyo gathered, the rulebooks list stays short (11) but each holds several checks:
   - *Dates, deadlines and availability:* dates that don't exist (EVENT-01), a weekday that doesn't match its date (EVENT-02), a last date or start date that has passed (EVENT-03).
   - *Offers, discounts and terms:* an offer with no end date (OFFER-01) or no pointer to its conditions (OFFER-02), and a percentage or saving that doesn't match the prices shown (OFFER-03).
   - *Copyright and asset permissions:* stock-library watermarks (RIGHTS-01), and other organisations' names or logos that head office hasn't approved (RIGHTS-02). The reader now lists other organisations it sees.
@@ -168,13 +168,13 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
   - *Join codes* (like `K7MQ-X3VP`, from an alphabet without 0/O or 1/I/L) let someone create their account and join as branch staff of the branch they pick. The code is readable only through the API, by head office and regional managers; browsers can't select it from the table (column grants). Head office can replace it at once if it leaks. The public join endpoints are rate-limited per address (20 tries in 10 minutes) so codes can't be guessed.
 - **Passwords need 8 characters, a number and a special character**, checked by the server and, as people type, by `PasswordInput`: it names only the next thing to fix, fills three bars, and turns red when the person stops typing with something missing. The head office password is called the *organisation password*, with a note that it can't be recovered.
 - **Small things that make the site feel finished:** theme-coloured thin scrollbars; smooth anchor scrolling; menus and popovers that fade and lift open; the passed-checks list opens smoothly; a slight press on buttons; a cookie notice once per browser, bottom left; a real 404 page for every unknown address; and on phones a solid top bar (blurring it while scrolling stutters) and no sideways scroll.
-- **`docs/copy-brief.md`** gives a copywriter (or ChatGPT) every true fact about Pramaan, the voice, and the exact pieces of text needed, so the product, enterprise and legal pages can be written without inventing anything.
+- **`docs/copy-brief.md`** gives a copywriter every true fact about Pramaan, the voice, and the exact pieces of text needed, so the product, enterprise and legal pages can be written without inventing anything.
 - **Migration:** `supabase/migrations/2026-11-08c_invites.sql`, rehearsed on an in-memory Postgres.
 
 ## Website text, legal pages and deletion (8 Nov, later)
 
-- **The website's words came from ChatGPT, working from `docs/copy-brief.md`;** Oikyo pasted them in. The long pages (Product, Enterprise, About, Privacy, Terms, Cookies) live as Markdown in `frontend/src/content` and are drawn by a small renderer (`lib/markdown.ts`, `components/content`) that builds page elements, never raw HTML, so the text can be swapped without touching code. No new library was needed.
-- **No invented facts in the legal pages.** ChatGPT marked what it couldn't know with `[NEED: …]`. Each was filled with something true or made true:
+- **The website's words were written from `docs/copy-brief.md`** and pasted in. The long pages (Product, Enterprise, About, Privacy, Terms, Cookies) live as Markdown in `frontend/src/content` and are drawn by a small renderer (`lib/markdown.ts`, `components/content`) that builds page elements, never raw HTML, so the text can be swapped without touching code. No new library was needed.
+- **No invented facts in the legal pages.** The copy marked what it couldn't know with `[NEED: …]`. Each was filled with something true or made true:
   - *Who runs Pramaan:* the team, in India, not yet a registered company; Indian law applies to the terms.
   - *Where data lives:* Supabase in AWS Mumbai, Render in Singapore, Vercel's global network; Google and Groq process images in their own data centres, with links to their terms.
   - *Account data and browser storage:* listed field by field and key by key, from the code.
