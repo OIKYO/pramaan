@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 import { Link } from "react-router";
 import { useKeeps, useVocabulary } from "@/api/hooks/useCatalog";
-import { useBranches, useOrganisation } from "@/api/hooks/useOrganisation";
+import { useBranches, useOrganisation, useRegions } from "@/api/hooks/useOrganisation";
 import { useBrandKit, useCourses, useResultStats, useToppers } from "@/api/hooks/useRulebook";
 import { useMembers } from "@/api/hooks/useTeam";
 import type { Dataset } from "@/api/types";
@@ -23,6 +23,7 @@ interface Step {
 export function SetupChecklist() {
   const org = useOrganisation().data;
   const kit = useBrandKit().data;
+  const regions = useRegions().data;
   const branches = useBranches().data;
   const courses = useCourses().data;
   const toppers = useToppers().data;
@@ -30,13 +31,15 @@ export function SetupChecklist() {
   const members = useMembers().data;
   const keeps = useKeeps();
   const words = useVocabulary();
-  if (!org || !kit || !branches || !courses || !toppers || !stats || !members) return null;
+  if (!org || !kit || !regions || !branches || !courses || !toppers || !stats || !members) return null;
 
   const steps: Step[] = [
     { title: "Say what your organisation does", text: "Your industry picks the words Pramaan uses and suggests rulebooks.",
       done: Boolean(org.industry_group), to: "/organisation/profile", action: "Choose industry" },
     { title: "Complete your brand kit", text: "Registered name, helpline, logo and colours. The brand checks need all four.",
       done: Boolean(kit.registered_name && kit.helpline && kit.logo_path && kit.palette.length), to: "/rulebook/brand", action: "Open brand kit" },
+    { title: "Add your regions", text: "Regions group branches; a regional manager reviews each one's posters.",
+      done: regions.length > 0, to: "/organisation/regions", action: "Add regions" },
     { title: "Add your branches", text: "Each branch's phone and address are checked on its posters.",
       done: branches.length > 0, to: "/organisation/branches", action: "Add branches", importable: "branches" },
     ...(keeps("offerings") ? [{ title: `Add ${words.offerings.toLowerCase()}`, text: `Posters must name and price your ${words.offering_plural} exactly as approved.`,

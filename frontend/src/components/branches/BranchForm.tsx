@@ -5,6 +5,7 @@ import { FormFooter } from "@/components/rulebook/FormFooter";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TextLink } from "@/components/ui/TextLink";
 import { toast } from "@/components/ui/Toast";
 
 /** Add or edit a branch. Its phone and address are what FACT-03 expects on its posters. */
@@ -27,7 +28,12 @@ export function BranchForm({ branch, regions, onDone }: { branch: Branch | null;
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
       <Field label="Branch name"><Input value={form.name} onChange={(e) => set({ name: e.target.value })} required /></Field>
-      <Field label="Region" hint={regions.length === 0 ? "Add a region first, in the Regions panel." : undefined}>
+      <Field
+        label="Region"
+        hint={regions.length === 0
+          ? <>Add a region first, on the <TextLink to="/organisation/regions">Regions</TextLink> page.</>
+          : <>Need another one? Add it on the <TextLink to="/organisation/regions">Regions</TextLink> page.</>}
+      >
         <Select value={form.region_id} onValueChange={(v) => set({ region_id: v })}>
           <SelectTrigger className="w-full"><SelectValue placeholder="Choose a region" /></SelectTrigger>
           <SelectContent>{regions.map((r) => <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>)}</SelectContent>

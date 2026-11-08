@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/Modal";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TextLink } from "@/components/ui/TextLink";
 import { Spinner } from "@/components/ui/Spinner";
 import { ROLE_LABEL } from "@/lib/labels";
 
@@ -70,7 +71,7 @@ export function MemberDialog({ open, onOpenChange, member, branches, regions, pe
           </Field>
         )}
         {form.role === "regional_manager" && (
-          <Field label="Region" error={tried ? errors.region : null} hint={regions.length === 0 ? "Add a region first, on the Branches page." : undefined}>
+          <Field label="Region" error={tried ? errors.region : null} hint={regions.length === 0 ? <>Add a region first, on the <TextLink to="/organisation/regions">Regions</TextLink> page.</> : undefined}>
             <Select value={form.region_id ?? ""} onValueChange={(v) => set({ region_id: v })}>
               <SelectTrigger className="w-full"><SelectValue placeholder="Choose a region" /></SelectTrigger>
               <SelectContent>{regions.map((r) => <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>)}</SelectContent>

@@ -81,6 +81,7 @@ export const router = createBrowserRouter([
           { path: "/organisation", element: <Navigate to="/organisation/profile" replace /> },
           page("/organisation/rulebooks", () => import("@/pages/Organisation/RulebooksPage").then((m) => ({ Component: m.RulebooksPage }))),
           page("/organisation/team", () => import("@/pages/Organisation/TeamPage").then((m) => ({ Component: m.TeamPage }))),
+          page("/organisation/regions", () => import("@/pages/Organisation/RegionsPage").then((m) => ({ Component: m.RegionsPage }))),
           page("/organisation/branches", () => import("@/pages/Organisation/BranchesPage").then((m) => ({ Component: m.BranchesPage }))),
           page("/organisation/import", () => import("@/pages/Organisation/ImportPage").then((m) => ({ Component: m.ImportPage }))),
         ],

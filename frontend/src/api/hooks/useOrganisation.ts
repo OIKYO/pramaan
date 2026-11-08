@@ -47,12 +47,39 @@ function useWrite<TArgs>(key: readonly unknown[], call: (args: TArgs) => Promise
   return useMutation({ mutationFn: call, onSettled: () => qc.invalidateQueries({ queryKey: key }) });
 }
 
-export const useSaveRegion = () =>
-  useWrite(keys.regions, ({ id, name }: { id?: string; name: string }) =>
-    rows(id ? supabase.from("regions").update({ name }).eq("id", id).select("id") : supabase.from("regions").insert({ name }).select("id")),
-  );
+const byName = (list: Region[]) => [...list].sort((x, y) => x.name.localeCompare(y.name));
 
-export const useDeleteRegion = () => useWrite(keys.regions, (id: string) => rows(supabase.from("regions").delete().eq("id", id).select("id")));
+/** Add a region, or rename one (with its id). It shows in the list at once and goes back if refused. */
+export function useSaveRegion() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, name }: { id?: string; name: string }) =>
+      rows(id ? supabase.from("regions").update({ name }).eq("id", id).select("id") : supabase.from("regions").insert({ name }).select("id")),
+    onMutate: async ({ id, name }) => {
+      const saved = await snapshot(qc, keys.regions);
+      qc.setQueryData<Region[]>(keys.regions, (list = []) =>
+        byName(id ? list.map((r) => (r.id === id ? { ...r, name } : r)) : [...list, { id: `new-${Date.now()}`, name }]));
+      return saved;
+    },
+    onError: (_e, _v, saved) => restore(qc, saved),
+    onSettled: () => qc.invalidateQueries({ queryKey: keys.regions }),
+  });
+}
+
+/** Delete an empty region. It leaves the list at once and comes back if refused. */
+export function useDeleteRegion() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => rows(supabase.from("regions").delete().eq("id", id).select("id")),
+    onMutate: async (id) => {
+      const saved = await snapshot(qc, keys.regions);
+      qc.setQueryData<Region[]>(keys.regions, (list = []) => list.filter((r) => r.id !== id));
+      return saved;
+    },
+    onError: (_e, _id, saved) => restore(qc, saved),
+    onSettled: () => qc.invalidateQueries({ queryKey: keys.regions }),
+  });
+}
 
 export const useSaveBranch = () =>
   useWrite(keys.branches, ({ id, ...branch }: Partial<Branch>) =>
