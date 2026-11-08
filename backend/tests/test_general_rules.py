@@ -35,6 +35,12 @@ def test_event03_deadlines_that_have_passed_block():
     assert len(found) == 1 and "has passed" in found[0].message
     assert not problems(make_ctx(poster("Last date to apply: 30 November 2026")), "EVENT-03")
     assert not problems(make_ctx(poster("Results declared on 19 April 2026")), "EVENT-03")  # a past result is fine
+    # "close", "closing" and "end" after what is closing, not only "closes" and "ends"
+    for line in ("Admissions close: Monday, 31 October 2026", "Applications closing 31 October 2026",
+                 "Closing date: 31 October 2026", "Offer ending 31 October 2026"):
+        assert problems(make_ctx(poster(line)), "EVENT-03"), line
+    assert not problems(make_ctx(poster("Admissions close: Monday, 30 November 2026")), "EVENT-03")
+    assert not problems(make_ctx(poster("Doors close at the end of 31 October 2026")), "EVENT-03")  # not a deadline word
 
 
 # ---------------------------------------------------------------- offers

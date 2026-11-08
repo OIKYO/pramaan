@@ -24,7 +24,8 @@ PATTERNS = [
 ]
 # Words that make a date something still to come: a deadline, a start, an offer's end.
 UPCOMING = re.compile(
-    r"\b(last date|deadline|apply (?:by|before)|register (?:by|before)|registrations? (?:close|closes|end|ends)|closes|ends"
+    r"\b(last date|deadline|closing date|apply (?:by|before)|register (?:by|before)|closes|ends"
+    r"|(?:admissions?|applications?|registrations?|enrol?ments?|entries|bookings?|offer|sale)\s+(?:close|closing|end|ending)"
     r"|valid (?:till|until|up ?to)|till|until|starts|begins|commences|from|admissions? open|before|walk-?in)\b", re.I)
 
 
