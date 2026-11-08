@@ -4,6 +4,7 @@ import type { Organisation } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/Panel";
 import { formatDate } from "@/lib/labels";
+import { DeleteOrganisation } from "./DeleteOrganisation";
 import { JoinCodePanel } from "./JoinCodePanel";
 import { OrganisationForm } from "./OrganisationForm";
 import { OrgProfileForm } from "./OrgProfileForm";
@@ -23,6 +24,7 @@ export function OrganisationProfile({ org, canEdit }: { org: Organisation; canEd
         <Panel title="What it does" description="Picks the words Pramaan uses and the rulebooks it suggests.">
           <OrgProfileForm key={`${org.industry_group}-${org.industry}-${org.org_type}`} org={org} canEdit={canEdit} />
         </Panel>
+        {canEdit && <DeleteOrganisation org={org} />}
       </div>
       <div className="flex flex-col gap-4">
         {canEdit && <JoinCodePanel canRefresh />}

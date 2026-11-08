@@ -1,16 +1,20 @@
 import { useParams } from "react-router";
-import { LegalDocument } from "@/components/legal/LegalDocument";
-import { LEGAL_DOCS } from "@/components/legal/legalText";
+import { ContentPage } from "@/components/content/ContentPage";
 import { PublicLayout } from "@/components/landing/PublicLayout";
+import cookies from "@/content/cookies.md?raw";
+import privacy from "@/content/privacy.md?raw";
+import terms from "@/content/terms.md?raw";
 import { NotFoundPage } from "@/pages/NotFound/NotFoundPage";
 
-/** Privacy, terms and cookies, open to everyone, signed in or not. */
+const DOCS: Record<string, string> = { privacy, terms, cookies };
+
+/** Privacy, terms and cookies, open to everyone, signed in or not. The text is in src/content. */
 export function LegalPage() {
-  const doc = LEGAL_DOCS[useParams().doc ?? ""];
+  const doc = DOCS[useParams().doc ?? ""];
   if (!doc) return <NotFoundPage />;
   return (
     <PublicLayout>
-      <LegalDocument doc={doc} />
+      <ContentPage source={doc} />
     </PublicLayout>
   );
 }

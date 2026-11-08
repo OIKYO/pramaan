@@ -1,20 +1,14 @@
 import { Link } from "react-router";
 import { BrandLogo } from "@/components/ui/BrandLogo";
-import { LEGAL, PRODUCT, REPO } from "./links";
+import { COMPANY, LEGAL, PRODUCT, REPO } from "./links";
 
 const COLUMNS = [
   { title: "Product", links: PRODUCT.map((l) => ({ to: l.to, label: l.label })) },
-  {
-    title: "Company",
-    links: [
-      { to: `${REPO}#readme`, label: "About Pramaan" },
-      { to: `${REPO}/blob/main/docs/contributions.md`, label: "Team HEISEN-DE-BUG" },
-    ],
-  },
+  { title: "Company", links: COMPANY },
   {
     title: "Contact",
     links: [
-      { to: `${REPO}/issues`, label: "Report a problem" },
+      { to: `${REPO}/issues`, label: "GitHub issues" },
       { to: REPO, label: "Source code" },
     ],
   },
@@ -48,7 +42,7 @@ export function LandingFooter() {
           ))}
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-5 py-5 text-xs text-muted-text sm:px-8 lg:px-12">
-          <span>© 2026 Pramaan. Built for CodeNexus India 2026.</span>
+          <span>© 2026 Pramaan. Built by HEISEN-DE-BUG for CodeNexus India 2026.</span>
           <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-1">
             {LEGAL.map((l) => <Link key={l.to} to={l.to} className="hover:text-ink-strong">{l.label}</Link>)}
           </nav>

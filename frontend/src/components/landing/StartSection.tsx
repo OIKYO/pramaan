@@ -9,10 +9,10 @@ export function StartSection() {
   return (
     <section id="start" className="grid scroll-mt-20 items-center gap-12 px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:px-12">
       <div className="flex flex-col items-start gap-4">
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Start for free</h2>
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Start with Pramaan</h2>
         <p className="max-w-md text-pretty text-muted-text">
-          Create your organisation, say what it does, and Pramaan sets up the rulebooks to match. It's free while Pramaan is
-          in its pilot. Your organisation's data is visible only to your organisation.
+          Pramaan is free during the pilot. Create your organisation, set up its rulebooks and branches, add your team, and
+          start checking posters before they go out.
         </p>
         <Button size="lg" asChild className="mt-2">
           <Link to="/signup">Create organisation</Link>
@@ -21,7 +21,7 @@ export function StartSection() {
       <div className="overflow-hidden rounded-xl border border-line bg-surface">
         <div className="flex flex-col gap-4 border-b border-line p-6">
           <h3 className="text-lg font-semibold">Brand kit</h3>
-          <p className="text-muted-text">Your registered name, helpline, logo, colours and tone of voice. Every poster is checked against them.</p>
+          <p className="text-muted-text">Add your registered name, logo, colours, helpline and tone of voice. Pramaan checks posters against the brand records approved by head office.</p>
           <div aria-hidden className="flex gap-2">
             {SWATCHES.map((s) => <span key={s} className={`size-7 rounded-md border border-line ${s}`} />)}
           </div>
@@ -30,12 +30,12 @@ export function StartSection() {
           <div className="flex flex-col gap-2 bg-surface p-6">
             <FileUp className="size-5 text-ink-strong" aria-hidden />
             <h3 className="text-sm">Import your data securely</h3>
-            <p className="text-muted-text">Branches, prices, figures and people from the spreadsheets you keep, checked line by line before anything is saved.</p>
+            <p className="text-muted-text">Import branches, offerings, figures, people and team members from CSV files. Every row is checked first; nothing is saved until the whole file is right.</p>
           </div>
           <div className="flex flex-col gap-2 bg-surface p-6">
             <UsersRound className="size-5 text-ink-strong" aria-hidden />
             <h3 className="text-sm">Add your team your way</h3>
-            <p className="text-muted-text">Branch staff, regional managers and head office, each with their own sign-in and only the access their role needs.</p>
+            <p className="text-muted-text">Invite people with one-use links that expire after seven days, share your organisation's join code, or add team members with temporary passwords they must change at first sign-in.</p>
           </div>
         </div>
       </div>

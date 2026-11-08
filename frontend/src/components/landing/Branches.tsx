@@ -5,10 +5,10 @@ export function Branches() {
   return (
     <section id="branches" className="grid scroll-mt-20 gap-10 border-b border-line px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:gap-16 lg:px-12">
       <div className="flex flex-col gap-3">
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Built for many branches</h2>
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">One organisation, many branches</h2>
         <p className="max-w-sm text-pretty text-muted-text">
-          A chain with forty branches makes hundreds of posters a month. Each branch gets its own space, every poster goes
-          up a two-step review, and everyone works from one rulebook.
+          Each branch can make its own posters without losing sight of the rules set by head office. Reviews follow a
+          clear path from the branch to the region and finally to head office.
         </p>
       </div>
       <div className="grid gap-10 md:grid-cols-2 md:gap-8">
@@ -20,8 +20,9 @@ export function Branches() {
             <span className="ml-auto"><ToneBadge tone="blocked">1 problem to fix</ToneBadge></span>
           </div>
           <p className="text-pretty text-muted-text">
-            <span className="font-medium text-ink-strong">Branch staff</span> upload a poster, see what's wrong within a minute,
-            and upload a fixed version. Each branch sees only its own posters.
+            <span className="font-medium text-ink-strong">Branch staff</span> make and upload posters for their branch. They see
+            the problems Pramaan finds, read the exact fixes, and upload a corrected version. They can compare poster versions
+            before sending them for review.
           </p>
         </div>
         <div className="flex flex-col gap-4">
@@ -35,9 +36,9 @@ export function Branches() {
             </span>
           </div>
           <p className="text-pretty text-muted-text">
-            <span className="font-medium text-ink-strong">Regional managers</span> review their branches' posters.{" "}
-            <span className="font-medium text-ink-strong">Head office</span> gives the final approval, and can override a block
-            only with a written reason. Nobody can approve a poster they made.
+            <span className="font-medium text-ink-strong">Regional managers</span> review posters submitted by their branches and
+            approve them or send them back with a comment. <span className="font-medium text-ink-strong">Head office</span> manages
+            the rulebooks, branches and people, then gives final approval. Every decision is recorded.
           </p>
         </div>
       </div>

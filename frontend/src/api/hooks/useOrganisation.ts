@@ -1,6 +1,6 @@
 /** The organisation, its regions and branches, and how far its setup has got. */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { patchJson } from "../client";
+import { patchJson, postJson } from "../client";
 import { supabase } from "../supabase";
 import type { Branch, Organisation, OrganisationUpdate, Region } from "../types";
 import { keys } from "./keys";
@@ -91,4 +91,14 @@ export function useProfileGaps(): string[] {
   if (!org.industry_group || !org.industry) gaps.push("industry");
   if (!org.org_type) gaps.push("kind of organisation");
   return gaps;
+}
+
+/** Delete the whole organisation, then sign out. Head office only; the name must be typed again. */
+export function useDeleteOrganisation() {
+  return useMutation({
+    mutationFn: async (confirm_name: string) => {
+      await postJson<null>("/organisation/delete", { confirm_name });
+      await supabase.auth.signOut({ scope: "local" });
+    },
+  });
 }

@@ -4,6 +4,7 @@ import { useSession } from "@/api/hooks/useSession";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/Modal";
 import { Panel } from "@/components/ui/Panel";
+import { DeleteAccount } from "./DeleteAccount";
 import { PasswordForm } from "./PasswordForm";
 
 /** Your password, and signing out of every device at once (for a lost phone or a shared computer). */
@@ -21,13 +22,14 @@ export function SecurityPanel() {
           </div>
           <Button variant="secondary" onClick={() => setChanging(true)}><KeyRound /> Change password</Button>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 py-4">
           <div className="flex flex-col gap-0.5">
             <span className="font-medium text-ink-strong">Signed-in devices</span>
             <span className="text-muted-text">Sign out everywhere if you lost a device or used a shared one.</span>
           </div>
           <Button variant="secondary" onClick={() => setLeaving(true)}><LogOut /> Sign out everywhere</Button>
         </div>
+        <DeleteAccount />
       </div>
       <Modal open={changing} onOpenChange={setChanging} title="Change password">
         <PasswordForm onDone={() => setChanging(false)} />

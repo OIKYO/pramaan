@@ -55,8 +55,8 @@ export function NavMenus() {
         <Menu label="Enterprise"><LinkGrid links={ENTERPRISE} /></Menu>
         <Menu label="Pricing">
           <div className={`${CARD} flex w-80 flex-col gap-3 p-5`}>
-            <p className="text-sm font-medium text-ink-strong">Free while Pramaan is in its pilot</p>
-            <p className="text-sm text-muted-text">Every rulebook and every check, for as many branches as you have. No card needed.</p>
+            <p className="text-sm font-medium text-ink-strong">Free during the pilot</p>
+            <p className="text-sm text-muted-text">Every rulebook and check is available, across as many branches as you need. No paid plans or card required.</p>
             <N.Link asChild>
               <Button asChild size="sm" className="self-start">
                 <Link to="/signup">Create organisation</Link>

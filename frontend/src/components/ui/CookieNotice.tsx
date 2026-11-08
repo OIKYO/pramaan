@@ -42,7 +42,8 @@ export function CookieNotice() {
           <div className="flex items-start gap-3">
             <Cookie className="mt-0.5 size-4 shrink-0 text-muted-text" aria-hidden />
             <p className="text-pretty text-ink">
-              Pramaan keeps only what it needs in your browser: your sign-in and your theme. No tracking, no ads.
+              Pramaan stores your sign-in session, theme, animation choice and this notice's dismissal in your browser. We use no
+              advertising or tracking cookies.
             </p>
           </div>
           <div className="flex items-center justify-end gap-2">

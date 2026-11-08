@@ -35,6 +35,13 @@ export const router = createBrowserRouter([
   // Invite links: open to everyone; the page itself handles someone already signed in.
   { path: "/join/:token", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Join/JoinPage").then((m) => ({ Component: m.JoinPage })) },
+  // The website's own pages: open to everyone, signed in or not. Their text is in src/content.
+  { path: "/product", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
+    lazy: () => import("@/pages/Content/ProductPage").then((m) => ({ Component: m.ProductPage })) },
+  { path: "/enterprise", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
+    lazy: () => import("@/pages/Content/EnterprisePage").then((m) => ({ Component: m.EnterprisePage })) },
+  { path: "/about", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
+    lazy: () => import("@/pages/Content/AboutPage").then((m) => ({ Component: m.AboutPage })) },
   // Open to everyone, signed in or not.
   { path: "/legal/:doc", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Legal/LegalPage").then((m) => ({ Component: m.LegalPage })) },

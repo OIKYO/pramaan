@@ -33,3 +33,14 @@ export function useUpdateMyName() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["profile"] }),
   });
 }
+
+/** Delete your own account: your name and email are removed and you're signed out everywhere.
+ * Refused (with a reason) for an organisation's only head office. */
+export function useDeleteMyAccount() {
+  return useMutation({
+    mutationFn: async () => {
+      await postJson<null>("/me/delete", {});
+      await supabase.auth.signOut({ scope: "local" });
+    },
+  });
+}

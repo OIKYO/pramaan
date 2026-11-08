@@ -5,18 +5,18 @@ import { RulebookVisual } from "./visuals/RulebookVisual";
 
 const REASONS: { title: string; text: string; visual: ReactNode }[] = [
   {
-    title: "Make your own brand rulebook",
-    text: "Tell Pramaan what your organisation does and it sets up the rulebooks that fit: a coaching institute gets courses, fees and a toppers register; a restaurant gets its menu and prices. Add or remove rulebooks whenever you like.",
+    title: "Rules for your organisation",
+    text: "Head office sets the approved records and chooses the rulebooks. Their names adapt to your industry, from Courses and fees to Menu and prices.",
     visual: <RulebookVisual />,
   },
   {
     title: "Consent before publicity",
-    text: "Nobody appears on a poster without signed consent that covers the channel, is still in date, and comes from a guardian for minors. Consent files stay private to head office and are never sent to the AI.",
+    text: "Everyone shown must be in the organisation's people register with valid, signed consent covering the publication channel. Staff identify people by tagging them; Pramaan does not recognise faces.",
     visual: <ConsentVisual />,
   },
   {
-    title: "Two readers for every number",
-    text: "Prices, ranks and phone numbers are read by Gemini and again by Tesseract. When the two disagree, Pramaan asks a person instead of guessing. Every decision and every AI call goes in the audit log.",
+    title: "Two readers for key numbers",
+    text: "Gemini reads the poster, while Tesseract independently reads prices, ranks, phone numbers and figures. If they disagree, a person confirms the number instead of Pramaan guessing.",
     visual: <ReadersVisual />,
   },
 ];
@@ -28,7 +28,7 @@ export function WhyPramaan() {
     <section id="why" className="grid scroll-mt-20 gap-10 border-b border-line px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:gap-16 lg:px-12">
       <div className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Why Pramaan?</h2>
-        <p className="max-w-sm text-pretty text-muted-text">Code decides; the AI only reads. The same poster always gets the same result.</p>
+        <p className="max-w-sm text-pretty text-muted-text">Keep the posters made by different branches consistent with the rules head office has approved.</p>
       </div>
       <div className="flex flex-col divide-y divide-line border-y border-line">
         {REASONS.map((r) => (

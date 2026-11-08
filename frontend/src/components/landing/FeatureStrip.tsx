@@ -1,10 +1,10 @@
 import { BadgeCheck, Crosshair, ListChecks, ScanText } from "lucide-react";
 
 const FEATURES = [
-  { icon: ScanText, title: "Reads every poster", text: "Gemini reads the words, prices, phone numbers and people. Tesseract reads the key numbers a second time." },
-  { icon: ListChecks, title: "Checks it in code", text: "Up to 27 checks against your brand kit, prices, figures, dates, offers and consent records. Same poster, same result." },
-  { icon: Crosshair, title: "Marks the fix", text: "Each problem is boxed on the poster with the rule it breaks and the exact change to make." },
-  { icon: BadgeCheck, title: "People approve", text: "A regional manager reviews, then head office approves. The AI can flag wording; it never approves." },
+  { icon: ScanText, title: "Reads every poster", text: "Gemini reads the poster's text, prices, numbers, people and claims, including content in Hindi and Bengali." },
+  { icon: ListChecks, title: "Checks in code", text: "Plain code applies up to 27 checks against the organisation's approved rulebooks. AI wording checks can warn, but never block." },
+  { icon: Crosshair, title: "Marks the problem", text: "Every finding identifies the location, broken rule, reason and exact fix. Passed checks are listed too." },
+  { icon: BadgeCheck, title: "People approve", text: "Branches fix and resubmit. Regional managers review, then head office gives final approval." },
 ];
 
 /** What happens to a poster, in four cells. The 1px gaps over the line colour draw the grid. */
