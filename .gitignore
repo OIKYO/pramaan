@@ -23,3 +23,6 @@ backend/.cache/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local brief for Claude Code; kept on the developer's machine, not on GitHub
+CLAUDE.md

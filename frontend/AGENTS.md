@@ -1,6 +1,6 @@
 # Rules for anyone (and any AI tool) working on the frontend
 
-These come from the project brief (`CLAUDE.md`, section 11). `npm run check` (tsc + ESLint) enforces the ones marked ✓.
+`npm run check` (tsc + ESLint) enforces the ones marked ✓.
 
 1. **Never write animation code outside `src/lib/motion.ts` and `src/components/ui`.** ✓ Motion answers a person's action (switching the theme, opening a panel, finding the problem they clicked). No hover lifts, entrance fades on load, looping effects or gradients.
 2. **Never hardcode colours or sizes; use tokens only.** Every colour, for both the light and the midnight theme, is a variable in `src/styles/tokens.css`, exposed as Tailwind classes (`bg-surface`, `text-ink`, `border-line`, `bg-primary`, `text-blocked`...). Use Tailwind's spacing scale, not arbitrary pixel values.
