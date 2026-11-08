@@ -170,3 +170,14 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Small things that make the site feel finished:** theme-coloured thin scrollbars; smooth anchor scrolling; menus and popovers that fade and lift open; the passed-checks list opens smoothly; a slight press on buttons; a cookie notice once per browser, bottom left; a real 404 page for every unknown address; and on phones a solid top bar (blurring it while scrolling stutters) and no sideways scroll.
 - **`docs/copy-brief.md`** gives a copywriter (or ChatGPT) every true fact about Pramaan, the voice, and the exact pieces of text needed, so the product, enterprise and legal pages can be written without inventing anything.
 - **Migration:** `supabase/migrations/2026-11-08c_invites.sql`, rehearsed on an in-memory Postgres.
+
+## Website text, legal pages and deletion (8 Nov, later)
+
+- **The website's words came from ChatGPT, working from `docs/copy-brief.md`;** Oikyo pasted them in. The long pages (Product, Enterprise, About, Privacy, Terms, Cookies) live as Markdown in `frontend/src/content` and are drawn by a small renderer (`lib/markdown.ts`, `components/content`) that builds page elements, never raw HTML, so the text can be swapped without touching code. No new library was needed.
+- **No invented facts in the legal pages.** ChatGPT marked what it couldn't know with `[NEED: …]`. Each was filled with something true or made true:
+  - *Who runs Pramaan:* the team, in India, not yet a registered company; Indian law applies to the terms.
+  - *Where data lives:* Supabase in AWS Mumbai, Render in Singapore, Vercel's global network; Google and Groq process images in their own data centres, with links to their terms.
+  - *Account data and browser storage:* listed field by field and key by key, from the code.
+  - *Retention and deletion:* the policy describes processes that now exist. Head office can delete the whole organisation (`POST /organisation/delete`, the name typed again), which removes its posters' images, consent files, logo and every member's sign-in. Anyone can delete their own account (`POST /me/delete`): name and email removed, sign-in disabled, their posters and reviews kept as a former member's. An organisation's only head office can't delete their account and leave it headless.
+  - *Contact:* the GitHub issues page, with a way to ask for private contact. A contact email is still to be decided and isn't made up.
+- **CSV export** was already there, so the Enterprise page says so.
