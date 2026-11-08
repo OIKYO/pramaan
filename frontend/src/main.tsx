@@ -3,7 +3,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
 import { SessionProvider } from "@/api/hooks/useSession";
-import { wakeApi } from "@/api/client";
 import { queryClient } from "@/api/queryClient";
 import { CookieNotice } from "@/components/ui/CookieNotice";
 import { MotionProvider } from "@/components/ui/MotionProvider";
@@ -11,8 +10,6 @@ import { Toaster } from "@/components/ui/Toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { router } from "@/routes";
 import "./index.css";
-
-wakeApi();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

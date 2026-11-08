@@ -16,7 +16,7 @@ export function BrandKitPage() {
         description="What every poster must carry, and the colours and tone it should use."
         meta={kit.data && <span>Last changed {formatDateTime(kit.data.updated_at)}</span>}
       />
-      <QueryState query={kit}>{(data) => <BrandKitEditor key={data.updated_at} kit={data} canEdit={isHeadOffice} />}</QueryState>
+      <QueryState query={kit}>{(data) => <BrandKitEditor kit={data} canEdit={isHeadOffice} />}</QueryState>
     </div>
   );
 }

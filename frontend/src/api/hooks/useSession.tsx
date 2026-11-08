@@ -1,6 +1,7 @@
 import type { Session } from "@supabase/supabase-js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { wakeApi } from "../client";
 import { supabase } from "../supabase";
 import type { Profile } from "../types";
 import { keys } from "./keys";
@@ -33,6 +34,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    // The free API server sleeps when idle; start waking it as soon as anyone opens the site.
+    wakeApi();
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
     const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next));
     return () => data.subscription.unsubscribe();
