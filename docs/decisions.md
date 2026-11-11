@@ -223,4 +223,14 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
   reading, so the second read and the rules can be checked again (`--rescore`) without new AI calls. A run the reader
   couldn't finish (both readers out of quota) isn't scored, and the page says how many there were.
 - **Not built:** the disclaimer size check from the Round 2 plan; the three improvements came first.
+- **The first live runs found two kinds of false flag, and both were rules, not the AI.** On 21 live runs (the free
+  quotas ran out after that), the checks caught every planted problem but raised 10 false flags. (1) ACC-01 flagged the
+  white initials on the teal badges at about 4:1, because it asked 4.5:1 of all text; WCAG asks 3:1 of large text, so a
+  line at least 3.5% of the poster's height (about 18.66 px bold when a 1080 × 1350 post is shown 400 px wide) now needs
+  3:1. Both planted contrast problems (about 1.6:1 and 1.1:1) are still caught. (2) CCPA-06 trusted the reader's label
+  "stat": it judged a phone number, a "20% off" discount and the "100%" inside banned guarantees as results figures, and it
+  found a number's line by text, so "1000" in a banned claim matched inside "10000" in the phone line. Numbers now belong to
+  the line whose box holds them, and a phone number, a discount or a banned promise isn't a results figure (FACT-03,
+  OFFER-03 and CCPA-01 check those). Re-scoring the same 21 saved readings, without new AI calls: every planted problem
+  caught, no false flags.
 

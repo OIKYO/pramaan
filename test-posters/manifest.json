@@ -28,7 +28,10 @@
     "expect": [
       "CCPA-01"
     ],
-    "also": [],
+    "also": [
+      "AI-01",
+      "BRAND-04"
+    ],
     "plants": "the banned claim “100% selection guaranteed”",
     "sha256": "a6028fd1a79a95a8fc1384f9f92e09a9c791bf8b120292b8c712cc7ffb6f2f68"
   },
@@ -164,7 +167,9 @@
     "expect": [
       "AI-01"
     ],
-    "also": [],
+    "also": [
+      "BRAND-04"
+    ],
     "plants": "Hindi text with the disguised guarantee “सीट तय है!” (your seat is fixed)",
     "sha256": "863bcd21ed70e15bfd62eb9d3030be42189ebada328b6c11a08c1e39b94cf0a3"
   },
