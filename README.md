@@ -37,7 +37,10 @@ Password for every account: `Northfield-demo-2026`. Sign in with these on the lo
 4. As the **regional manager**, confirm any reading that needs a person, then **Approve**.
 5. As **head office**, **Give final approval**, then look at **Insights** and the **Audit log**.
 
-`test-posters/` has one clean poster and ten posters that each plant one problem (see `test-posters/manifest.json`).
+`test-posters/` has 50 fictional posters with known answers: clean ones, several planted examples of each check, and one with two problems (see `test-posters/manifest.json`).
+
+6. **Consent by link:** as head office, open a poster with a "no consent" finding and choose **Ask for consent by link** (or make one from the toppers register). Open the link in a private window: it shows the exact poster with the person marked. Approve it there, and the consent finding clears. Withdraw it later through the same link, and the poster goes back to its branch.
+7. **More pages:** upload several images at once (a carousel) or one PDF brochure. Each page is read and checked, findings say which page they're on, and the review works as for a single poster.
 
 ### Start your own organisation
 
@@ -88,9 +91,19 @@ Install Tesseract for Windows (the UB Mannheim build, with Hindi and Bengali dat
 
 ## Round 3 improvements
 
-1. **Digital consent link:** students and guardians give consent through a link instead of a paper form.
-2. **50-poster reliability tests:** a larger poster set to measure how often each check is right.
-3. **More formats:** PDF brochures, multi-image posts, and a disclaimer size check.
+1. **Digital consent portal** (`/consent/<link>`): head office sends one link per person. The student, or a parent or
+   guardian for a minor, sees the exact poster with them marked, their rank and every line printed about them, where it will
+   be published and until when, then approves (typing their name) or declines. Approving clears the consent findings it now
+   covers. Withdrawing later, through the same link, turns the consent off and sends every poster in review or approved that
+   shows them back to its branch.
+2. **Reliability report** (public, [`/reliability`](https://pramaanapp.vercel.app/reliability)): the 50 test posters through
+   the live AI reader three times each, with nothing reused, scored per check for catch rate, false flags and whether repeated
+   runs agree. `python -m scripts.reliability` reproduces it.
+3. **More formats:** carousels of up to 10 images and PDF brochures of up to 10 pages. Each page is read and checked on its
+   own, then the rules run over the whole post: a finding says which page it is on, and a disclaimer on any page counts. The
+   review and approval steps are unchanged.
+
+Not built: the disclaimer size check from our Round 2 plan.
 
 ## Docs
 

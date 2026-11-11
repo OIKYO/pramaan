@@ -189,3 +189,38 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **The site helps too.** It calls `/health` the moment anyone opens it, so the server is waking while they read or type; and any loading state that lasts more than 4 seconds says the server may be waking and how long that takes.
 - **The API's bare address** now answers with its name and links instead of "Not Found".
 
+## Round 3: consent links, posts with more pages, and a reliability report (11 Nov)
+
+- **Consent is asked per person, and from a poster it shows that exact poster.** A link made from a "no consent" finding
+  stores the poster version, the person's box and every line printed about them, so the person approves exactly what they
+  saw. The consent then covers that person on the chosen channels until the chosen date, like a signed form does.
+  `toppers.consent_source` says whether consent came from a signed file or a link; `has_consent` follows it.
+- **Approving clears findings by code, not by hand.** The CCPA-03 validity checks moved into one function,
+  `consent_problems()`, which both the rule and the consent link use. When someone approves, every open CCPA-02 or CCPA-03
+  finding about them on a poster not yet approved is resolved, but only if the new consent covers that poster's channel
+  today. The history says the consent link did it, with who signed.
+- **Withdrawing reopens posters.** Withdrawal turns the person's consent off at once. Every poster in review or approved that
+  shows them (by staff tags or by a finding about them) gets a blocking CCPA-02 finding and goes back to its branch
+  (`state.consent_withdrawn`), with a history entry and an audit row. Reviews may therefore have no actor: the consent link
+  isn't a member. No email is sent: Pramaan still sends none, so head office passes links on, as with invites.
+- **Pages are stacked, so the rules didn't change.** Each page is read, second-read and visually checked on its own boxes,
+  then the readings are stacked (page *n* has y from 1000·*n*). The 27 rules run once on the stacked reading, unchanged:
+  presence checks (disclaimers, registered name) look across the whole post, and proximity checks stay within a page because
+  pages never overlap. The box check accepts y up to 10 000, and every page's reading is clamped to its own page before
+  stacking. Single-image posters are page 0, so nothing about them changed.
+- **One AI call per page, cached per page.** `poster_versions.pages` keeps each page's image, hash and reading, so a fixed
+  version that changes one page of a brochure re-reads only that page. A page the reader can't read gets its own READ-01;
+  the other pages are still checked.
+- **PDFs with pypdfium2.** It renders pages without system packages (unlike Poppler) and is BSD/Apache licensed (unlike the
+  AGPL PyMuPDF). Up to 10 pages, 25 MB.
+- **Fifty posters with known answers.** The generator plants each problem on purpose and records a perfect reading, and the
+  test suite proves that with it every poster fails exactly its planted checks, so the ground truth is checked by the same
+  rules. A poster can also list AI flags that are fair on it ("also"): on a planted guarantee, the AI's guarantee and tone
+  flags don't count as false flags.
+- **What the report scores.** The 27 rule checks are scored for catch rate and false flags; the reader's questions for a
+  person (READ-02, READ-03) are reported separately, because asking instead of guessing is the designed behaviour. Dates are
+  checked as of 7 Nov 2026, so the date checks give the same answer whenever the report runs. Each run saves the AI's
+  reading, so the second read and the rules can be checked again (`--rescore`) without new AI calls. A run the reader
+  couldn't finish (both readers out of quota) isn't scored, and the page says how many there were.
+- **Not built:** the disclaimer size check from the Round 2 plan; the three improvements came first.
+
