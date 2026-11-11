@@ -8,7 +8,9 @@ Writes
   backend/tests/fixtures/readings/<name>.json   what a perfect reader returns (used when READER_MODE=fixture)
   backend/tests/fixtures/readings/index.json    image SHA-256 -> fixture name
 
-One clean poster, then one poster per planted problem, so each problem is easy to attribute.
+Fifty posters: clean ones, one poster per planted problem (several examples of each check), and a few
+with two problems. Each says which checks must fail ("expect") and which AI flags are fair on it
+("also"); the reliability report scores the live reader against them.
 Every person, number and address is fictional (see backend/scripts/seed.py). People are drawn as
 initials in a circle, never as faces. Text uses the Nirmala UI font that ships with Windows, which
 covers Latin, the rupee sign and Devanagari. This Pillow build can't shape Indic scripts, so the Hindi
@@ -36,8 +38,9 @@ FONT = Path("C:/Windows/Fonts/Nirmala.ttc")
 
 W, H = 1080, 1350
 NAVY, CREAM, INK, TEAL, WHITE = "#1F3354", "#F8F6F1", "#111827", "#238A7D", "#FFFFFF"
-LIME, PALE_GREY = "#A3E635", "#C9C9C9"
+LIME, PALE_GREY, PINK, PALE_YELLOW = "#A3E635", "#C9C9C9", "#FBCFE8", "#F1E7B8"
 SILIGURI = next(b for b in BRANCHES if b["city"] == "Siliguri")
+KOLKATA = next(b for b in BRANCHES if b["city"] == "Kolkata")
 
 RIYA = dict(name="Riya Sen", rank=73, course="2-Year Classroom Programme", duration="2 years", paid="Paid")
 ANANYA = dict(name="Ananya Roy", rank=58, course="2-Year Classroom Programme", duration="2 years", paid="Paid")
@@ -95,12 +98,13 @@ class Poster:
 def build(spec: dict) -> Poster:
     p = Poster(spec.get("background", CREAM))
     p.draw.rectangle((0, 0, W, 210), fill=NAVY)
-    p.img.paste(Image.open(LOGO).convert("RGB").resize((150, 150), Image.Resampling.LANCZOS), (60, 30))
+    if spec.get("logo", True):
+        p.img.paste(Image.open(LOGO).convert("RGB").resize((150, 150), Image.Resampling.LANCZOS), (60, 30))
     p.text(240, 45, "Northfield Academy", 56, WHITE, bold=True)
     p.text(240, 125, "Siliguri branch", 30, CREAM)
 
     headline = spec.get("headline", {"text": "Our JEE Main 2026 toppers"})
-    p.text(80, 245, headline["text"], 58, NAVY, bold=True, romanised=headline.get("romanised", ""),
+    p.text(80, 245, headline["text"], 58, headline.get("fill", NAVY), bold=True, romanised=headline.get("romanised", ""),
            claim=headline.get("claim", False), flag=headline.get("flag"))
 
     toppers = spec.get("toppers", [RIYA])
@@ -108,8 +112,9 @@ def build(spec: dict) -> Poster:
         p.person(370 + i * 190, **topper)
     y = 370 + len(toppers) * 190 + 20
 
-    p.text(80, y, "42 classroom students qualified JEE Main 2026", 36, NAVY, bold=True, claim=True,
-           numbers=[("stat", "42", 42)])
+    stat, stat_value = spec.get("stat", ("42", 42))
+    p.text(80, y, f"{stat} classroom students qualified JEE Main 2026", 36, NAVY, bold=True, claim=True,
+           numbers=[("stat", stat, stat_value)])
     fee, fee_value = spec.get("fee", ("₹48,000", 48000))
     p.text(80, y + 70, f"2-Year Classroom Programme: {fee}", 34, INK, numbers=[("fee", fee, fee_value)])
     phone = spec.get("phone", SILIGURI["phone"])
@@ -120,9 +125,10 @@ def build(spec: dict) -> Poster:
     p.text(80, 1130, "Ranks as declared in the official results. Students shown gave written consent.", 24,
            spec.get("disclaimer_fill", INK))
     p.draw.rectangle((0, 1190, W, H), fill=NAVY)
-    p.text(80, 1245, f"Northfield Academy Pvt. Ltd. · Helpline {HELPLINE}", 30, CREAM,
-           numbers=[("phone", HELPLINE, None)])
-    p.reading["registered_name_seen"] = p.reading["helpline_seen"] = True
+    if spec.get("footer", True):
+        p.text(80, 1245, f"Northfield Academy Pvt. Ltd. · Helpline {HELPLINE}", 30, CREAM,
+               numbers=[("phone", HELPLINE, None)])
+        p.reading["registered_name_seen"] = p.reading["helpline_seen"] = True
     return p
 
 
@@ -170,6 +176,134 @@ POSTERS = [
      "expect": ["CCPA-03"], "plants": "Karan Thapa, whose consent is dated before the result"},
 ]
 
+PRIYA_FREE = dict(name="Priya Mondal", rank=205, course="All-India Test Series", duration="6 months", paid="Free")
+ARJUN = dict(name="Arjun Das", rank=112, course="2-Year Classroom Programme", duration="2 years", paid="Paid")
+ALT = "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number."
+GUARANTEE_AI = ["AI-01", "BRAND-04"]  # fair AI flags on a planted guarantee
+
+
+def line(text: str, y: int = 1000, size: int = 40, **extra) -> dict:
+    return {"y": y, "text": text, "size": size, **extra}
+
+
+def flag(rule_id: str, why: str) -> dict:
+    return {"rule_id": rule_id, "why": why}
+
+
+POSTERS += [
+    # clean posters: nothing should fail
+    {"name": "12-clean-ananya", "title": "Ananya's result", "channel": "instagram", "tags": ["Ananya Roy"],
+     "toppers": [ANANYA], "alt_text": ALT, "expect": [], "plants": "nothing: Ananya Roy, a minor with guardian-signed consent"},
+    {"name": "13-clean-print", "title": "Riya's result (print)", "channel": "print", "tags": ["Riya Sen"],
+     "headline": {"text": "Congratulations, Riya Sen"}, "expect": [], "plants": "nothing: a print poster, which needs no alt text"},
+    {"name": "14-clean-test-series", "title": "Priya's result", "channel": "instagram", "tags": ["Priya Mondal"],
+     "toppers": [PRIYA_FREE], "alt_text": ALT, "expect": [], "plants": "nothing: Priya Mondal shown correctly as a free test-series student"},
+    {"name": "15-clean-congrats", "title": "Congratulations", "channel": "whatsapp", "tags": ["Riya Sen", "Ananya Roy"],
+     "toppers": [RIYA, ANANYA], "headline": {"text": "Congratulations to our achievers"}, "alt_text": ALT,
+     "expect": [], "plants": "nothing: two toppers on WhatsApp"},
+    {"name": "16-clean-offer", "title": "Early-bird offer", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Early-bird discount: 10% off till 30 November 2026"), line("T&C apply at the branch", 1060, 30)],
+     "expect": [], "plants": "nothing: an offer with an end date and its terms"},
+    {"name": "17-clean-date", "title": "New batch", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("New batch starts Monday, 7 December 2026")],
+     "expect": [], "plants": "nothing: a future date on the right weekday"},
+    {"name": "18-clean-hindi", "title": "Naya batch", "channel": "whatsapp", "tags": ["Riya Sen"], "alt_text": ALT,
+     "headline": {"text": "नया बैच शुरू", "romanised": "Naya batch shuru"},
+     "expect": [], "plants": "nothing: a Hindi headline with no promise"},
+    # banned claims (CCPA-01)
+    {"name": "19-banned-guaranteed-selection", "title": "JEE 2027", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "headline": {"text": "Guaranteed selection in JEE 2027", "claim": True},
+     "expect": ["CCPA-01"], "also": GUARANTEE_AI, "plants": "the banned claim “Guaranteed selection”"},
+    {"name": "20-banned-job", "title": "Careers", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("100% job placement after the course", claim=True)],
+     "expect": ["CCPA-01"], "also": GUARANTEE_AI, "plants": "the banned claim “100% job”"},
+    {"name": "21-banned-rank", "title": "Top ranks", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Guaranteed rank in the top 1000", claim=True)],
+     "expect": ["CCPA-01"], "also": GUARANTEE_AI, "plants": "the banned claim “Guaranteed rank”"},
+    {"name": "22-banned-hindi", "title": "Chayan", "channel": "whatsapp", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("100% चयन", romanised="100% chayan", claim=True)],
+     "expect": ["CCPA-01"], "also": GUARANTEE_AI, "plants": "the banned Hindi claim “100% चयन” (100% selection)"},
+    {"name": "23-banned-success", "title": "Results", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Guaranteed success for every student", claim=True)],
+     "expect": ["CCPA-01"], "also": GUARANTEE_AI, "plants": "the banned claim “Guaranteed success”"},
+    # ranks (CCPA-04)
+    {"name": "24-wrong-rank-ananya", "title": "Ananya's result", "channel": "instagram", "tags": ["Ananya Roy"],
+     "toppers": [{**ANANYA, "rank": 85}], "alt_text": ALT, "expect": ["CCPA-04"], "plants": "Ananya Roy shown as AIR 85 (the register says AIR 58)"},
+    {"name": "25-wrong-rank-riya-7", "title": "Riya's result", "channel": "instagram", "tags": ["Riya Sen"],
+     "toppers": [{**RIYA, "rank": 7}], "alt_text": ALT, "expect": ["CCPA-04"], "plants": "Riya Sen shown as AIR 7 (the register says AIR 73)"},
+    {"name": "26-wrong-rank-priya", "title": "Priya's result", "channel": "instagram", "tags": ["Priya Mondal"],
+     "toppers": [{**PRIYA_FREE, "rank": 250}], "alt_text": ALT, "expect": ["CCPA-04"], "plants": "Priya Mondal shown as AIR 250 (the register says AIR 205)"},
+    # consent (CCPA-02)
+    {"name": "27-no-consent-with-riya", "title": "Our toppers", "channel": "instagram", "tags": ["Riya Sen", "Arjun Das"],
+     "toppers": [RIYA, ARJUN], "alt_text": ALT, "expect": ["CCPA-02"], "plants": "Arjun Das (no consent) beside Riya Sen"},
+    {"name": "28-not-in-register", "title": "Meera's result", "channel": "print", "tags": [],
+     "toppers": [dict(name="Meera Pillai", rank=91, course="2-Year Classroom Programme", duration="2 years", paid="Paid")],
+     "expect": ["CCPA-02", "READ-03"], "plants": "Meera Pillai, who isn't in the register (so nobody could tag her)"},
+    # details next to each person (CCPA-05)
+    {"name": "29-wrong-duration", "title": "Riya's result", "channel": "instagram", "tags": ["Riya Sen"],
+     "toppers": [{**RIYA, "duration": "1 year"}], "alt_text": ALT, "expect": ["CCPA-05"], "plants": "Riya Sen's course shown as 1 year (it's 2 years)"},
+    {"name": "30-wrong-paid", "title": "Riya's result", "channel": "instagram", "tags": ["Riya Sen"],
+     "toppers": [{**RIYA, "paid": "Free"}], "alt_text": ALT, "expect": ["CCPA-05"], "plants": "Riya Sen's paid course shown as free"},
+    # results figures (CCPA-06)
+    {"name": "31-wrong-stat", "title": "Our results", "channel": "instagram", "tags": ["Riya Sen"], "stat": ("45", 45),
+     "alt_text": ALT, "expect": ["CCPA-06"], "plants": "45 students qualified (the approved figure is 42)"},
+    {"name": "32-wrong-stat-high", "title": "Our results", "channel": "instagram", "tags": ["Riya Sen"], "stat": ("420", 420),
+     "alt_text": ALT, "expect": ["CCPA-06"], "plants": "420 students qualified (the approved figure is 42)"},
+    # courses, fees and contacts (FACT-01 to FACT-03)
+    {"name": "33-wrong-course-duration", "title": "Crash course", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Crash Course: 8 months of classes", size=34)],
+     "expect": ["FACT-01"], "plants": "the 1-Year Crash Course described as 8 months"},
+    {"name": "34-wrong-fee-high", "title": "Fees", "channel": "instagram", "tags": ["Riya Sen"], "fee": ("₹50,000", 50000),
+     "alt_text": ALT, "expect": ["FACT-02"], "plants": "a fee of ₹50,000 (approved: ₹48,000)"},
+    {"name": "35-wrong-fee-typo", "title": "Fees", "channel": "instagram", "tags": ["Riya Sen"], "fee": ("₹4,800", 4800),
+     "alt_text": ALT, "expect": ["FACT-02"], "plants": "a fee of ₹4,800, a missing zero (approved: ₹48,000)"},
+    {"name": "36-other-branch-phone", "title": "Call us", "channel": "instagram", "tags": ["Riya Sen"], "phone": KOLKATA["phone"],
+     "alt_text": ALT, "expect": ["FACT-03"], "plants": "the Kolkata branch's phone on a Siliguri poster"},
+    # brand (BRAND-01 to BRAND-04)
+    {"name": "37-no-logo", "title": "Results", "channel": "instagram", "tags": ["Riya Sen"], "logo": False,
+     "alt_text": ALT, "expect": ["BRAND-01"], "plants": "no logo"},
+    {"name": "38-off-palette-pink", "title": "Festive batch", "channel": "instagram", "tags": ["Riya Sen"], "background": PINK,
+     "alt_text": ALT, "expect": ["BRAND-02"], "plants": "a pink background outside the brand palette"},
+    {"name": "39-no-registered-name", "title": "Results", "channel": "instagram", "tags": ["Riya Sen"], "footer": False,
+     "alt_text": ALT, "expect": ["BRAND-03"], "plants": "no registered name or helpline"},
+    {"name": "40-pushy-tone", "title": "Hurry", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Hurry! Join now or regret it forever!", flag=flag("BRAND-04", "Pressures and frightens readers, against the tone notes."))],
+     "expect": ["BRAND-04"], "plants": "pressuring words: “Join now or regret it forever!”"},
+    # accessibility (ACC-01, ACC-02)
+    {"name": "41-low-contrast-headline", "title": "Results", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "headline": {"text": "Our JEE Main 2026 toppers", "fill": PALE_YELLOW},
+     "expect": ["ACC-01"], "plants": "a pale yellow headline on the off-white background"},
+    {"name": "42-no-alt-text", "title": "Results", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": "",
+     "expect": ["ACC-02"], "plants": "an Instagram post with no alt text"},
+    # disguised guarantees (AI-01)
+    {"name": "43-selection-pakka", "title": "Selection", "channel": "whatsapp", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Selection pakka with Northfield!", flag=flag("AI-01", "Says selection is certain without the word 'guarantee'."))],
+     "expect": ["AI-01"], "also": ["BRAND-04"], "plants": "the disguised guarantee “Selection pakka”"},
+    {"name": "44-seat-confirmed", "title": "Seats", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Your IIT seat is confirmed here", flag=flag("AI-01", "Promises an IIT seat, which nobody can promise."))],
+     "expect": ["AI-01"], "also": ["BRAND-04"], "plants": "the disguised guarantee “Your IIT seat is confirmed”"},
+    # dates (EVENT-01 to EVENT-03)
+    {"name": "45-wrong-weekday", "title": "New batch", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("New batch starts Monday, 30 December 2026")],
+     "expect": ["EVENT-02"], "plants": "Monday, 30 December 2026 (it's a Wednesday)"},
+    {"name": "46-passed-deadline", "title": "Admissions", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Last date to apply: 31 October 2026")],
+     "expect": ["EVENT-03"], "plants": "a last date that has passed (31 October 2026)"},
+    {"name": "47-impossible-date", "title": "Admissions", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Admissions close on 31 November 2026")],
+     "expect": ["EVENT-01"], "plants": "31 November, a date that doesn't exist"},
+    # offers and permissions (OFFER-01, OFFER-02, RIGHTS-01)
+    {"name": "48-offer-no-end", "title": "Offer", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Early-bird discount: 20% off"), line("T&C apply at the branch", 1060, 30)],
+     "expect": ["OFFER-01"], "plants": "an offer with no end date"},
+    {"name": "49-offer-no-terms", "title": "Scholarships", "channel": "instagram", "tags": ["Riya Sen"], "alt_text": ALT,
+     "extra_lines": [line("Scholarships up to 50% till 30 November 2026", size=36)],
+     "expect": ["OFFER-02"], "plants": "a scholarship that doesn't say who qualifies or where the terms are"},
+    {"name": "50-two-problems", "title": "Riya's result", "channel": "instagram", "tags": ["Riya Sen"],
+     "toppers": [{**RIYA, "rank": 37}], "fee": ("₹45,000", 45000), "alt_text": ALT,
+     "expect": ["CCPA-04", "FACT-02"], "plants": "two problems: Riya Sen as AIR 37, and a fee of ₹45,000"},
+]
+
 
 def main() -> None:
     if not FONT.exists():
@@ -189,7 +323,7 @@ def main() -> None:
         manifest.append({
             "name": spec["name"], "file": png.name, "title": spec["title"], "channel": spec["channel"],
             "caption": spec.get("caption", ""), "alt_text": spec.get("alt_text", ""), "tags": spec["tags"],
-            "expect": spec["expect"], "plants": spec["plants"], "sha256": sha,
+            "expect": spec["expect"], "also": spec.get("also", []), "plants": spec["plants"], "sha256": sha,
         })
         print(f"{png.name}: expects {spec['expect'] or 'all pass'}")
     (READINGS_DIR / "index.json").write_text(json.dumps(index, indent=2) + "\n", encoding="utf-8")

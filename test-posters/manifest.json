@@ -11,6 +11,7 @@
       "Ananya Roy"
     ],
     "expect": [],
+    "also": [],
     "plants": "nothing: every check should pass",
     "sha256": "565f9749dbc8d908c9ee96921a87e9e2bf8d7a291f054477682260efbf4cf1e5"
   },
@@ -27,6 +28,7 @@
     "expect": [
       "CCPA-01"
     ],
+    "also": [],
     "plants": "the banned claim “100% selection guaranteed”",
     "sha256": "a6028fd1a79a95a8fc1384f9f92e09a9c791bf8b120292b8c712cc7ffb6f2f68"
   },
@@ -43,6 +45,7 @@
     "expect": [
       "CCPA-04"
     ],
+    "also": [],
     "plants": "Riya Sen shown as AIR 37 (the register says AIR 73)",
     "sha256": "a4a3d1d14af041a503017c3c9af16c60b856eab98c2ea7e6d835d2ff70902430"
   },
@@ -59,6 +62,7 @@
     "expect": [
       "CCPA-02"
     ],
+    "also": [],
     "plants": "Arjun Das, who has no consent on file",
     "sha256": "da2383b64ec2fc41588f3591a463695651f042e515d15d7ed152af9ed43f7433"
   },
@@ -75,6 +79,7 @@
     "expect": [
       "CCPA-05"
     ],
+    "also": [],
     "plants": "Priya Mondal presented as a paid classroom student (she took the free test series)",
     "sha256": "de7fe48cbe8b305297980e01b73c854eae7c1d624b219312dc20a46c67398249"
   },
@@ -91,6 +96,7 @@
     "expect": [
       "FACT-02"
     ],
+    "also": [],
     "plants": "a fee of ₹45,000 (approved: ₹48,000)",
     "sha256": "1773cd82095a83a8a53035e966884f24c9b8d0ab88398bd05d252fa6d3dbece5"
   },
@@ -107,6 +113,7 @@
     "expect": [
       "FACT-03"
     ],
+    "also": [],
     "plants": "a phone number that isn't the Siliguri branch's",
     "sha256": "1cddf390531ab32ffa1d0d52cb846acd670d2ea4bc55641183deb6ff0bc612c4"
   },
@@ -123,6 +130,7 @@
     "expect": [
       "BRAND-02"
     ],
+    "also": [],
     "plants": "a lime-green background outside the brand palette",
     "sha256": "a1b805ceaf36689808f6cdc9f743dcdb6c6df49dc135d52bdfb1bbcd27ebd325"
   },
@@ -139,6 +147,7 @@
     "expect": [
       "ACC-01"
     ],
+    "also": [],
     "plants": "a pale grey disclaimer on the off-white background",
     "sha256": "c6679558f99b6a32c033d6690a349f56af3ef3767d18b6d2ec6c233b0aae75f4"
   },
@@ -155,6 +164,7 @@
     "expect": [
       "AI-01"
     ],
+    "also": [],
     "plants": "Hindi text with the disguised guarantee “सीट तय है!” (your seat is fixed)",
     "sha256": "863bcd21ed70e15bfd62eb9d3030be42189ebada328b6c11a08c1e39b94cf0a3"
   },
@@ -171,7 +181,678 @@
     "expect": [
       "CCPA-03"
     ],
+    "also": [],
     "plants": "Karan Thapa, whose consent is dated before the result",
     "sha256": "9c2061433fe43157c937e6a772dfd2fe2068f5473f56f1b59bef55c409f9bae8"
+  },
+  {
+    "name": "12-clean-ananya",
+    "file": "12-clean-ananya.png",
+    "title": "Ananya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Ananya Roy"
+    ],
+    "expect": [],
+    "also": [],
+    "plants": "nothing: Ananya Roy, a minor with guardian-signed consent",
+    "sha256": "0adb6ebac812de087db6b142a08dc7f0e7a5a1a7b5241f173d26ef2576b13ad5"
+  },
+  {
+    "name": "13-clean-print",
+    "file": "13-clean-print.png",
+    "title": "Riya's result (print)",
+    "channel": "print",
+    "caption": "",
+    "alt_text": "",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [],
+    "also": [],
+    "plants": "nothing: a print poster, which needs no alt text",
+    "sha256": "550fe94a7b15475b704937a22940438f3162c761ef1c9e5d3cd8fa1b9657f235"
+  },
+  {
+    "name": "14-clean-test-series",
+    "file": "14-clean-test-series.png",
+    "title": "Priya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Priya Mondal"
+    ],
+    "expect": [],
+    "also": [],
+    "plants": "nothing: Priya Mondal shown correctly as a free test-series student",
+    "sha256": "acbe56f8024bea00d47a61876a3b33dba91f5d8f300e94c9f6540d42af19b6e1"
+  },
+  {
+    "name": "15-clean-congrats",
+    "file": "15-clean-congrats.png",
+    "title": "Congratulations",
+    "channel": "whatsapp",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen",
+      "Ananya Roy"
+    ],
+    "expect": [],
+    "also": [],
+    "plants": "nothing: two toppers on WhatsApp",
+    "sha256": "fe5ea62983702f4337296830edddbf64c742081a022714f2079340cd5cb4f3ba"
+  },
+  {
+    "name": "16-clean-offer",
+    "file": "16-clean-offer.png",
+    "title": "Early-bird offer",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [],
+    "also": [],
+    "plants": "nothing: an offer with an end date and its terms",
+    "sha256": "731b06e58aa41885706cae656d1d06976fb463ba37f981bbc95730f32c72305d"
+  },
+  {
+    "name": "17-clean-date",
+    "file": "17-clean-date.png",
+    "title": "New batch",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [],
+    "also": [],
+    "plants": "nothing: a future date on the right weekday",
+    "sha256": "5e5bbea02841d0cbf8b1c2d2d2a61ceda4ae649432c03ea7fae7ac3bb5dc09fe"
+  },
+  {
+    "name": "18-clean-hindi",
+    "file": "18-clean-hindi.png",
+    "title": "Naya batch",
+    "channel": "whatsapp",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [],
+    "also": [],
+    "plants": "nothing: a Hindi headline with no promise",
+    "sha256": "12a57b29fc3531614bb003bafa09c109edefb92359588ee50b43d94796403f8f"
+  },
+  {
+    "name": "19-banned-guaranteed-selection",
+    "file": "19-banned-guaranteed-selection.png",
+    "title": "JEE 2027",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-01"
+    ],
+    "also": [
+      "AI-01",
+      "BRAND-04"
+    ],
+    "plants": "the banned claim “Guaranteed selection”",
+    "sha256": "9fab5fd902316a50d76994bf17b3df3db6bb1596ea6c8c2b5b2dc8779ff27890"
+  },
+  {
+    "name": "20-banned-job",
+    "file": "20-banned-job.png",
+    "title": "Careers",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-01"
+    ],
+    "also": [
+      "AI-01",
+      "BRAND-04"
+    ],
+    "plants": "the banned claim “100% job”",
+    "sha256": "eae5e7ebdaee6cbc90cbf890032d8d7da2b7a9359cf122c48d44b915f3710007"
+  },
+  {
+    "name": "21-banned-rank",
+    "file": "21-banned-rank.png",
+    "title": "Top ranks",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-01"
+    ],
+    "also": [
+      "AI-01",
+      "BRAND-04"
+    ],
+    "plants": "the banned claim “Guaranteed rank”",
+    "sha256": "64bda22e7eaea9d49856c7752c8174871c825d49c634efbfffad6e4d19508049"
+  },
+  {
+    "name": "22-banned-hindi",
+    "file": "22-banned-hindi.png",
+    "title": "Chayan",
+    "channel": "whatsapp",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-01"
+    ],
+    "also": [
+      "AI-01",
+      "BRAND-04"
+    ],
+    "plants": "the banned Hindi claim “100% चयन” (100% selection)",
+    "sha256": "4fa8f29da81c5014b4a91135e93cce831e016f3c53ded59e9620c4d87481ccde"
+  },
+  {
+    "name": "23-banned-success",
+    "file": "23-banned-success.png",
+    "title": "Results",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-01"
+    ],
+    "also": [
+      "AI-01",
+      "BRAND-04"
+    ],
+    "plants": "the banned claim “Guaranteed success”",
+    "sha256": "c36507d65c4ca2333137f107baa067eb6a511d050d6545358c7efc36045754a3"
+  },
+  {
+    "name": "24-wrong-rank-ananya",
+    "file": "24-wrong-rank-ananya.png",
+    "title": "Ananya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Ananya Roy"
+    ],
+    "expect": [
+      "CCPA-04"
+    ],
+    "also": [],
+    "plants": "Ananya Roy shown as AIR 85 (the register says AIR 58)",
+    "sha256": "0e0153fc59039ccb21cb6bb8e734299e5ffc4bdcb231d6c228d3d031d4ad4816"
+  },
+  {
+    "name": "25-wrong-rank-riya-7",
+    "file": "25-wrong-rank-riya-7.png",
+    "title": "Riya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-04"
+    ],
+    "also": [],
+    "plants": "Riya Sen shown as AIR 7 (the register says AIR 73)",
+    "sha256": "c9a7d5ba346ddf108441ad4799a5e9108b4f515216d4401f7c090bcac3db235e"
+  },
+  {
+    "name": "26-wrong-rank-priya",
+    "file": "26-wrong-rank-priya.png",
+    "title": "Priya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Priya Mondal"
+    ],
+    "expect": [
+      "CCPA-04"
+    ],
+    "also": [],
+    "plants": "Priya Mondal shown as AIR 250 (the register says AIR 205)",
+    "sha256": "98161fb6690319cbad9a6613aa6ab9574df7aa5a99ac5edfefd4869da81133b9"
+  },
+  {
+    "name": "27-no-consent-with-riya",
+    "file": "27-no-consent-with-riya.png",
+    "title": "Our toppers",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen",
+      "Arjun Das"
+    ],
+    "expect": [
+      "CCPA-02"
+    ],
+    "also": [],
+    "plants": "Arjun Das (no consent) beside Riya Sen",
+    "sha256": "9930392a2c7d9d812da3503ce8c7a816b7e6439831c1f9f28860b3ae23894b3a"
+  },
+  {
+    "name": "28-not-in-register",
+    "file": "28-not-in-register.png",
+    "title": "Meera's result",
+    "channel": "print",
+    "caption": "",
+    "alt_text": "",
+    "tags": [],
+    "expect": [
+      "CCPA-02",
+      "READ-03"
+    ],
+    "also": [],
+    "plants": "Meera Pillai, who isn't in the register (so nobody could tag her)",
+    "sha256": "8ba43284e751e845470668df1a13c3ddef85f36726a5bffbb0fa631028cae9d3"
+  },
+  {
+    "name": "29-wrong-duration",
+    "file": "29-wrong-duration.png",
+    "title": "Riya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-05"
+    ],
+    "also": [],
+    "plants": "Riya Sen's course shown as 1 year (it's 2 years)",
+    "sha256": "a19e73259f7f164f1284748bf24e3c0e12636cf1078dfefe8ce54d08634b0698"
+  },
+  {
+    "name": "30-wrong-paid",
+    "file": "30-wrong-paid.png",
+    "title": "Riya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-05"
+    ],
+    "also": [],
+    "plants": "Riya Sen's paid course shown as free",
+    "sha256": "cc5bc0a56608bcc9539ac5c3de6978e1dc43846fddb071ee2bd9353bcc85501e"
+  },
+  {
+    "name": "31-wrong-stat",
+    "file": "31-wrong-stat.png",
+    "title": "Our results",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-06"
+    ],
+    "also": [],
+    "plants": "45 students qualified (the approved figure is 42)",
+    "sha256": "c13e18edf52ec8ff500a7c2e2371343227d967641f60ce75bdf72c1fd059949a"
+  },
+  {
+    "name": "32-wrong-stat-high",
+    "file": "32-wrong-stat-high.png",
+    "title": "Our results",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-06"
+    ],
+    "also": [],
+    "plants": "420 students qualified (the approved figure is 42)",
+    "sha256": "0f080a667b3b484ae028aa0bfa92884bd44636142bc11126e8ef6d87a30141c1"
+  },
+  {
+    "name": "33-wrong-course-duration",
+    "file": "33-wrong-course-duration.png",
+    "title": "Crash course",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "FACT-01"
+    ],
+    "also": [],
+    "plants": "the 1-Year Crash Course described as 8 months",
+    "sha256": "599bfbe078fced8762f86df6214bb2bc01102556b27a3f889e4795887f70e3f0"
+  },
+  {
+    "name": "34-wrong-fee-high",
+    "file": "34-wrong-fee-high.png",
+    "title": "Fees",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "FACT-02"
+    ],
+    "also": [],
+    "plants": "a fee of ₹50,000 (approved: ₹48,000)",
+    "sha256": "1b1ddcf5740e18cd66b71e54eae43cc34d65d1a18c9984b99c1b6d731903453c"
+  },
+  {
+    "name": "35-wrong-fee-typo",
+    "file": "35-wrong-fee-typo.png",
+    "title": "Fees",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "FACT-02"
+    ],
+    "also": [],
+    "plants": "a fee of ₹4,800, a missing zero (approved: ₹48,000)",
+    "sha256": "b51713ded4a25b0d6fbccfacbcf04f4c134f17fa3081e156a1c3ad217eb191c1"
+  },
+  {
+    "name": "36-other-branch-phone",
+    "file": "36-other-branch-phone.png",
+    "title": "Call us",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "FACT-03"
+    ],
+    "also": [],
+    "plants": "the Kolkata branch's phone on a Siliguri poster",
+    "sha256": "4cceb9a7b3a180768f58a195b83a1e83428034134ffffba9a19f56f118d5ed46"
+  },
+  {
+    "name": "37-no-logo",
+    "file": "37-no-logo.png",
+    "title": "Results",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "BRAND-01"
+    ],
+    "also": [],
+    "plants": "no logo",
+    "sha256": "60bd738ce2b752e8d69b348ab9aae84c8148cec380c739ac420a187919495d74"
+  },
+  {
+    "name": "38-off-palette-pink",
+    "file": "38-off-palette-pink.png",
+    "title": "Festive batch",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "BRAND-02"
+    ],
+    "also": [],
+    "plants": "a pink background outside the brand palette",
+    "sha256": "936b51a65402d97d6a1c8c1322c18d9d46a5b06c80666bd66ddb2a3ea5167787"
+  },
+  {
+    "name": "39-no-registered-name",
+    "file": "39-no-registered-name.png",
+    "title": "Results",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "BRAND-03"
+    ],
+    "also": [],
+    "plants": "no registered name or helpline",
+    "sha256": "18b45d8726c52bbb4c8cd8e4515c25fb0d56967ec6209ed23268932db97e385a"
+  },
+  {
+    "name": "40-pushy-tone",
+    "file": "40-pushy-tone.png",
+    "title": "Hurry",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "BRAND-04"
+    ],
+    "also": [],
+    "plants": "pressuring words: “Join now or regret it forever!”",
+    "sha256": "92bea8c7d171af23bc4aff3393f3257da00710937f02c0f601988b819e8f8aef"
+  },
+  {
+    "name": "41-low-contrast-headline",
+    "file": "41-low-contrast-headline.png",
+    "title": "Results",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "ACC-01"
+    ],
+    "also": [],
+    "plants": "a pale yellow headline on the off-white background",
+    "sha256": "33e29b7b5a7cf45f7c0f45f041e91dd22a9bfa53ed07a914b60e4900606935e0"
+  },
+  {
+    "name": "42-no-alt-text",
+    "file": "42-no-alt-text.png",
+    "title": "Results",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "ACC-02"
+    ],
+    "also": [],
+    "plants": "an Instagram post with no alt text",
+    "sha256": "d02775c3d5e6b7fb162afdd8e408a73340d28558ff5f7e05a15ff2076cd30ffa"
+  },
+  {
+    "name": "43-selection-pakka",
+    "file": "43-selection-pakka.png",
+    "title": "Selection",
+    "channel": "whatsapp",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "AI-01"
+    ],
+    "also": [
+      "BRAND-04"
+    ],
+    "plants": "the disguised guarantee “Selection pakka”",
+    "sha256": "273e18ff02f64cdd470b35ad53b282aced36fe58c14388b05a1689007dfceec5"
+  },
+  {
+    "name": "44-seat-confirmed",
+    "file": "44-seat-confirmed.png",
+    "title": "Seats",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "AI-01"
+    ],
+    "also": [
+      "BRAND-04"
+    ],
+    "plants": "the disguised guarantee “Your IIT seat is confirmed”",
+    "sha256": "354e87b9e12a6c4737246b16db937efedeb17f5defff99fce7dbb98e52c8d461"
+  },
+  {
+    "name": "45-wrong-weekday",
+    "file": "45-wrong-weekday.png",
+    "title": "New batch",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "EVENT-02"
+    ],
+    "also": [],
+    "plants": "Monday, 30 December 2026 (it's a Wednesday)",
+    "sha256": "6c4cabf3b21434addc96c58c7c5ca5303e2305f572af5c08d90ec1c0e7e7a9b4"
+  },
+  {
+    "name": "46-passed-deadline",
+    "file": "46-passed-deadline.png",
+    "title": "Admissions",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "EVENT-03"
+    ],
+    "also": [],
+    "plants": "a last date that has passed (31 October 2026)",
+    "sha256": "45bfa68f76f08c7950c4538d80be3d1cddd5cdc5e2759f1fcd421bdb25260459"
+  },
+  {
+    "name": "47-impossible-date",
+    "file": "47-impossible-date.png",
+    "title": "Admissions",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "EVENT-01"
+    ],
+    "also": [],
+    "plants": "31 November, a date that doesn't exist",
+    "sha256": "7b79506e33c7e14503f87d3b57ae9976f5fa2c06c5878194168483570840f141"
+  },
+  {
+    "name": "48-offer-no-end",
+    "file": "48-offer-no-end.png",
+    "title": "Offer",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "OFFER-01"
+    ],
+    "also": [],
+    "plants": "an offer with no end date",
+    "sha256": "b95ca81461b5a8283ae4e80f6ca69add672348f32b2f28820f4ac74e9f97b807"
+  },
+  {
+    "name": "49-offer-no-terms",
+    "file": "49-offer-no-terms.png",
+    "title": "Scholarships",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "OFFER-02"
+    ],
+    "also": [],
+    "plants": "a scholarship that doesn't say who qualifies or where the terms are",
+    "sha256": "d1b4dc9c4e8f7d7f8c0ce61956c73b4ec2970f875715a50ffa08894ded0c8223"
+  },
+  {
+    "name": "50-two-problems",
+    "file": "50-two-problems.png",
+    "title": "Riya's result",
+    "channel": "instagram",
+    "caption": "",
+    "alt_text": "Northfield Academy Siliguri poster with a JEE Main 2026 result, the course fee and the branch phone number.",
+    "tags": [
+      "Riya Sen"
+    ],
+    "expect": [
+      "CCPA-04",
+      "FACT-02"
+    ],
+    "also": [],
+    "plants": "two problems: Riya Sen as AIR 37, and a fee of ₹45,000",
+    "sha256": "7bee0f2d1099b5204f64c1b8fcca3f00ac316e8880a73e1a14703d4cefe5cf0b"
   }
 ]
