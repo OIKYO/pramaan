@@ -9,10 +9,15 @@ from pydantic import AfterValidator, BaseModel, Field, field_validator, model_va
 Box2D = list[int]
 
 
+# A post with several pages stacks them: page n covers y from 1000*n (pipeline/pages.py).
+MAX_STACKED_Y = 10_000
+
+
 def _check_box(box: list[int]) -> list[int]:
     if len(box) != 4:
         raise ValueError("box_2d must be [ymin, xmin, ymax, xmax]")
-    ymin, xmin, ymax, xmax = (min(max(int(v), 0), 1000) for v in box)
+    ymin, ymax = (min(max(int(v), 0), MAX_STACKED_Y) for v in (box[0], box[2]))
+    xmin, xmax = (min(max(int(v), 0), 1000) for v in (box[1], box[3]))
     return [min(ymin, ymax), min(xmin, xmax), max(ymin, ymax), max(xmin, xmax)]
 
 
@@ -254,11 +259,18 @@ class FindingOut(Finding):
     resolved_at: datetime | None = None
 
 
+class PageOut(BaseModel):
+    index: int
+    image_url: str | None
+
+
 class VersionOut(BaseModel):
     id: str
     version: int
     image_url: str | None
     image_sha256: str
+    source: Literal["image", "carousel", "pdf"] = "image"
+    pages: list[PageOut] = Field(default=[], description="Every page in order; boxes on page n have y from 1000*n")
     caption: str
     alt_text: str
     tagged_topper_ids: list[str]

@@ -11,6 +11,7 @@ from app.models import (ConsentApprove, ConsentDecline, ConsentPage, ConsentRequ
                         ConsentRequestOut, ConsentWithdraw, PosterReading, Profile, Topper)
 from app.ratelimit import limit
 from app.routers.posters import load_state
+from pipeline.pages import unstack_box
 from pipeline.run import IST
 from rules.claims import consent_problems
 from rules.registry import rule_def
@@ -113,18 +114,23 @@ def _by_token(token: str) -> dict:
 
 
 def _page(row: dict) -> ConsentPage:
-    image_url = None
-    if row["version_id"]:
-        version = get_db().table("poster_versions").select("image_path").eq("id", row["version_id"]).execute().data
-        if version:
-            signed = get_db().storage.from_("posters").create_signed_url(version[0]["image_path"], IMAGE_SECONDS)
-            image_url = signed.get("signedURL") or signed.get("signedUrl")
     details = row.get("details") or {}
+    image_url, box = None, details.get("box_2d")
+    if row["version_id"]:
+        version = get_db().table("poster_versions").select("image_path, pages").eq("id", row["version_id"]).execute().data
+        if version:
+            path, stored = version[0]["image_path"], version[0].get("pages") or []
+            if box:
+                page, box = unstack_box(box)
+                if page < len(stored) and stored[page].get("image_path"):
+                    path = stored[page]["image_path"]
+            signed = get_db().storage.from_("posters").create_signed_url(path, IMAGE_SECONDS)
+            image_url = signed.get("signedURL") or signed.get("signedUrl")
     return ConsentPage(
         organisation=row["organisations"]["name"], person_name=row["toppers"]["full_name"],
         is_minor=row["toppers"]["is_minor"], status=consent.request_status(row, _now()), channels=row["channels"],
         valid_until=row["valid_until"], poster_title=(row.get("posters") or {}).get("title"), image_url=image_url,
-        box_2d=details.get("box_2d"), shown=details.get("shown") or [row["toppers"]["full_name"]],
+        box_2d=box, shown=details.get("shown") or [row["toppers"]["full_name"]],
         signer_name=row["signer_name"], signer_relation=row["signer_relation"], decided_at=row["decided_at"],
         withdrawn_at=row["withdrawn_at"], expires_at=row["expires_at"],
     )

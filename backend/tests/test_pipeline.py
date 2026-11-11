@@ -45,7 +45,7 @@ def test_each_poster_fails_exactly_its_planted_checks(entry):
     failed = {f.rule_id for f in result.findings if f.severity != "pass"}
     assert failed == set(entry["expect"]), [f.message for f in result.findings if f.severity != "pass"]
     assert result.reader_model == f"fixture:{entry['name']}"
-    assert result.ai_call is None  # fixture mode never calls an AI
+    assert result.ai_calls == []  # fixture mode never calls an AI
     assert {f.rule_id for f in result.findings} >= {"READ-01", "READ-02", "READ-03"}
     assert len({f.rule_id for f in result.findings}) == 30
 

@@ -7,6 +7,7 @@ pytesseract==0.3.13
 rapidfuzz==3.14.6
 opencv-python-headless==5.0.0.93
 pillow==13.0.0
+pypdfium2==5.15.2
 supabase==2.34.1
 pytest==9.2.0
 httpx==0.28.1

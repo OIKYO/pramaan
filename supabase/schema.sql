@@ -170,6 +170,8 @@ create table public.poster_versions (
   version int not null check (version >= 1),
   image_path text not null,                           -- object path in the private 'posters' bucket
   image_sha256 text not null,
+  source text not null default 'image' check (source in ('image', 'carousel', 'pdf')),
+  pages jsonb not null default '[]',                  -- each page: image_path, image_sha256, reading, reader_model
   caption text not null default '',
   alt_text text not null default '',
   tagged_topper_ids uuid[] not null default '{}',
@@ -180,6 +182,7 @@ create table public.poster_versions (
   unique (poster_id, version)
 );
 create index poster_versions_by_hash on public.poster_versions (image_sha256);
+create index poster_versions_pages on public.poster_versions using gin (pages jsonb_path_ops);
 
 create table public.findings (
   id uuid primary key default gen_random_uuid(),

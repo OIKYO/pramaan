@@ -10,16 +10,20 @@ from app.auth import current_user
 from app.config import get_settings
 from app.db import audit, get_db
 from app.models import (
-    Channel, FindingOut, PosterDetail, PosterReading, Profile, ReviewOut, ReviewRequest, VersionOut,
+    Channel, FindingOut, PageOut, PosterDetail, PosterReading, Profile, ReviewOut, ReviewRequest, VersionOut,
 )
 from pipeline.reader import AI_RULE_IDS
-from pipeline.run import CheckResult, PosterInput, cached_reading, check_poster, image_sha256, load_reference, save_result
+from pipeline import pages
+from pipeline.run import (
+    CheckResult, Page, PosterInput, cached_reading, check_poster, image_sha256, load_reference, post_sha256, save_result,
+)
 from rules.registry import Problem, to_finding
 
 log = logging.getLogger(__name__)
 router = APIRouter(prefix="/posters", tags=["posters"])
 
 MAX_IMAGE_BYTES = 15 * 1024 * 1024
+MAX_PDF_BYTES = 25 * 1024 * 1024
 FORMATS = {"PNG": ("image/png", "png"), "JPEG": ("image/jpeg", "jpg"), "WEBP": ("image/webp", "webp")}
 SIGNED_URL_SECONDS = 3600
 SEVERITY_ORDER = {"block": 0, "needs_human": 1, "warn": 2, "pass": 3}
@@ -60,6 +64,11 @@ def refuse(error: state.Refused) -> HTTPException:
     return HTTPException(error.status, error.message)
 
 
+def _page_paths(version: dict) -> list[str]:
+    stored = [page["image_path"] for page in version.get("pages") or [] if page.get("image_path")]
+    return stored or [version["image_path"]]
+
+
 def build_detail(poster_id: str, user: Profile) -> PosterDetail:
     db = get_db()
     ps = load_state(poster_id)
@@ -72,8 +81,9 @@ def build_detail(poster_id: str, user: Profile) -> PosterDetail:
     reviews = (db.table("reviews").select("*, profiles(full_name)").eq("poster_id", poster_id)
                .order("created_at").execute().data)
     urls = {}
-    if versions:
-        signed = db.storage.from_("posters").create_signed_urls([v["image_path"] for v in versions], SIGNED_URL_SECONDS)
+    paths = sorted({path for v in versions for path in _page_paths(v)})
+    if paths:
+        signed = db.storage.from_("posters").create_signed_urls(paths, SIGNED_URL_SECONDS)
         urls = {s["path"]: s.get("signedURL") or s.get("signedUrl") for s in signed}
 
     version_out = []
@@ -83,6 +93,8 @@ def build_detail(poster_id: str, user: Profile) -> PosterDetail:
                       key=lambda f: (SEVERITY_ORDER[f["severity"]], f["rule_id"]))
         version_out.append(VersionOut(
             id=v["id"], version=v["version"], image_url=urls.get(v["image_path"]), image_sha256=v["image_sha256"],
+            source=v.get("source") or "image",
+            pages=[PageOut(index=i, image_url=urls.get(path)) for i, path in enumerate(_page_paths(v))],
             caption=v["caption"], alt_text=v["alt_text"], tagged_topper_ids=v["tagged_topper_ids"],
             reading=reading, reader_model=v["reader_model"], checked_at=v["checked_at"], created_at=v["created_at"],
             findings=[FindingOut(**f) for f in mine],
@@ -105,17 +117,45 @@ def build_detail(poster_id: str, user: Profile) -> PosterDetail:
 def read_image(upload: UploadFile) -> tuple[bytes, str, str]:
     data = upload.file.read(MAX_IMAGE_BYTES + 1)
     if len(data) > MAX_IMAGE_BYTES:
-        raise HTTPException(413, "The image is larger than 15 MB. Export it smaller and try again.")
+        raise HTTPException(413, "An image is larger than 15 MB. Export it smaller and try again.")
     try:
         with Image.open(io.BytesIO(data)) as img:
             fmt = img.format
             img.verify()
     except (UnidentifiedImageError, OSError, Image.DecompressionBombError):
-        raise HTTPException(415, "That file isn't an image Pramaan can read. Upload a PNG, JPEG or WebP.") from None
+        raise HTTPException(415, "That file isn't an image Pramaan can read. Upload a PNG, JPEG or WebP, or a PDF.") from None
     if fmt not in FORMATS:
-        raise HTTPException(415, f"{fmt} images aren't supported. Upload a PNG, JPEG or WebP.")
+        raise HTTPException(415, f"{fmt} images aren't supported. Upload a PNG, JPEG or WebP, or a PDF.")
     mime, ext = FORMATS[fmt]
     return data, mime, ext
+
+
+def read_post(uploads: list[UploadFile]) -> tuple[list[tuple[bytes, str, str, str]], str]:
+    """The post's pages as (data, mime, extension, name), and what it is: one image, a carousel or a PDF."""
+    if not uploads:
+        raise HTTPException(422, "Add the poster: an image, up to 10 images for a carousel, or one PDF.")
+    first = uploads[0].file.read(5)
+    uploads[0].file.seek(0)
+    if first.startswith(b"%PDF"):
+        if len(uploads) > 1:
+            raise HTTPException(422, "Upload one PDF on its own, or images only.")
+        data = uploads[0].file.read(MAX_PDF_BYTES + 1)
+        if len(data) > MAX_PDF_BYTES:
+            raise HTTPException(413, "The PDF is larger than 25 MB. Export it smaller and try again.")
+        try:
+            rendered = pages.render_pdf(data)
+        except ValueError as error:
+            raise HTTPException(422, str(error)) from None
+        except Exception:
+            raise HTTPException(415, "That PDF couldn't be opened. Export it again and upload the new file.") from None
+        if not rendered:
+            raise HTTPException(422, "That PDF has no pages.")
+        name = uploads[0].filename or "brochure.pdf"
+        return [(png, "image/png", "png", f"{name}#page{i + 1}") for i, png in enumerate(rendered)], "pdf"
+    if len(uploads) > pages.MAX_PAGES:
+        raise HTTPException(422, f"A post can have up to {pages.MAX_PAGES} images. Split it into two posts.")
+    images = [(*read_image(upload), upload.filename or "") for upload in uploads]
+    return images, "carousel" if len(images) > 1 else "image"
 
 
 def valid_tags(tagged: list[str], org_id: str) -> list[str]:
@@ -127,23 +167,32 @@ def valid_tags(tagged: list[str], org_id: str) -> list[str]:
     return ids
 
 
-def add_version(poster: state.PosterState, version: int, data: bytes, mime: str, ext: str, filename: str,
+def add_version(poster: state.PosterState, version: int, post: list[tuple[bytes, str, str, str]], source: str,
                 caption: str, alt_text: str, tags: list[str], actor: Profile) -> str:
     db = get_db()
-    sha = image_sha256(data)
-    path = f"{poster.id}/v{version}-{sha[:12]}.{ext}"
-    db.storage.from_("posters").upload(path, data, {"content-type": mime, "upsert": "true"})
+    shas = [image_sha256(data) for data, *_ in post]
+    sha = post_sha256(shas)
+    paths = []
+    for index, (data, mime, ext, _) in enumerate(post):
+        page = "" if len(post) == 1 else f"-p{index + 1}"
+        path = f"{poster.id}/v{version}{page}-{shas[index][:12]}.{ext}"
+        db.storage.from_("posters").upload(path, data, {"content-type": mime, "upsert": "true"})
+        paths.append(path)
     version_id = db.table("poster_versions").insert({
-        "poster_id": poster.id, "version": version, "image_path": path, "image_sha256": sha,
+        "poster_id": poster.id, "version": version, "image_path": paths[0], "image_sha256": sha, "source": source,
+        "pages": [{"image_path": path, "image_sha256": page_sha} for path, page_sha in zip(paths, shas)],
         "caption": caption, "alt_text": alt_text, "tagged_topper_ids": tags,
     }).execute().data[0]["id"]
 
     settings = get_settings()
     try:
         ref = load_reference(db, poster.branch_id, poster.org_id)
-        cached = cached_reading(db, sha, caption, settings.reader_mode == "live", poster.org_id)
+        live = settings.reader_mode == "live"
+        cached = [cached_reading(db, page_sha, caption, live, poster.org_id) for page_sha in shas]
+        (data, mime, _, name), *rest = post
         result = check_poster(PosterInput(image=data, mime_type=mime, channel=_channel(poster.id), caption=caption,
-                                          alt_text=alt_text, tagged_topper_ids=tags, filename=filename),
+                                          alt_text=alt_text, tagged_topper_ids=tags, filename=name,
+                                          more_pages=[Page(d, m, n) for d, m, _, n in rest]),
                               ref, settings, cached=cached)
     except Exception as exc:  # never leave a poster stuck in draft
         log.exception("Checks crashed for poster %s v%s", poster.id, version)
@@ -151,10 +200,11 @@ def add_version(poster: state.PosterState, version: int, data: bytes, mime: str,
             "The checks crashed before finishing, so this version wasn't fully checked.",
             {"error": f"{type(exc).__name__}: {str(exc)[:300]}"},
             "Upload the version again. If it keeps failing, tell the Pramaan team."))])
-    save_result(db, version_id, result, actor.id, poster.org_id)
+    save_result(db, version_id, result, actor.id, poster.org_id, paths)
     counts = {s: sum(f.severity == s for f in result.findings) for s in ("block", "needs_human", "warn", "pass")}
     apply(poster, state.checked(), actor, version_id=version_id,
-          details={"version": version, "reader_model": result.reader_model, "findings": counts})
+          details={"version": version, "pages": len(post), "source": source, "reader_model": result.reader_model,
+                   "findings": counts})
     return version_id
 
 
@@ -168,7 +218,7 @@ Tags = Annotated[list[str], Form()]
 @router.post("", response_model=PosterDetail, status_code=201)
 def create_poster(
     user: Annotated[Profile, Depends(current_user)],
-    image: Annotated[UploadFile, File()],
+    image: Annotated[list[UploadFile], File(description="One image, up to 10 images (a carousel), or one PDF")],
     title: Annotated[str, Form(min_length=1, max_length=200)],
     channel: Annotated[Channel, Form()],
     caption: Annotated[str, Form(max_length=2200)] = "",
@@ -180,7 +230,7 @@ def create_poster(
         state.check_create(user)
     except state.Refused as error:
         raise refuse(error) from None
-    data, mime, ext = read_image(image)
+    post, source = read_post(image)
     tags = valid_tags(tagged_topper_ids, user.org_id)
     db = get_db()
     row = db.table("posters").insert({
@@ -190,7 +240,7 @@ def create_poster(
     db.table("reviews").insert({"poster_id": row["id"], "actor_id": user.id, "action": "created"}).execute()
     audit(user.org_id, user.id, "poster_created", "poster", row["id"], {"title": row["title"], "channel": channel})
     poster = load_state(row["id"])
-    add_version(poster, 1, data, mime, ext, image.filename or "", caption, alt_text, tags, user)
+    add_version(poster, 1, post, source, caption, alt_text, tags, user)
     return build_detail(row["id"], user)
 
 
@@ -198,7 +248,7 @@ def create_poster(
 def new_version(
     poster_id: str,
     user: Annotated[Profile, Depends(current_user)],
-    image: Annotated[UploadFile, File()],
+    image: Annotated[list[UploadFile], File(description="One image, up to 10 images (a carousel), or one PDF")],
     caption: Annotated[str, Form(max_length=2200)] = "",
     alt_text: Annotated[str, Form(max_length=1000)] = "",
     tagged_topper_ids: Tags = [],
@@ -209,13 +259,13 @@ def new_version(
         transition = state.check_new_version(user, poster)
     except state.Refused as error:
         raise refuse(error) from None
-    data, mime, ext = read_image(image)
+    post, source = read_post(image)
     tags = valid_tags(tagged_topper_ids, user.org_id)
     db = get_db()
     version = db.table("posters").select("current_version").eq("id", poster_id).single().execute().data["current_version"] + 1
     db.table("posters").update({"current_version": version}).eq("id", poster_id).execute()
     apply(poster, transition, user, details={"version": version})
-    add_version(load_state(poster_id), version, data, mime, ext, image.filename or "", caption, alt_text, tags, user)
+    add_version(load_state(poster_id), version, post, source, caption, alt_text, tags, user)
     return build_detail(poster_id, user)
 
 
