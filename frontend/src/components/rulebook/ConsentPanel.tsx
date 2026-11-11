@@ -38,15 +38,16 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
         <ConsentRequestList topperId={topper.id} />
       </div>
 
-      {onFile && (fileUrl.data ? (
-        <Button asChild variant="secondary">
-          <a href={fileUrl.data} target="_blank" rel="noopener noreferrer">Open consent file</a>
-        </Button>
-      ) : (
-        <Button type="button" variant="secondary" disabled>
+      {onFile && (
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={!fileUrl.data}
+          onClick={() => fileUrl.data && window.open(fileUrl.data, "_blank", "noopener,noreferrer")}
+        >
           {fileUrl.isError ? "The consent file can't be opened right now" : "Open consent file"}
         </Button>
-      ))}
+      )}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-ink-strong" htmlFor="consent-file">
           {topper.consent_source === "file" ? "Replace with a new signed form (PDF)" : "Or upload a signed form (PDF)"}
