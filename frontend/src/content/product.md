@@ -48,7 +48,7 @@ There are three kinds of rulebooks.
 
 These contain fundamental checks that apply to every poster. They cannot be switched off.
 
-**Brand kit:** Holds the organisation's registered name, logo, colour palette, helpline and tone of voice. Pramaan checks that the logo, required name and helpline are present, colours follow the palette, text contrast meets the 4.5:1 WCAG minimum, and required alt text is provided for Instagram and WhatsApp. The AI can warn about tone of voice.
+**Brand kit:** Holds the organisation's registered name, logo, colour palette, helpline and tone of voice. Pramaan checks that the logo, required name and helpline are present, colours follow the palette, text contrast meets the WCAG minimum (4.5:1, or 3:1 for large text), and required alt text is provided for Instagram and WhatsApp. The AI can warn about tone of voice.
 
 **Branch contact details:** Checks that the phone numbers and addresses shown belong to the relevant branch or use the organisation's helpline.
 

@@ -43,7 +43,7 @@ export const PASSED = [
   "Colours within palette",
   "Registered name and helpline present",
   "Tone of voice",
-  "Text contrast at least 4.5:1",
+  "Text contrast (4.5:1, large text 3:1)",
   "Alt text on social posts",
   "Disguised guarantees",
   "Dates are real dates",

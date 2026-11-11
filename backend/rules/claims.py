@@ -1,7 +1,8 @@
 from rapidfuzz import fuzz
 
+from rules.offers import OFFER
 from rules.registry import Problem, RuleContext, rule
-from rules.text import best_course, block_with, duration_months, evidence, norm, number_value
+from rules.text import best_course, block_with, digits, duration_months, evidence, norm, number_value
 
 # Built-in banned phrases (CCPA-01). Head office adds more in brand_kit.banned_phrases.
 BANNED_PHRASES = [
@@ -27,9 +28,13 @@ def _a(noun: str) -> str:
     return f"an {noun}" if noun[:1].lower() in "aeiou" else f"a {noun}"
 
 
+def _banned(ctx: RuleContext) -> list[str]:
+    return [norm(p) for p in [*BANNED_PHRASES, *ctx.brand_kit.banned_phrases] if p.strip()]
+
+
 @rule("CCPA-01")
 def no_banned_claims(ctx: RuleContext) -> list[Problem]:
-    phrases = [norm(p) for p in [*BANNED_PHRASES, *ctx.brand_kit.banned_phrases] if p.strip()]
+    phrases = _banned(ctx)
     places = [(b.text, b.romanised, b.box_2d) for b in ctx.reading.text_blocks]
     places += [(c.text, "", c.box_2d) for c in ctx.reading.claims]
     if ctx.caption:
@@ -191,8 +196,10 @@ def results_figures(ctx: RuleContext) -> list[Problem]:
         value = number_value(number.raw_text, number.value)
         if any(value is not None and abs(value - s.value) < 1e-9 for s in ctx.result_stats):
             continue
-        block = block_with(ctx.reading, number.raw_text)
+        block = block_with(ctx.reading, number.raw_text, number.box_2d)
         context = block.text if block else number.raw_text
+        if _not_a_results_figure(ctx, number.raw_text, context):
+            continue
         nearest = max(ctx.result_stats, key=lambda s: fuzz.token_set_ratio(s.label, context), default=None)
         fix = (f"Use the approved figure: {nearest.label}: {nearest.value:g}." if nearest
                else "Remove the figure, or ask head office to approve it first.")
@@ -201,6 +208,14 @@ def results_figures(ctx: RuleContext) -> list[Problem]:
             evidence(number.box_2d, number.raw_text), fix,
         ))
     return problems
+
+
+def _not_a_results_figure(ctx: RuleContext, raw: str, context: str) -> bool:
+    """The reader labels each number; code still checks the label. A phone number, a discount or a
+    banned promise isn't a results figure: FACT-03, OFFER-03 and CCPA-01 check those."""
+    if len(digits(raw)) >= 10 or OFFER.search(context) or OFFER.search(raw):
+        return True
+    return any(phrase in norm(context) for phrase in _banned(ctx))
 
 
 @rule("AI-01")

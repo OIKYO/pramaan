@@ -227,3 +227,39 @@ def test_acc01_low_contrast_warns():
 ])
 def test_acc02_alt_text_on_social_posts(channel, alt_text, fails):
     assert bool(problems(make_ctx(channel=channel, alt_text=alt_text), "ACC-02")) is fails
+
+
+def test_acc01_large_text_needs_only_three_to_one():
+    reading = clean_reading()
+    big = reading.text_blocks[0].model_copy(update={"text": "RS", "box_2d": [300, 80, 340, 200]})  # 4% of the height
+    small = reading.text_blocks[0].model_copy(update={"text": "small print", "box_2d": [900, 80, 920, 600]})
+    reading = reading.model_copy(update={"text_blocks": [big, small]})
+    visual = clean_visual(2).model_copy(update={"contrast": [
+        ContrastReading(block_index=0, ratio=4.0, fg="#FFFFFF", bg="#238A7D"),
+        ContrastReading(block_index=1, ratio=4.0, fg="#999999", bg="#FFFFFF"),
+    ]})
+    found = problems(make_ctx(reading, visual=visual), "ACC-01")
+    assert [p.evidence["text"] for p in found] == ["small print"]
+    visual.contrast[0] = ContrastReading(block_index=0, ratio=2.5, fg="#FFFFFF", bg="#EEEEEE")
+    assert {p.evidence["text"] for p in problems(make_ctx(reading, visual=visual), "ACC-01")} == {"RS", "small print"}
+
+
+def test_ccpa06_ignores_numbers_that_are_not_results_figures():
+    def with_stat(text, raw):
+        reading = add_block(clean_reading(), text)
+        return reading.model_copy(update={"numbers": [*reading.numbers, NumberSeen(kind="stat", raw_text=raw, value=None,
+                                                                                   box_2d=reading.text_blocks[-1].box_2d)]})
+    assert not problems(make_ctx(with_stat("Siliguri branch: +91 10000 22102", "+91 10000 22102")), "CCPA-06")
+    assert not problems(make_ctx(with_stat("Early-bird discount: 20% off", "20%")), "CCPA-06")
+    assert not problems(make_ctx(with_stat("100% selection guaranteed", "100%")), "CCPA-06")
+    assert problems(make_ctx(with_stat("98% of our students cleared JEE Main", "98%")), "CCPA-06")
+
+
+def test_a_number_belongs_to_the_line_its_box_is_on():
+    reading = clean_reading()
+    phone = TextBlock(text="Siliguri branch: +91 10000 22102", box_2d=[700, 100, 740, 900])
+    claim = TextBlock(text="Guaranteed rank in the top 1000", box_2d=[800, 100, 840, 900])
+    reading = reading.model_copy(update={"text_blocks": [phone, claim], "numbers": [
+        NumberSeen(kind="stat", raw_text="1000", value=1000, box_2d=[805, 700, 835, 800])]})
+    assert not problems(make_ctx(reading), "CCPA-06")  # the banned claim, not the phone line, holds the number
+

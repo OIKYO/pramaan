@@ -52,7 +52,7 @@ def fees(ctx: RuleContext) -> list[Problem]:
         value = number_value(number.raw_text, number.value)
         if value is None:
             continue  # unreadable numbers go to a person (READ-02)
-        block = block_with(ctx.reading, number.raw_text)
+        block = block_with(ctx.reading, number.raw_text, number.box_2d)
         course, score = best_course(block.text, ctx.courses) if block else (None, 0.0)
         where = evidence(number.box_2d, block.text if block else number.raw_text)
         price = ctx.words.price

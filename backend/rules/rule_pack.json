@@ -72,8 +72,8 @@
       "reason": "Each organisation describes its tone of voice in the brand kit. The AI flags wording that doesn't fit it; a person decides."
     },
     {
-      "id": "ACC-01", "name": "Text contrast at least 4.5:1", "rulebooks": ["brand"], "kind": "code", "severity": "warn",
-      "reason": "Low-contrast text is hard to read on phones in sunlight and for people with low vision. 4.5:1 is the WCAG minimum for normal text."
+      "id": "ACC-01", "name": "Text contrast (4.5:1, large text 3:1)", "rulebooks": ["brand"], "kind": "code", "severity": "warn",
+      "reason": "Low-contrast text is hard to read on phones in sunlight and for people with low vision. WCAG asks for 4.5:1 for normal text and 3:1 for large text."
     },
     {
       "id": "ACC-02", "name": "Alt text on social posts", "rulebooks": ["brand"], "kind": "code", "severity": "warn",

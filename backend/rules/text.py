@@ -85,8 +85,16 @@ def best_course(text: str, courses: list[Course]) -> tuple[Course | None, float]
     return course, score
 
 
-def block_with(reading: PosterReading, raw: str) -> TextBlock | None:
+def block_with(reading: PosterReading, raw: str, box_2d: list[int] | None = None) -> TextBlock | None:
+    """The line a number was printed on: the one whose box holds the number's box, else the first
+    line with the same text ('1000' alone would also match inside '10000')."""
     wanted, wanted_digits = norm(raw), digits(raw)
+    if box_2d:
+        cy, cx = (box_2d[0] + box_2d[2]) / 2, (box_2d[1] + box_2d[3]) / 2
+        for block in reading.text_blocks:
+            b = block.box_2d
+            if b[0] <= cy <= b[2] and b[1] <= cx <= b[3] and (not wanted_digits or wanted_digits in digits(block.text)):
+                return block
     for block in reading.text_blocks:
         if wanted and wanted in norm(block.text):
             return block
