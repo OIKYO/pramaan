@@ -42,6 +42,9 @@ export function VersionCompare({ versions }: { versions: Version[] }) {
               <VersionSwitcher versions={versions} value={version.version} onChange={set} label={label} />
               <span className="shrink-0 text-sm text-muted-text tabular-nums">{problemsOf(version).length} problems</span>
             </div>
+            {(version.pages?.length ?? 0) > 1 && (
+              <span className="text-xs text-muted-text">Page 1 of {version.pages.length}. Open the version to see every page.</span>
+            )}
             {version.image_url && (
               <img
                 src={version.image_url}

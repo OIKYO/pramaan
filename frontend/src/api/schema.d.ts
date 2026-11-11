@@ -769,8 +769,11 @@ export interface components {
     schemas: {
         /** Body_create_poster_posters_post */
         Body_create_poster_posters_post: {
-            /** Image */
-            image: string;
+            /**
+             * Image
+             * @description One image, up to 10 images (a carousel), or one PDF
+             */
+            image: string[];
             /** Title */
             title: string;
             /**
@@ -796,8 +799,11 @@ export interface components {
         };
         /** Body_new_version_posters__poster_id__versions_post */
         Body_new_version_posters__poster_id__versions_post: {
-            /** Image */
-            image: string;
+            /**
+             * Image
+             * @description One image, up to 10 images (a carousel), or one PDF
+             */
+            image: string[];
             /**
              * Caption
              * @default
@@ -1518,6 +1524,13 @@ export interface components {
             /** Rulebooks */
             rulebooks?: string[] | null;
         };
+        /** PageOut */
+        PageOut: {
+            /** Index */
+            index: number;
+            /** Image Url */
+            image_url: string | null;
+        };
         /** PasswordChange */
         PasswordChange: {
             /**
@@ -1926,6 +1939,18 @@ export interface components {
             image_url: string | null;
             /** Image Sha256 */
             image_sha256: string;
+            /**
+             * Source
+             * @default image
+             * @enum {string}
+             */
+            source: "image" | "carousel" | "pdf";
+            /**
+             * Pages
+             * @description Every page in order; boxes on page n have y from 1000*n
+             * @default []
+             */
+            pages: components["schemas"]["PageOut"][];
             /** Caption */
             caption: string;
             /** Alt Text */

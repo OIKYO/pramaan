@@ -40,7 +40,7 @@ function usePosterChange<TArgs>({ call, target, predict }: Change<TArgs>) {
 const cached = (qc: QueryClient, id: string) => qc.getQueryData<PosterDetail>(keys.poster(id));
 
 export interface VersionInput {
-  image: File;
+  image: File[];
   caption: string;
   alt_text: string;
   tagged_topper_ids: string[];

@@ -24,7 +24,7 @@ const CHANNELS = (Object.keys(CHANNEL_LABEL) as Channel[]).map((value) => ({ val
 export function PosterForm({ mode, channel: fixedChannel, defaults, pending, onSubmit }: PosterFormProps) {
   const [title, setTitle] = useState("");
   const [channel, setChannel] = useState<Channel>(fixedChannel ?? "instagram");
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
   const [caption, setCaption] = useState(defaults?.caption ?? "");
   const [altText, setAltText] = useState(defaults?.alt_text ?? "");
   const [tags, setTags] = useState<string[]>(defaults?.tagged_topper_ids ?? []);
@@ -34,14 +34,14 @@ export function PosterForm({ mode, channel: fixedChannel, defaults, pending, onS
   const submit = (event: FormEvent) => {
     event.preventDefault();
     setTried(true);
-    if (!image || titleMissing) return;
-    onSubmit({ title: title.trim(), channel, image, caption, alt_text: altText, tagged_topper_ids: tags });
+    if (images.length === 0 || titleMissing) return;
+    onSubmit({ title: title.trim(), channel, image: images, caption, alt_text: altText, tagged_topper_ids: tags });
   };
 
   return (
     <form onSubmit={submit} noValidate className="@container">
       <fieldset disabled={pending} className="grid items-start gap-6 @3xl:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-        <ImagePicker file={image} onChange={setImage} error={tried && !image ? "Choose the poster image first." : null} />
+        <ImagePicker files={images} onChange={setImages} error={tried && images.length === 0 ? "Choose the poster first: an image, a few for a carousel, or a PDF." : null} />
         <div className="flex min-w-0 flex-col gap-5">
           {mode === "new" && (
             <>

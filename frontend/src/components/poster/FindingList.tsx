@@ -20,6 +20,7 @@ interface FindingListProps {
   onResolve: (findingId: string, note: string) => void;
   onOverride: (findingId: string, note: string) => void;
   consent?: { versionId: string; channel: Channel };
+  multi?: boolean;
 }
 
 const GROUPS: Exclude<Severity, "pass">[] = ["block", "needs_human", "warn"];
@@ -56,6 +57,7 @@ export function FindingList(props: FindingListProps) {
                 onResolve={(note) => props.onResolve(problem.finding.id, note)}
                 onOverride={(note) => props.onOverride(problem.finding.id, note)}
                 consent={props.consent}
+                pageLabel={props.multi && problem.page !== null ? `Page ${problem.page + 1}` : undefined}
               />
             ))}
           </section>

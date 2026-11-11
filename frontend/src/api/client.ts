@@ -57,7 +57,7 @@ export const postForm = <T>(path: string, form: FormData) => api<T>(path, { meth
 export function toForm(input: Record<string, unknown>): FormData {
   const form = new FormData();
   for (const [key, value] of Object.entries(input)) {
-    if (Array.isArray(value)) value.forEach((item) => form.append(key, String(item)));
+    if (Array.isArray(value)) value.forEach((item) => form.append(key, item instanceof File ? item : String(item)));
     else if (value instanceof File) form.append(key, value);
     else form.append(key, String(value ?? ""));
   }

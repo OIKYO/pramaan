@@ -3,9 +3,10 @@ import { useOverrideFinding, useResolveFinding } from "@/api/hooks/usePoster";
 import { useProfile } from "@/api/hooks/useSession";
 import type { Channel, PosterAction, Version } from "@/api/types";
 import { toast } from "@/components/ui/Toast";
-import { passesOf, problemsOf } from "@/lib/findings";
+import { pagesOf, passesOf, problemsOf } from "@/lib/findings";
 import { scrollToItem } from "@/lib/motion";
 import { FindingList } from "./FindingList";
+import { PageStrip } from "./PageStrip";
 import { PosterCanvas } from "./PosterCanvas";
 import { VerdictSummary } from "./VerdictSummary";
 
@@ -25,6 +26,14 @@ export function PosterWorkspace({ title, version, ruleNames, actions, channel, c
   const problems = problemsOf(version);
   const onError = (error: Error) => toast.error(error.message);
   const headOffice = useProfile().role === "head_office";
+  const pageList = pagesOf(version);
+  const multi = pageList.length > 1;
+  const [page, setPage] = useState(0);
+  const pickInList = (number: number | null) => {
+    setSelected(number);
+    const picked = problems.find((p) => p.number === number);
+    if (picked && picked.page !== null && picked.box) setPage(picked.page);
+  };
 
   const pickOnPoster = (number: number | null) => {
     setSelected(number);
@@ -34,9 +43,19 @@ export function PosterWorkspace({ title, version, ruleNames, actions, channel, c
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-8">
       <div className="flex flex-col gap-2 lg:sticky lg:top-6">
-        <PosterCanvas imageUrl={version.image_url} title={title} problems={problems} selected={selected} onSelect={pickOnPoster} />
+        {multi && (
+          <PageStrip pages={pageList} problems={problems} value={page}
+            onChange={(next) => {
+              setPage(next);
+              setSelected(null);
+            }} />
+        )}
+        <PosterCanvas imageUrl={pageList[page]?.image_url ?? null} title={multi ? `${title}, page ${page + 1}` : title}
+          problems={problems.filter((p) => (p.page ?? 0) === page)} selected={selected} onSelect={pickOnPoster} />
         <p className="text-xs text-muted-text">
-          Version {version.version} · read by {version.reader_model ?? "nobody (the reader failed)"}
+          Version {version.version}
+          {multi ? ` · ${pageList.length} pages, ${version.source === "pdf" ? "a PDF brochure" : "a carousel"}` : ""} · read by{" "}
+          {version.reader_model ?? "nobody (the reader failed)"}
         </p>
       </div>
       <div className="flex min-w-0 flex-col gap-5">
@@ -47,7 +66,8 @@ export function PosterWorkspace({ title, version, ruleNames, actions, channel, c
           questions={version.questions ?? []}
           ruleNames={ruleNames}
           selected={selected}
-          onSelect={setSelected}
+          onSelect={pickInList}
+          multi={multi}
           canResolve={actions.includes("resolve")}
           canOverride={actions.includes("override")}
           onResolve={(findingId, note) => resolve.mutate({ findingId, note }, { onSuccess: () => toast.success("Reading confirmed."), onError })}

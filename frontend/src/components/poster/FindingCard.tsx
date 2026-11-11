@@ -20,9 +20,10 @@ interface FindingCardProps {
   onResolve: (note: string) => void;
   onOverride: (note: string) => void;
   consent?: { versionId: string; channel: Channel };
+  pageLabel?: string;
 }
 
-export function FindingCard({ problem, ruleName, selected, onSelect, canResolve, canOverride, onResolve, onOverride, consent }: FindingCardProps) {
+export function FindingCard({ problem, ruleName, selected, onSelect, canResolve, canOverride, onResolve, onOverride, consent, pageLabel }: FindingCardProps) {
   const { number, finding, box } = problem;
   const [asking, setAsking] = useState<"resolve" | "override" | null>(null);
   const quoted = typeof finding.evidence?.text === "string" ? finding.evidence.text : null;
@@ -49,6 +50,7 @@ export function FindingCard({ problem, ruleName, selected, onSelect, canResolve,
           <p className="flex flex-wrap gap-x-2 text-xs text-muted-text">
             {finding.rule_id}
             <span>{ruleName}</span>
+            {pageLabel && <span className="text-ink">{pageLabel}</span>}
           </p>
           <h3 className="text-base leading-snug text-pretty">{finding.message}</h3>
         </div>
