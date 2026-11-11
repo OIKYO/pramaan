@@ -122,10 +122,12 @@ create table public.toppers (
   is_minor boolean not null default false,
   photo_path text,
   consent_path text,                                  -- object path in the private 'consent' bucket
-  has_consent boolean generated always as (consent_path is not null) stored,
+  consent_source text check (consent_source in ('file', 'link')),  -- a signed file, or a consent link
+  has_consent boolean generated always as (consent_source is not null) stored,
   consent_date date,
   consent_channels public.channel[] not null default '{}',
   consent_valid_until date,
+  consent_withdrawn_at timestamptz,
   guardian_signed boolean not null default false,
   verified_by uuid references public.profiles (id),
   verified_at timestamptz,
@@ -204,10 +206,10 @@ create table public.reviews (
   id uuid primary key default gen_random_uuid(),
   poster_id uuid not null references public.posters (id) on delete cascade,
   version_id uuid references public.poster_versions (id) on delete set null,
-  actor_id uuid not null references public.profiles (id),
+  actor_id uuid references public.profiles (id),      -- null when a consent link changed the poster
   action text not null check (action in (
     'created', 'new_version', 'checked', 'submitted', 'approved', 'final_approved', 'sent_back',
-    'finding_resolved', 'finding_overridden'
+    'finding_resolved', 'finding_overridden', 'consent_withdrawn'
   )),
   comment text,
   created_at timestamptz not null default now()
@@ -268,6 +270,30 @@ create table public.invites (
   constraint invites_region_same_org foreign key (region_id, org_id) references public.regions (id, org_id) on delete cascade
 );
 create index invites_org_idx on public.invites (org_id);
+
+-- Consent links (backend only; see backend/app/routers/consent.py). Only a hash of each token is kept.
+create type public.consent_status as enum ('pending', 'approved', 'declined', 'withdrawn', 'revoked');
+create table public.consent_requests (
+  id uuid primary key default gen_random_uuid(),
+  org_id uuid not null references public.organisations (id) on delete cascade,
+  topper_id uuid not null references public.toppers (id) on delete cascade,
+  poster_id uuid references public.posters (id) on delete set null,
+  version_id uuid references public.poster_versions (id) on delete set null,
+  token_hash text not null unique,
+  channels public.channel[] not null,
+  valid_until date not null,
+  details jsonb not null default '{}',                -- what the person was shown: {"box_2d": [...], "shown": [...]}
+  status public.consent_status not null default 'pending',
+  signer_name text,
+  signer_relation text check (signer_relation in ('self', 'guardian')),
+  decline_reason text,
+  decided_at timestamptz,
+  withdrawn_at timestamptz,
+  expires_at timestamptz not null,
+  created_by uuid references public.profiles (id),
+  created_at timestamptz not null default now()
+);
+create index consent_requests_topper_idx on public.consent_requests (topper_id);
 
 -- Keep the API awake. Render's free plan sleeps after 15 idle minutes and GitHub runs free scheduled
 -- jobs late, so Supabase's own scheduler calls /health?db=true every 10 minutes, which also keeps the

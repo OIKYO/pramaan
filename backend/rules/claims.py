@@ -63,49 +63,56 @@ def consent_on_file(ctx: RuleContext) -> list[Problem]:
             ))
         elif match.status == "match":
             topper = ctx.toppers[match.topper_id]
-            if not topper.consent_path:
+            if topper.has_consent:
+                continue
+            where = evidence(person.box_2d, person.name, topper_id=topper.id)
+            if topper.consent_withdrawn_at:
+                problems.append(Problem(
+                    message=f"{topper.full_name} withdrew consent on {topper.consent_withdrawn_at:%d %b %Y}.",
+                    evidence=where,
+                    suggested_fix=f"Remove {topper.full_name} from the poster, and take it down wherever it was published.",
+                ))
+            else:
                 problems.append(Problem(
                     message=f"{topper.full_name} is shown, but there's no signed consent on file.",
-                    evidence=evidence(person.box_2d, person.name, topper_id=topper.id),
-                    suggested_fix=f"Remove {topper.full_name} from the poster, or upload their signed consent to the {register} first.",
+                    evidence=where,
+                    suggested_fix=f"Remove {topper.full_name} from the poster, or get their consent first: "
+                                  f"a signed form in the {register}, or a consent link.",
                 ))
     return problems
+
+
+def consent_problems(topper, channel: str, today) -> list[tuple[str, str]]:
+    """(message, fix) for each way this person's consent doesn't cover a poster on this channel today."""
+    name, out = topper.full_name, []
+    if topper.consent_date is None:
+        out.append((f"{name}'s consent has no date, so nobody can tell what it covers.",
+                    f"Add the date {name} signed the consent."))
+    elif topper.result_date and topper.consent_date <= topper.result_date:
+        out.append((f"{name}'s consent was signed on {topper.consent_date:%d %b %Y}, before the result on "
+                    f"{topper.result_date:%d %b %Y}, so it can't cover this result.",
+                    f"Get fresh consent from {name}, dated after the result."))
+    if channel not in topper.consent_channels:
+        allowed = ", ".join(topper.consent_channels) or "no channels"
+        out.append((f"{name}'s consent covers {allowed}, not {channel}.",
+                    f"Use this poster only on {allowed}, or get {name}'s consent for {channel}."))
+    if topper.consent_valid_until and today > topper.consent_valid_until:
+        out.append((f"{name}'s consent expired on {topper.consent_valid_until:%d %b %Y}.",
+                    f"Renew {name}'s consent before using their result."))
+    if topper.is_minor and not topper.guardian_signed:
+        out.append((f"{name} is a minor, and the consent isn't signed by a parent or guardian.",
+                    f"Get {name}'s consent signed by their parent or guardian."))
+    return out
 
 
 @rule("CCPA-03")
 def consent_is_valid(ctx: RuleContext) -> list[Problem]:
     problems = []
     for person, topper in ctx.matched():
-        if not topper.consent_path:
+        if not topper.has_consent:
             continue  # CCPA-02 reports missing consent.
         where = evidence(person.box_2d, person.name, topper_id=topper.id)
-        name = topper.full_name
-        if topper.consent_date is None:
-            problems.append(Problem(
-                f"{name}'s consent has no date, so nobody can tell what it covers.", where,
-                f"Add the date {name} signed the consent to the {ctx.words.register_name}.",
-            ))
-        elif topper.result_date and topper.consent_date <= topper.result_date:
-            problems.append(Problem(
-                f"{name}'s consent was signed on {topper.consent_date:%d %b %Y}, before the result on {topper.result_date:%d %b %Y}, so it can't cover this result.",
-                where, f"Get fresh written consent from {name}, dated after the result.",
-            ))
-        if ctx.channel not in topper.consent_channels:
-            allowed = ", ".join(topper.consent_channels) or "no channels"
-            problems.append(Problem(
-                f"{name}'s consent covers {allowed}, not {ctx.channel}.", where,
-                f"Use this poster only on {allowed}, or get {name}'s consent for {ctx.channel}.",
-            ))
-        if topper.consent_valid_until and ctx.today > topper.consent_valid_until:
-            problems.append(Problem(
-                f"{name}'s consent expired on {topper.consent_valid_until:%d %b %Y}.", where,
-                f"Renew {name}'s consent before using their result.",
-            ))
-        if topper.is_minor and not topper.guardian_signed:
-            problems.append(Problem(
-                f"{name} is a minor, and the consent isn't signed by a parent or guardian.", where,
-                f"Get the consent form countersigned by {name}'s parent or guardian.",
-            ))
+        problems += [Problem(message, where, fix) for message, fix in consent_problems(topper, ctx.channel, ctx.today)]
     return problems
 
 

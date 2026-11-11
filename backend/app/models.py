@@ -2,7 +2,7 @@ import re
 from datetime import date, datetime
 from typing import Annotated, Literal
 
-from pydantic import AfterValidator, BaseModel, Field, field_validator
+from pydantic import AfterValidator, BaseModel, Field, field_validator, model_validator
 
 
 # Gemini's box convention: [ymin, xmin, ymax, xmax], each 0-1000 of the image height/width.
@@ -125,10 +125,21 @@ class Topper(BaseModel):
     course_id: str | None = None
     is_minor: bool = False
     consent_path: str | None = None
+    consent_source: Literal["file", "link"] | None = None
+    has_consent: bool = False
     consent_date: date | None = None
     consent_channels: list[str] = []
     consent_valid_until: date | None = None
+    consent_withdrawn_at: datetime | None = None
     guardian_signed: bool = False
+
+    @model_validator(mode="before")
+    @classmethod
+    def _consent_from_file(cls, data):
+        # The database sends has_consent; tests and imports may give only a consent file.
+        if isinstance(data, dict) and "has_consent" not in data:
+            return {**data, "has_consent": bool(data.get("consent_path") or data.get("consent_source"))}
+        return data
 
 
 class Branch(BaseModel):
@@ -263,7 +274,7 @@ class VersionOut(BaseModel):
 class ReviewOut(BaseModel):
     id: str
     version_id: str | None
-    actor_id: str
+    actor_id: str | None
     actor_name: str
     action: str
     comment: str | None
@@ -597,3 +608,73 @@ class JoinCode(BaseModel):
 
 class DeleteOrganisation(BaseModel):
     confirm_name: str = Field(description="The organisation's name, typed again to confirm")
+
+
+# ============================================================ consent links
+
+ConsentStatus = Literal["pending", "approved", "declined", "withdrawn", "revoked", "expired"]
+SignerRelation = Literal["self", "guardian"]
+
+
+class ConsentRequestCreate(BaseModel):
+    topper_id: str
+    version_id: str | None = Field(default=None, description="The poster version to show, when asking from a poster")
+    channels: list[Channel] = Field(min_length=1)
+    valid_until: date
+
+
+class ConsentRequestOut(BaseModel):
+    id: str
+    topper_id: str
+    topper_name: str
+    poster_id: str | None = None
+    poster_title: str | None = None
+    channels: list[Channel]
+    valid_until: date
+    status: ConsentStatus
+    signer_name: str | None = None
+    signer_relation: SignerRelation | None = None
+    decline_reason: str | None = None
+    decided_at: datetime | None = None
+    withdrawn_at: datetime | None = None
+    expires_at: datetime
+    created_at: datetime
+    created_by_name: str | None = None
+
+
+class ConsentRequestCreated(BaseModel):
+    request: ConsentRequestOut
+    token: str = Field(description="Shown once: the link is <app>/consent/<token>")
+
+
+class ConsentPage(BaseModel):
+    """What the person sees before they decide: the exact poster and what it says about them."""
+    organisation: str
+    person_name: str
+    is_minor: bool
+    status: ConsentStatus
+    channels: list[Channel]
+    valid_until: date
+    poster_title: str | None = None
+    image_url: str | None = None
+    box_2d: Box2D | None = None
+    shown: list[str] = Field(description="What the poster or the register says about the person, line by line")
+    signer_name: str | None = None
+    signer_relation: SignerRelation | None = None
+    decided_at: datetime | None = None
+    withdrawn_at: datetime | None = None
+    expires_at: datetime
+
+
+class ConsentApprove(BaseModel):
+    signer_name: str = Field(min_length=2, max_length=120)
+    relation: SignerRelation
+    agree: Literal[True]
+
+
+class ConsentDecline(BaseModel):
+    reason: str | None = Field(default=None, max_length=500)
+
+
+class ConsentWithdraw(BaseModel):
+    signer_name: str = Field(min_length=2, max_length=120)

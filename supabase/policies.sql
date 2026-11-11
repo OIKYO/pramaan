@@ -59,6 +59,7 @@ grant select (id, name, industry_group, industry, org_type, focus, rulebooks, cr
 
 -- Invites are backend-only.
 revoke all on public.invites from anon, authenticated;
+revoke all on public.consent_requests from anon, authenticated;
 grant update (name) on public.organisations to authenticated;
 
 -- Backend-only tables: clients may read (subject to RLS) but never write.
@@ -71,7 +72,8 @@ from authenticated;
 revoke select, insert, update on public.toppers from authenticated;
 grant select (
   id, org_id, full_name, name_variants, exam, exam_year, rank, result_date, course_id, is_minor, photo_path,
-  has_consent, consent_date, consent_channels, consent_valid_until, guardian_signed, verified_by, verified_at
+  has_consent, consent_source, consent_date, consent_channels, consent_valid_until, consent_withdrawn_at,
+  guardian_signed, verified_by, verified_at
 ) on public.toppers to authenticated;
 grant insert (
   full_name, name_variants, exam, exam_year, rank, result_date, course_id, is_minor,
@@ -84,6 +86,7 @@ grant update (
 
 alter table public.organisations enable row level security;
 alter table public.invites enable row level security;
+alter table public.consent_requests enable row level security;
 alter table public.regions enable row level security;
 alter table public.branches enable row level security;
 alter table public.profiles enable row level security;

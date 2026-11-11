@@ -96,7 +96,7 @@ def build_detail(poster_id: str, user: Profile) -> PosterDetail:
         created_by=p["created_by"], created_by_name=p["profiles"]["full_name"], created_at=p["created_at"],
         updated_at=p["updated_at"], versions=version_out,
         reviews=[ReviewOut(id=r["id"], version_id=r["version_id"], actor_id=r["actor_id"],
-                           actor_name=r["profiles"]["full_name"], action=r["action"], comment=r["comment"],
+                           actor_name=(r["profiles"] or {}).get("full_name") or "Consent link", action=r["action"], comment=r["comment"],
                            created_at=r["created_at"]) for r in reviews],
         allowed_actions=state.allowed_actions(user, ps, current_findings),
     )

@@ -35,7 +35,7 @@ def upload_consent(topper_id: str, user: HeadOffice, file: Annotated[UploadFile,
     path = f"{user.org_id}/{topper_id}/consent-{datetime.now(IST):%Y%m%d-%H%M%S}.pdf"
     db = get_db()
     db.storage.from_("consent").upload(path, data, {"content-type": "application/pdf", "upsert": "true"})
-    db.table("toppers").update({"consent_path": path, "verified_by": user.id,
+    db.table("toppers").update({"consent_path": path, "consent_source": "file", "consent_withdrawn_at": None, "verified_by": user.id,
                                 "verified_at": datetime.now(IST).isoformat()}).eq("id", topper_id).execute()
     audit(user.org_id, user.id, "consent_uploaded", "topper", topper_id, {"name": topper["full_name"], "path": path})
     return ConsentUploaded(topper_id=topper_id, has_consent=True)

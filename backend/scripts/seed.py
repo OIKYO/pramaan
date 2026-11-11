@@ -208,12 +208,15 @@ def main() -> None:
             "consent_channels": topper.get("consent_channels", []),
             "consent_valid_until": "2027-05-01" if has_consent else None,
             "consent_path": None,
+            "consent_source": None,
+            "consent_withdrawn_at": None,
             "verified_by": hq_id,
             "verified_at": f"{date(2026, 5, 15).isoformat()}T10:00:00+05:30",
         }
         if has_consent:
             slug = topper["full_name"].lower().replace(" ", "-")
             row["consent_path"] = upload(db, "consent", f"{ORG_ID}/{slug}.pdf", consent_pdf(topper), "application/pdf")
+            row["consent_source"] = "file"
         db.table("toppers").upsert(row, on_conflict="org_id,full_name").execute()
     print(f"{len(TOPPERS)} toppers")
 

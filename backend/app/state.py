@@ -98,6 +98,13 @@ def checked() -> Transition:
     return Transition("checked", None, "checked")
 
 
+def consent_withdrawn(poster: PosterState) -> Transition | None:
+    """A poster in review or approved goes back to the branch when someone on it withdraws consent."""
+    if poster.status in ("in_review", "approved"):
+        return Transition("changes_requested", None, "consent_withdrawn")
+    return None
+
+
 def submit(user: Profile, poster: PosterState) -> Transition:
     _must_view(user, poster)
     if not _is_branch_staff_for(user, poster):
