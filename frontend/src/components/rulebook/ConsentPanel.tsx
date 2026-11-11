@@ -14,13 +14,15 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
   const link = useConsentLink();
   const [file, setFile] = useState<File | null>(null);
   const [asking, setAsking] = useState(false);
+  const [blockedUrl, setBlockedUrl] = useState<string | null>(null);
   const onError = (e: Error) => toast.error(e.message);
   const openFile = () => {
     // The tab opens during the click: opened only after the link arrives, browsers block it as a pop-up.
     const tab = window.open("", "_blank");
     if (tab) tab.opener = null;
+    setBlockedUrl(null);
     link.mutate(topper.id, {
-      onSuccess: ({ url }) => (tab ? tab.location.replace(url) : window.location.assign(url)),
+      onSuccess: ({ url }) => (tab ? tab.location.replace(url) : setBlockedUrl(url)),
       onError: (e) => {
         tab?.close();
         onError(e);
@@ -58,6 +60,16 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
         >
           Open consent file
         </Button>
+      )}
+      {blockedUrl && (
+        <p role="status" className="text-sm text-ink">
+          Your browser blocked the new tab.{" "}
+          <a href={blockedUrl} target="_blank" rel="noopener noreferrer" onClick={() => setBlockedUrl(null)}
+            className="font-medium text-ink-strong underline decoration-line-strong underline-offset-4 hover:decoration-ink-strong">
+            Open the consent file
+          </a>{" "}
+          (the link works for 2 minutes).
+        </p>
       )}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-ink-strong" htmlFor="consent-file">
