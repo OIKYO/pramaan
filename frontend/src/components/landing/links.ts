@@ -1,6 +1,7 @@
 import {
   BadgeCheck,
   FileUp,
+  Gauge,
   Library,
   ListChecks,
   Network,
@@ -23,6 +24,7 @@ export const PRODUCT: LandingLink[] = [
   { to: "/product#rulebooks-that-fit-your-organisation", label: "The checks", text: "Rules applied to every relevant poster", icon: ListChecks },
   { to: "/product#built-around-your-industry", label: "Rulebooks", text: "Set the rules for your organisation", icon: Library },
   { to: "/enterprise#three-roles-one-review-process", label: "Reviews", text: "Branch, regional, then head office", icon: BadgeCheck },
+  { to: "/reliability", label: "Reliability", text: "How often the checks are right, measured", icon: Gauge },
 ];
 
 export const ENTERPRISE: LandingLink[] = [

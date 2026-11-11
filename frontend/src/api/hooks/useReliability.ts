@@ -1,0 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
+import type { Reliability } from "../types";
+import { keys } from "./keys";
+
+export const useReliability = () =>
+  useQuery({
+    queryKey: keys.reliability,
+    queryFn: async () => {
+      const response = await fetch("/reliability.json");
+      if (!response.ok) throw new Error("The reliability report isn't published yet. Run scripts/reliability.py.");
+      return (await response.json()) as Reliability;
+    },
+    staleTime: 10 * 60_000,
+  });

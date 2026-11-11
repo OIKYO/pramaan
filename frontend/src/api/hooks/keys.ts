@@ -20,4 +20,5 @@ export const keys = {
   importSpecs: ["imports"] as const,
   insights: ["insights"] as const,
   audit: ["audit"] as const,
+  reliability: ["reliability"] as const,
 };

@@ -166,3 +166,66 @@ export interface AuditEntry {
   created_at: string;
   actor_name: string | null;
 }
+
+export interface ReliabilityCheck {
+  id: string;
+  name: string;
+  kind: "code" | "ai";
+  planted: number;
+  caught: number;
+  missed: number;
+  false_flags: number;
+  clean_runs: number;
+  consistent: number;
+  compared: number;
+}
+
+export interface ReliabilityRun {
+  failed: string[];
+  reader_model: string | null;
+  asked: number;
+  missed: string[];
+  extra: string[];
+  findings: { rule_id: string; severity: string; message: string }[];
+}
+
+export interface ReliabilityPoster {
+  name: string;
+  title: string;
+  channel: Channel;
+  plants: string;
+  expect: string[];
+  also: string[];
+  image: string;
+  runs: ReliabilityRun[];
+  unread: number;
+  consistent: boolean | null;
+}
+
+export interface Reliability {
+  generated_at: string;
+  mode: "live" | "fixture";
+  second_reader: "tesseract" | "perfect" | "off";
+  checked_as_of: string;
+  gemini_model: string;
+  groq_model: string;
+  prompt_version: string;
+  posters: number;
+  runs_per_poster: number;
+  runs: number;
+  unread_runs: number;
+  readers: Record<string, number>;
+  summary: {
+    catch_rate: number | null;
+    caught: number;
+    missed: number;
+    false_flags: number;
+    false_flag_rate: number | null;
+    exactly_right: number;
+    consistent_posters: number;
+    compared_posters: number;
+    asked_per_run: number | null;
+  };
+  checks: ReliabilityCheck[];
+  results: ReliabilityPoster[];
+}
