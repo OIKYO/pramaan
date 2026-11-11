@@ -8,6 +8,7 @@ import { ConsentRequestList } from "@/components/consent/ConsentRequestList";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/Toast";
+import { openInNewTab } from "@/lib/newTab";
 
 export function ConsentPanel({ topper }: { topper: Topper }) {
   const upload = useUploadConsent();
@@ -43,7 +44,7 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
           type="button"
           variant="secondary"
           disabled={!fileUrl.data}
-          onClick={() => fileUrl.data && window.open(fileUrl.data, "_blank", "noopener,noreferrer")}
+          onClick={() => fileUrl.data && openInNewTab(fileUrl.data)}
         >
           {fileUrl.isError ? "The consent file can't be opened right now" : "Open consent file"}
         </Button>
