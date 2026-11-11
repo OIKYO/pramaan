@@ -241,5 +241,11 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
 - **Groq's boxes are approximate.** The backup reader's y is close, but its x comes back at roughly 0.6 to 0.8 of the true
   position, not by a constant factor, and telling it the image's size didn't change that. Its readings still feed every
   rule (they work on text), but its boxes land in the wrong place, so the second read disagrees and a person is asked about
-  each number, which is the designed fallback. Snapping its boxes to the words Tesseract finds would fix that; it isn't done.
+  each number, which is the designed fallback.
+- **So Groq's boxes are snapped to the text** (`pipeline/snap.py`). Tesseract finds the lines on the page; each line the
+  reader saw moves onto the line with the same text nearby (fuzzy match within 15% of the height), each number onto its
+  own words, and anything else (people, lines in other scripts) by a straight-line correction fitted to the lines that
+  matched. Gemini's boxes are left as they are. On the 9 saved Groq readings, the number boxes went from about 54 to 1
+  thousandths off (about a pixel), and the second read agrees on 49 of 50 numbers instead of 3. It needs Tesseract, so
+  it runs only where Tesseract is installed (the Docker image has it).
 

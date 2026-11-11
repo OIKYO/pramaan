@@ -15,6 +15,7 @@ from pipeline.pages import unstack_box
 from pipeline.run import IST
 from rules.claims import consent_problems
 from rules.registry import rule_def
+from rules.text import norm
 
 router = APIRouter(tags=["consent"])
 HeadOffice = Annotated[Profile, Depends(require("head_office"))]
@@ -201,7 +202,9 @@ def withdraw(token: str, body: ConsentWithdraw, request: Request) -> ConsentPage
     audit(row["org_id"], None, "consent_withdrawn", "topper", row["topper_id"],
           {"name": row["toppers"]["full_name"], "signer": signer, "request_id": row["id"]})
     topper = Topper(**{**row["toppers"], "consent_source": None, "has_consent": False, "consent_withdrawn_at": now})
-    _reopen_posters(row["org_id"], topper, f"{signer} withdrew {topper.full_name}'s consent on {now:%d %b %Y}.")
+    who = (f"{topper.full_name} withdrew consent" if norm(signer) == norm(topper.full_name)
+           else f"{signer} withdrew {topper.full_name}'s consent")
+    _reopen_posters(row["org_id"], topper, f"{who} on {now:%d %b %Y}.")
     return _page(_by_token(token))
 
 

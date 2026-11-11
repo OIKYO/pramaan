@@ -13,7 +13,7 @@ from PIL import Image, ImageOps
 
 from app.config import Settings
 from app.models import BrandKit, Branch, Course, Finding, PosterReading, ResultStat, Topper
-from pipeline import ocr, pages, reader, visual
+from pipeline import ocr, pages, reader, snap, visual
 from pipeline.match import identity_findings, match_people
 from rules.registry import Problem, RuleContext, Words, rule_def, run_rules, to_finding
 
@@ -138,6 +138,8 @@ def check_poster(
     all_pages = poster.pages
     many = len(all_pages) > 1
     cached_pages = cached if isinstance(cached, list) else [cached] + [None] * (len(all_pages) - 1)
+    # Groq places boxes only roughly; with Tesseract here they move onto the text it finds (pipeline/snap.py).
+    snap_boxes = digit_reader is not None and ocr.tesseract_available(settings.tesseract_cmd)
 
     results, readings, reports, findings, ai_calls, notes, failed = [], [], [], [], [], [], []
     for index, page in enumerate(all_pages):
@@ -145,6 +147,9 @@ def check_poster(
         reading, model, note, call = _read_page(page, sha, poster, ref, settings, cached_pages[index])
         if call:
             ai_calls.append(call)
+        image = load_image(page.image) if reading is not None else None
+        if reading is not None and (model or "").startswith("groq:") and snap_boxes:
+            reading = pages.within_page(snap.snap_to_text(image, reading))
         results.append(PageResult(sha, reading, model))
         readings.append(reading)
         if reading is None:
@@ -152,7 +157,6 @@ def check_poster(
             reports.append(None)
             continue
         notes.append(note)
-        image = load_image(page.image)
         findings += pages.stack_findings(ocr.cross_check(image, reading, digit_reader), index)
         reports.append(visual.analyse(image, reading, ref.brand_kit.palette, ref.logo))
 
