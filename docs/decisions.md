@@ -253,4 +253,7 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
   across all fifty) and ten of them three times (consistency): clean posters, guarantees in English and Hindi, a rank,
   consent, a fee, a disguised guarantee and a date. A run stops after five refusals in a row from the quota and is
   retried later; refused attempts aren't scored, and the page says how many runs are in.
+  The real ceilings: Gemini's free tier stops after a few dozen requests a day, and Groq's allows 200,000 tokens a
+  day, about 25 to 30 poster reads (each sends about 4,000 tokens). Both are shared with the live site, so the run
+  pauses rather than leave the site with no reader.
 
