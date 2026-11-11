@@ -248,4 +248,9 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
   matched. Gemini's boxes are left as they are. On the 9 saved Groq readings, the number boxes went from about 54 to 1
   thousandths off (about a pixel), and the second read agrees on 49 of 50 numbers instead of 3. It needs Tesseract, so
   it runs only where Tesseract is installed (the Docker image has it).
+- **70 live reads, not 150.** The free Gemini and Groq quotas allow a few dozen reads a day, shared with the live site, so
+  three runs of all 50 posters wouldn't finish in time. The report reads every poster once (catch rate and false flags
+  across all fifty) and ten of them three times (consistency): clean posters, guarantees in English and Hindi, a rank,
+  consent, a fee, a disguised guarantee and a date. A run stops after five refusals in a row from the quota and is
+  retried later; refused attempts aren't scored, and the page says how many runs are in.
 
