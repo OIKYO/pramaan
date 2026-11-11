@@ -233,4 +233,13 @@ Why Pramaan is built the way it is. Each entry: the decision, the reason, and wh
   the line whose box holds them, and a phone number, a discount or a banned promise isn't a results figure (FACT-03,
   OFFER-03 and CCPA-01 check those). Re-scoring the same 21 saved readings, without new AI calls: every planted problem
   caught, no false flags.
+- **The second read, tuned now that Tesseract runs on a laptop.** On every key number of the 50 posters, Tesseract agreed
+  with the exact box's digits 167 times in 252 with the old crop (8% padding, 2×). Readers' boxes are often a little off and
+  Tesseract misreads digits that touch the crop's edge, so the crop now grows by 60% of the box's height above and below and
+  30% of its width plus a fifth of its height at the sides, is scaled 3×, and gets a 12 px white margin: 252 of 252 on the
+  exact boxes, and 60 of 62 on Gemini's own boxes from the live runs (52 before).
+- **Groq's boxes are approximate.** The backup reader's y is close, but its x comes back at roughly 0.6 to 0.8 of the true
+  position, not by a constant factor, and telling it the image's size didn't change that. Its readings still feed every
+  rule (they work on text), but its boxes land in the wrong place, so the second read disagrees and a person is asked about
+  each number, which is the designed fallback. Snapping its boxes to the words Tesseract finds would fix that; it isn't done.
 
