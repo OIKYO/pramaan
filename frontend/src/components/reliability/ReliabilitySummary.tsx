@@ -6,13 +6,18 @@ import { percent, plural, readerName } from "./format";
 export function ReliabilitySummary({ report }: { report: Reliability }) {
   const s = report.summary;
   const readers = Object.entries(report.readers);
+  const scored = report.results.filter((p) => p.runs.length > 0).length;
+  const complete = report.runs >= report.posters * report.runs_per_poster;
   return (
     <section className="flex flex-col gap-6 px-5 pt-12 pb-8 sm:px-8 lg:px-12">
       <div className="flex max-w-3xl flex-col gap-3">
         <h1 className="text-3xl text-balance sm:text-4xl">How reliable are Pramaan's checks?</h1>
         <p className="text-lg text-pretty text-muted-text">
-          {report.posters} fictional test posters, each with known problems planted on it, went through the {report.mode === "live" ? "live AI reader" : "test reader"}{" "}
-          {plural(report.runs_per_poster, "time")} each, with nothing reused between runs. Every check was scored against what was planted.
+          {report.posters} fictional test posters, each with known problems planted on it, go through the {report.mode === "live" ? "live AI reader" : "test reader"}{" "}
+          {plural(report.runs_per_poster, "time")} each, with nothing reused between runs, and every check is scored against what was planted.
+          {complete
+            ? " All the runs are in."
+            : ` So far: ${plural(report.runs, "run")} over ${scored} of the ${report.posters} posters. The rest run as the free AI quota allows, and this page updates when they do.`}
         </p>
       </div>
       <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -24,7 +29,7 @@ export function ReliabilitySummary({ report }: { report: Reliability }) {
       <p className="text-sm text-muted-text">
         Run on {formatDate(report.generated_at)} · read by{" "}
         {readers.map(([model, n], i) => `${i ? (i === readers.length - 1 ? " and " : ", ") : ""}${readerName(model)} in ${plural(n, "run")}`).join("")}
-        {report.unread_runs > 0 && ` · ${plural(report.unread_runs, "run")} couldn't be read and ${report.unread_runs === 1 ? "isn't" : "aren't"} scored`}
+        {report.unread_runs > 0 && ` · ${plural(report.unread_runs, "attempt")} stopped at the free AI quota; ${report.unread_runs === 1 ? "it's" : "they're"} retried, not scored`}
         {" · "}second read of numbers {report.second_reader === "tesseract" ? "by Tesseract" : report.second_reader === "off" ? "off for this run" : "perfect"}
         {" · "}dates checked as of {formatDate(report.checked_as_of)}
       </p>

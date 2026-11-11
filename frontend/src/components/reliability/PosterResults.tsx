@@ -38,8 +38,9 @@ const columns: Column<ReliabilityPoster>[] = [
     header: "Runs",
     cell: (p) => (
       <div className="flex flex-col items-start gap-1">
+        {p.runs.length === 0 && <span className="text-sm text-muted-text">Not run yet</span>}
         {p.runs.map((run, i) => <RunBadge key={i} run={run} n={i + 1} />)}
-        {p.unread > 0 && <span className="text-xs text-muted-text">{p.unread} unread</span>}
+        {p.unread > 0 && <span className="text-xs text-muted-text">{p.unread} stopped at the AI quota</span>}
       </div>
     ),
   },

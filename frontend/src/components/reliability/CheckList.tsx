@@ -18,7 +18,9 @@ function CheckRow({ check }: { check: ReliabilityCheck }) {
           <span className="w-12 shrink-0 text-right text-sm text-ink-strong tabular-nums">{percent(check.caught / tried)}</span>
         </div>
       ) : (
-        <span className="text-sm text-muted-text">Not planted in this set</span>
+        <span className="text-sm text-muted-text">
+          {check.planted > 0 ? `Planted on ${plural(check.planted, "poster")}, not run yet` : "Not planted in this set"}
+        </span>
       )}
       <p className="flex flex-wrap gap-x-3 text-sm text-muted-text tabular-nums">
         {tried > 0 && <span>{check.caught} of {tried} caught</span>}
@@ -30,8 +32,9 @@ function CheckRow({ check }: { check: ReliabilityCheck }) {
 }
 
 export function CheckList({ checks }: { checks: ReliabilityCheck[] }) {
-  const planted = checks.filter((c) => c.caught + c.missed > 0);
-  const rest = checks.filter((c) => c.caught + c.missed === 0);
+  const tried = checks.filter((c) => c.caught + c.missed > 0);
+  const waiting = checks.filter((c) => c.caught + c.missed === 0 && c.planted > 0);
+  const rest = checks.filter((c) => c.planted === 0);
   return (
     <section className="flex flex-col gap-4 px-5 py-8 sm:px-8 lg:px-12" aria-labelledby="by-check">
       <div className="flex max-w-3xl flex-col gap-1">
@@ -42,7 +45,7 @@ export function CheckList({ checks }: { checks: ReliabilityCheck[] }) {
         </p>
       </div>
       <ul className="flex flex-col divide-y divide-line rounded-lg border border-line bg-surface">
-        {[...planted, ...rest].map((check) => <CheckRow key={check.id} check={check} />)}
+        {[...tried, ...waiting, ...rest].map((check) => <CheckRow key={check.id} check={check} />)}
       </ul>
     </section>
   );

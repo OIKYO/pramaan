@@ -1,0 +1,1532 @@
+{
+ "generated_at": "2026-11-11T23:57:23+05:30",
+ "mode": "live",
+ "second_reader": "tesseract",
+ "checked_as_of": "2026-11-07",
+ "gemini_model": "gemini-3.5-flash",
+ "groq_model": "qwen/qwen3.8-27b",
+ "prompt_version": "2026-11-08b",
+ "posters": 50,
+ "runs_per_poster": 3,
+ "runs": 27,
+ "unread_runs": 123,
+ "readers": {
+  "groq:qwen/qwen3.8-27b": 15,
+  "gemini-3.5-flash": 12
+ },
+ "summary": {
+  "catch_rate": 1.0,
+  "caught": 21,
+  "missed": 0,
+  "false_flags": 0,
+  "false_flag_rate": 0.0,
+  "exactly_right": 27,
+  "consistent_posters": 2,
+  "compared_posters": 2,
+  "asked_per_run": 0.15
+ },
+ "checks": [
+  {
+   "id": "ACC-01",
+   "name": "Text contrast (4.5:1, large text 3:1)",
+   "kind": "code",
+   "planted": 2,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "ACC-02",
+   "name": "Alt text on social posts",
+   "kind": "code",
+   "planted": 1,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "AI-01",
+   "name": "Disguised guarantees",
+   "kind": "ai",
+   "planted": 3,
+   "caught": 2,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 21,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "BRAND-01",
+   "name": "Logo present",
+   "kind": "code",
+   "planted": 1,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "BRAND-02",
+   "name": "Colours within palette",
+   "kind": "code",
+   "planted": 2,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "BRAND-03",
+   "name": "Registered name and helpline present",
+   "kind": "code",
+   "planted": 1,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "BRAND-04",
+   "name": "Tone of voice",
+   "kind": "ai",
+   "planted": 1,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 21,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "CCPA-01",
+   "name": "No banned claims",
+   "kind": "code",
+   "planted": 6,
+   "caught": 4,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 23,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "CCPA-02",
+   "name": "Everyone shown has consent on file",
+   "kind": "code",
+   "planted": 3,
+   "caught": 2,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 25,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "CCPA-03",
+   "name": "Consent is valid",
+   "kind": "code",
+   "planted": 1,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "CCPA-04",
+   "name": "Rank matches the register",
+   "kind": "code",
+   "planted": 5,
+   "caught": 2,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 25,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "CCPA-05",
+   "name": "Required details next to each topper",
+   "kind": "code",
+   "planted": 3,
+   "caught": 2,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 25,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "CCPA-06",
+   "name": "Figures match approved figures",
+   "kind": "code",
+   "planted": 2,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "EVENT-01",
+   "name": "Dates are real dates",
+   "kind": "code",
+   "planted": 1,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "EVENT-02",
+   "name": "Day matches the date",
+   "kind": "code",
+   "planted": 1,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "EVENT-03",
+   "name": "No deadlines that have passed",
+   "kind": "code",
+   "planted": 1,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "FACT-01",
+   "name": "Offerings named as approved",
+   "kind": "code",
+   "planted": 1,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "FACT-02",
+   "name": "Prices match approved prices",
+   "kind": "code",
+   "planted": 4,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "FACT-03",
+   "name": "Branch contact details",
+   "kind": "code",
+   "planted": 2,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "FACT-04",
+   "name": "No expired prices or figures",
+   "kind": "code",
+   "planted": 0,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "LEGAL-01",
+   "name": "Required disclaimers are present",
+   "kind": "code",
+   "planted": 0,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "LEGAL-02",
+   "name": "No claims your industry forbids",
+   "kind": "code",
+   "planted": 0,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "OFFER-01",
+   "name": "Offers say how long they last",
+   "kind": "code",
+   "planted": 1,
+   "caught": 1,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 26,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "OFFER-02",
+   "name": "Offers point to their conditions",
+   "kind": "code",
+   "planted": 1,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "OFFER-03",
+   "name": "Discounts add up",
+   "kind": "code",
+   "planted": 0,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "RIGHTS-01",
+   "name": "No stock-photo watermarks",
+   "kind": "code",
+   "planted": 0,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  },
+  {
+   "id": "RIGHTS-02",
+   "name": "Other organisations are approved partners",
+   "kind": "code",
+   "planted": 0,
+   "caught": 0,
+   "missed": 0,
+   "false_flags": 0,
+   "clean_runs": 27,
+   "consistent": 2,
+   "compared": 2
+  }
+ ],
+ "results": [
+  {
+   "name": "01-clean",
+   "title": "JEE Main 2026 toppers",
+   "channel": "instagram",
+   "plants": "nothing: every check should pass",
+   "expect": [],
+   "also": [],
+   "image": "reliability/01-clean.jpg",
+   "runs": [
+    {
+     "failed": [
+      "READ-02"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 1,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "READ-02",
+       "severity": "needs_human",
+       "message": "The AI read “73”, but the second reader saw “2”."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "02-banned-claim",
+   "title": "Admissions open",
+   "channel": "instagram",
+   "plants": "the banned claim “100% selection guaranteed”",
+   "expect": [
+    "CCPA-01"
+   ],
+   "also": [
+    "AI-01",
+    "BRAND-04"
+   ],
+   "image": "reliability/02-banned-claim.jpg",
+   "runs": [
+    {
+     "failed": [
+      "BRAND-04",
+      "CCPA-01"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-01",
+       "severity": "block",
+       "message": "The poster says “100% selection guaranteed”, which promises a result."
+      },
+      {
+       "rule_id": "BRAND-04",
+       "severity": "warn",
+       "message": "“100% selection guaranteed”: Guaranteeing student selection violates the tone policy against making promises about results."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "03-wrong-rank",
+   "title": "Riya's result",
+   "channel": "instagram",
+   "plants": "Riya Sen shown as AIR 37 (the register says AIR 73)",
+   "expect": [
+    "CCPA-04"
+   ],
+   "also": [],
+   "image": "reliability/03-wrong-rank.jpg",
+   "runs": [
+    {
+     "failed": [
+      "CCPA-04"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-04",
+       "severity": "block",
+       "message": "Shows AIR 37 for Riya Sen; the register says AIR 73."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "04-no-consent",
+   "title": "Arjun's result",
+   "channel": "print",
+   "plants": "Arjun Das, who has no consent on file",
+   "expect": [
+    "CCPA-02"
+   ],
+   "also": [],
+   "image": "reliability/04-no-consent.jpg",
+   "runs": [
+    {
+     "failed": [
+      "CCPA-02"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-02",
+       "severity": "block",
+       "message": "Arjun Das is shown, but there's no signed consent on file."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "05-wrong-course",
+   "title": "Priya's result",
+   "channel": "instagram",
+   "plants": "Priya Mondal presented as a paid classroom student (she took the free test series)",
+   "expect": [
+    "CCPA-05"
+   ],
+   "also": [],
+   "image": "reliability/05-wrong-course.jpg",
+   "runs": [
+    {
+     "failed": [
+      "CCPA-05"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-05",
+       "severity": "block",
+       "message": "Next to Priya Mondal: the course shown (“2-Year Classroom Programme”) isn't the one they took; the duration shown (“2 years”) is wrong; it says “Paid”, but the course is free."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "06-wrong-fee",
+   "title": "Classroom fees",
+   "channel": "instagram",
+   "plants": "a fee of ₹45,000 (approved: ₹48,000)",
+   "expect": [
+    "FACT-02"
+   ],
+   "also": [],
+   "image": "reliability/06-wrong-fee.jpg",
+   "runs": [
+    {
+     "failed": [
+      "FACT-02"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "FACT-02",
+       "severity": "block",
+       "message": "Shows ₹45,000 for 2-Year Classroom Programme; the approved fee is ₹48,000."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "07-wrong-phone",
+   "title": "Call us",
+   "channel": "instagram",
+   "plants": "a phone number that isn't the Siliguri branch's",
+   "expect": [
+    "FACT-03"
+   ],
+   "also": [],
+   "image": "reliability/07-wrong-phone.jpg",
+   "runs": [
+    {
+     "failed": [
+      "FACT-03"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "FACT-03",
+       "severity": "block",
+       "message": "+91 10000 22109 isn't the Siliguri branch number or the helpline."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "08-off-palette",
+   "title": "Summer batch",
+   "channel": "instagram",
+   "plants": "a lime-green background outside the brand palette",
+   "expect": [
+    "BRAND-02"
+   ],
+   "also": [],
+   "image": "reliability/08-off-palette.jpg",
+   "runs": [
+    {
+     "failed": [
+      "BRAND-02"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "BRAND-02",
+       "severity": "warn",
+       "message": "#A2E535 covers about 66% of the poster and isn't a brand colour."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "09-low-contrast",
+   "title": "Results poster",
+   "channel": "instagram",
+   "plants": "a pale grey disclaimer on the off-white background",
+   "expect": [
+    "ACC-01"
+   ],
+   "also": [],
+   "image": "reliability/09-low-contrast.jpg",
+   "runs": [
+    {
+     "failed": [
+      "ACC-01"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "ACC-01",
+       "severity": "warn",
+       "message": "“Ranks as declared in the official results. Students shown gave written consent.” has a contrast of about 1.4:1; text needs at least 4.5:1."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "10-hindi",
+   "title": "Naya batch",
+   "channel": "whatsapp",
+   "plants": "Hindi text with the disguised guarantee “सीट तय है!” (your seat is fixed)",
+   "expect": [
+    "AI-01"
+   ],
+   "also": [
+    "BRAND-04"
+   ],
+   "image": "reliability/10-hindi.jpg",
+   "runs": [
+    {
+     "failed": [
+      "AI-01"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "AI-01",
+       "severity": "warn",
+       "message": "“सीट तय है!”: Promises a confirmed seat, creating an illegal disguised guarantee of selection or admission."
+      }
+     ]
+    },
+    {
+     "failed": [
+      "AI-01"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "AI-01",
+       "severity": "warn",
+       "message": "“सीट तय है!”: The phrase 'Seat tay hai!' (Seat is fixed) acts as a disguised guarantee of admission or selection."
+      }
+     ]
+    }
+   ],
+   "unread": 1,
+   "consistent": true
+  },
+  {
+   "name": "11-old-consent",
+   "title": "Karan's result",
+   "channel": "print",
+   "plants": "Karan Thapa, whose consent is dated before the result",
+   "expect": [
+    "CCPA-03"
+   ],
+   "also": [],
+   "image": "reliability/11-old-consent.jpg",
+   "runs": [
+    {
+     "failed": [
+      "CCPA-03"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-03",
+       "severity": "block",
+       "message": "Karan Thapa's consent was signed on 30 Mar 2026, before the result on 19 Apr 2026, so it can't cover this result."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "12-clean-ananya",
+   "title": "Ananya's result",
+   "channel": "instagram",
+   "plants": "nothing: Ananya Roy, a minor with guardian-signed consent",
+   "expect": [],
+   "also": [],
+   "image": "reliability/12-clean-ananya.jpg",
+   "runs": [
+    {
+     "failed": [],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": []
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "13-clean-print",
+   "title": "Riya's result (print)",
+   "channel": "print",
+   "plants": "nothing: a print poster, which needs no alt text",
+   "expect": [],
+   "also": [],
+   "image": "reliability/13-clean-print.jpg",
+   "runs": [
+    {
+     "failed": [
+      "READ-02"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 1,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "READ-02",
+       "severity": "needs_human",
+       "message": "The AI read “73”, but the second reader saw “3”."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "14-clean-test-series",
+   "title": "Priya's result",
+   "channel": "instagram",
+   "plants": "nothing: Priya Mondal shown correctly as a free test-series student",
+   "expect": [],
+   "also": [],
+   "image": "reliability/14-clean-test-series.jpg",
+   "runs": [
+    {
+     "failed": [],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": []
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "15-clean-congrats",
+   "title": "Congratulations",
+   "channel": "whatsapp",
+   "plants": "nothing: two toppers on WhatsApp",
+   "expect": [],
+   "also": [],
+   "image": "reliability/15-clean-congrats.jpg",
+   "runs": [
+    {
+     "failed": [],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": []
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "16-clean-offer",
+   "title": "Early-bird offer",
+   "channel": "instagram",
+   "plants": "nothing: an offer with an end date and its terms",
+   "expect": [],
+   "also": [],
+   "image": "reliability/16-clean-offer.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "17-clean-date",
+   "title": "New batch",
+   "channel": "instagram",
+   "plants": "nothing: a future date on the right weekday",
+   "expect": [],
+   "also": [],
+   "image": "reliability/17-clean-date.jpg",
+   "runs": [
+    {
+     "failed": [],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": []
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "18-clean-hindi",
+   "title": "Naya batch",
+   "channel": "whatsapp",
+   "plants": "nothing: a Hindi headline with no promise",
+   "expect": [],
+   "also": [],
+   "image": "reliability/18-clean-hindi.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "19-banned-guaranteed-selection",
+   "title": "JEE 2027",
+   "channel": "instagram",
+   "plants": "the banned claim “Guaranteed selection”",
+   "expect": [
+    "CCPA-01"
+   ],
+   "also": [
+    "AI-01",
+    "BRAND-04"
+   ],
+   "image": "reliability/19-banned-guaranteed-selection.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "20-banned-job",
+   "title": "Careers",
+   "channel": "instagram",
+   "plants": "the banned claim “100% job”",
+   "expect": [
+    "CCPA-01"
+   ],
+   "also": [
+    "AI-01",
+    "BRAND-04"
+   ],
+   "image": "reliability/20-banned-job.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "21-banned-rank",
+   "title": "Top ranks",
+   "channel": "instagram",
+   "plants": "the banned claim “Guaranteed rank”",
+   "expect": [
+    "CCPA-01"
+   ],
+   "also": [
+    "AI-01",
+    "BRAND-04"
+   ],
+   "image": "reliability/21-banned-rank.jpg",
+   "runs": [
+    {
+     "failed": [
+      "BRAND-04",
+      "CCPA-01"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-01",
+       "severity": "block",
+       "message": "The poster says “Guaranteed rank in the top 1000”, which promises a result."
+      },
+      {
+       "rule_id": "BRAND-04",
+       "severity": "warn",
+       "message": "“Guaranteed rank in the top 1000”: The text makes a promise about results ('Guaranteed rank'), which is prohibited by the tone of voice rules."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "22-banned-hindi",
+   "title": "Chayan",
+   "channel": "whatsapp",
+   "plants": "the banned Hindi claim “100% चयन” (100% selection)",
+   "expect": [
+    "CCPA-01"
+   ],
+   "also": [
+    "AI-01",
+    "BRAND-04"
+   ],
+   "image": "reliability/22-banned-hindi.jpg",
+   "runs": [
+    {
+     "failed": [
+      "AI-01",
+      "CCPA-01",
+      "READ-02"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 1,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "READ-02",
+       "severity": "needs_human",
+       "message": "The AI read “100%”, but the second reader saw “1004”."
+      },
+      {
+       "rule_id": "CCPA-01",
+       "severity": "block",
+       "message": "The poster says “100% चयन”, which promises a result."
+      },
+      {
+       "rule_id": "AI-01",
+       "severity": "warn",
+       "message": "“100% चयन”: The phrase '100% chayan' (100% selection) is a disguised guarantee of results."
+      }
+     ]
+    },
+    {
+     "failed": [
+      "AI-01",
+      "CCPA-01",
+      "READ-02"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 1,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "READ-02",
+       "severity": "needs_human",
+       "message": "The AI read “100%”, but the second reader saw “1004”."
+      },
+      {
+       "rule_id": "CCPA-01",
+       "severity": "block",
+       "message": "The poster says “100% चयन”, which promises a result."
+      },
+      {
+       "rule_id": "AI-01",
+       "severity": "warn",
+       "message": "“100% चयन”: The phrase '100% chayan' (100% selection) is a disguised guarantee of results."
+      }
+     ]
+    }
+   ],
+   "unread": 1,
+   "consistent": true
+  },
+  {
+   "name": "23-banned-success",
+   "title": "Results",
+   "channel": "instagram",
+   "plants": "the banned claim “Guaranteed success”",
+   "expect": [
+    "CCPA-01"
+   ],
+   "also": [
+    "AI-01",
+    "BRAND-04"
+   ],
+   "image": "reliability/23-banned-success.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "24-wrong-rank-ananya",
+   "title": "Ananya's result",
+   "channel": "instagram",
+   "plants": "Ananya Roy shown as AIR 85 (the register says AIR 58)",
+   "expect": [
+    "CCPA-04"
+   ],
+   "also": [],
+   "image": "reliability/24-wrong-rank-ananya.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "25-wrong-rank-riya-7",
+   "title": "Riya's result",
+   "channel": "instagram",
+   "plants": "Riya Sen shown as AIR 7 (the register says AIR 73)",
+   "expect": [
+    "CCPA-04"
+   ],
+   "also": [],
+   "image": "reliability/25-wrong-rank-riya-7.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "26-wrong-rank-priya",
+   "title": "Priya's result",
+   "channel": "instagram",
+   "plants": "Priya Mondal shown as AIR 250 (the register says AIR 205)",
+   "expect": [
+    "CCPA-04"
+   ],
+   "also": [],
+   "image": "reliability/26-wrong-rank-priya.jpg",
+   "runs": [
+    {
+     "failed": [
+      "CCPA-04"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-04",
+       "severity": "block",
+       "message": "Shows AIR 250 for Priya Mondal; the register says AIR 205."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "27-no-consent-with-riya",
+   "title": "Our toppers",
+   "channel": "instagram",
+   "plants": "Arjun Das (no consent) beside Riya Sen",
+   "expect": [
+    "CCPA-02"
+   ],
+   "also": [],
+   "image": "reliability/27-no-consent-with-riya.jpg",
+   "runs": [
+    {
+     "failed": [
+      "CCPA-02"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-02",
+       "severity": "block",
+       "message": "Arjun Das is shown, but there's no signed consent on file."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "28-not-in-register",
+   "title": "Meera's result",
+   "channel": "print",
+   "plants": "Meera Pillai, who isn't in the register (so nobody could tag her)",
+   "expect": [
+    "CCPA-02",
+    "READ-03"
+   ],
+   "also": [],
+   "image": "reliability/28-not-in-register.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "29-wrong-duration",
+   "title": "Riya's result",
+   "channel": "instagram",
+   "plants": "Riya Sen's course shown as 1 year (it's 2 years)",
+   "expect": [
+    "CCPA-05"
+   ],
+   "also": [],
+   "image": "reliability/29-wrong-duration.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "30-wrong-paid",
+   "title": "Riya's result",
+   "channel": "instagram",
+   "plants": "Riya Sen's paid course shown as free",
+   "expect": [
+    "CCPA-05"
+   ],
+   "also": [],
+   "image": "reliability/30-wrong-paid.jpg",
+   "runs": [
+    {
+     "failed": [
+      "CCPA-05"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-05",
+       "severity": "block",
+       "message": "Next to Riya Sen: it says “Free”, but the course is paid."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "31-wrong-stat",
+   "title": "Our results",
+   "channel": "instagram",
+   "plants": "45 students qualified (the approved figure is 42)",
+   "expect": [
+    "CCPA-06"
+   ],
+   "also": [],
+   "image": "reliability/31-wrong-stat.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "32-wrong-stat-high",
+   "title": "Our results",
+   "channel": "instagram",
+   "plants": "420 students qualified (the approved figure is 42)",
+   "expect": [
+    "CCPA-06"
+   ],
+   "also": [],
+   "image": "reliability/32-wrong-stat-high.jpg",
+   "runs": [
+    {
+     "failed": [
+      "CCPA-06"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-06",
+       "severity": "block",
+       "message": "“420 classroom students qualified JEE Main 2026” isn't a results figure."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "33-wrong-course-duration",
+   "title": "Crash course",
+   "channel": "instagram",
+   "plants": "the 1-Year Crash Course described as 8 months",
+   "expect": [
+    "FACT-01"
+   ],
+   "also": [],
+   "image": "reliability/33-wrong-course-duration.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "34-wrong-fee-high",
+   "title": "Fees",
+   "channel": "instagram",
+   "plants": "a fee of ₹50,000 (approved: ₹48,000)",
+   "expect": [
+    "FACT-02"
+   ],
+   "also": [],
+   "image": "reliability/34-wrong-fee-high.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "35-wrong-fee-typo",
+   "title": "Fees",
+   "channel": "instagram",
+   "plants": "a fee of ₹4,800, a missing zero (approved: ₹48,000)",
+   "expect": [
+    "FACT-02"
+   ],
+   "also": [],
+   "image": "reliability/35-wrong-fee-typo.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "36-other-branch-phone",
+   "title": "Call us",
+   "channel": "instagram",
+   "plants": "the Kolkata branch's phone on a Siliguri poster",
+   "expect": [
+    "FACT-03"
+   ],
+   "also": [],
+   "image": "reliability/36-other-branch-phone.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "37-no-logo",
+   "title": "Results",
+   "channel": "instagram",
+   "plants": "no logo",
+   "expect": [
+    "BRAND-01"
+   ],
+   "also": [],
+   "image": "reliability/37-no-logo.jpg",
+   "runs": [
+    {
+     "failed": [
+      "BRAND-01"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "BRAND-01",
+       "severity": "warn",
+       "message": "The Northfield Academy Pvt. Ltd. logo from the brand kit wasn't found on the poster."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "38-off-palette-pink",
+   "title": "Festive batch",
+   "channel": "instagram",
+   "plants": "a pink background outside the brand palette",
+   "expect": [
+    "BRAND-02"
+   ],
+   "also": [],
+   "image": "reliability/38-off-palette-pink.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "39-no-registered-name",
+   "title": "Results",
+   "channel": "instagram",
+   "plants": "no registered name or helpline",
+   "expect": [
+    "BRAND-03"
+   ],
+   "also": [],
+   "image": "reliability/39-no-registered-name.jpg",
+   "runs": [
+    {
+     "failed": [
+      "BRAND-03"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "BRAND-03",
+       "severity": "warn",
+       "message": "The registered name “Northfield Academy Pvt. Ltd.” isn't on the poster."
+      },
+      {
+       "rule_id": "BRAND-03",
+       "severity": "warn",
+       "message": "The helpline +91 10000 10000 isn't on the poster."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "40-pushy-tone",
+   "title": "Hurry",
+   "channel": "instagram",
+   "plants": "pressuring words: “Join now or regret it forever!”",
+   "expect": [
+    "BRAND-04"
+   ],
+   "also": [],
+   "image": "reliability/40-pushy-tone.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "41-low-contrast-headline",
+   "title": "Results",
+   "channel": "instagram",
+   "plants": "a pale yellow headline on the off-white background",
+   "expect": [
+    "ACC-01"
+   ],
+   "also": [],
+   "image": "reliability/41-low-contrast-headline.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "42-no-alt-text",
+   "title": "Results",
+   "channel": "instagram",
+   "plants": "an Instagram post with no alt text",
+   "expect": [
+    "ACC-02"
+   ],
+   "also": [],
+   "image": "reliability/42-no-alt-text.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "43-selection-pakka",
+   "title": "Selection",
+   "channel": "whatsapp",
+   "plants": "the disguised guarantee “Selection pakka”",
+   "expect": [
+    "AI-01"
+   ],
+   "also": [
+    "BRAND-04"
+   ],
+   "image": "reliability/43-selection-pakka.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "44-seat-confirmed",
+   "title": "Seats",
+   "channel": "instagram",
+   "plants": "the disguised guarantee “Your IIT seat is confirmed”",
+   "expect": [
+    "AI-01"
+   ],
+   "also": [
+    "BRAND-04"
+   ],
+   "image": "reliability/44-seat-confirmed.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "45-wrong-weekday",
+   "title": "New batch",
+   "channel": "instagram",
+   "plants": "Monday, 30 December 2026 (it's a Wednesday)",
+   "expect": [
+    "EVENT-02"
+   ],
+   "also": [],
+   "image": "reliability/45-wrong-weekday.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "46-passed-deadline",
+   "title": "Admissions",
+   "channel": "instagram",
+   "plants": "a last date that has passed (31 October 2026)",
+   "expect": [
+    "EVENT-03"
+   ],
+   "also": [],
+   "image": "reliability/46-passed-deadline.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "47-impossible-date",
+   "title": "Admissions",
+   "channel": "instagram",
+   "plants": "31 November, a date that doesn't exist",
+   "expect": [
+    "EVENT-01"
+   ],
+   "also": [],
+   "image": "reliability/47-impossible-date.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "48-offer-no-end",
+   "title": "Offer",
+   "channel": "instagram",
+   "plants": "an offer with no end date",
+   "expect": [
+    "OFFER-01"
+   ],
+   "also": [],
+   "image": "reliability/48-offer-no-end.jpg",
+   "runs": [
+    {
+     "failed": [
+      "OFFER-01"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "OFFER-01",
+       "severity": "warn",
+       "message": "“Early-bird discount: 20% off” is an offer with no end date."
+      }
+     ]
+    }
+   ],
+   "unread": 2,
+   "consistent": true
+  },
+  {
+   "name": "49-offer-no-terms",
+   "title": "Scholarships",
+   "channel": "instagram",
+   "plants": "a scholarship that doesn't say who qualifies or where the terms are",
+   "expect": [
+    "OFFER-02"
+   ],
+   "also": [],
+   "image": "reliability/49-offer-no-terms.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  },
+  {
+   "name": "50-two-problems",
+   "title": "Riya's result",
+   "channel": "instagram",
+   "plants": "two problems: Riya Sen as AIR 37, and a fee of ₹45,000",
+   "expect": [
+    "CCPA-04",
+    "FACT-02"
+   ],
+   "also": [],
+   "image": "reliability/50-two-problems.jpg",
+   "runs": [],
+   "unread": 3,
+   "consistent": null
+  }
+ ]
+}
