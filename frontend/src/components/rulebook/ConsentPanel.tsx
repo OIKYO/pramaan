@@ -15,6 +15,18 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
   const [file, setFile] = useState<File | null>(null);
   const [asking, setAsking] = useState(false);
   const onError = (e: Error) => toast.error(e.message);
+  const openFile = () => {
+    // The tab opens during the click: opened only after the link arrives, browsers block it as a pop-up.
+    const tab = window.open("", "_blank");
+    if (tab) tab.opener = null;
+    link.mutate(topper.id, {
+      onSuccess: ({ url }) => (tab ? tab.location.replace(url) : window.location.assign(url)),
+      onError: (e) => {
+        tab?.close();
+        onError(e);
+      },
+    });
+  };
 
   return (
     <section className="flex flex-col gap-3 rounded-md border border-line bg-surface-sunken/50 p-4">
@@ -42,7 +54,7 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
           type="button"
           variant="secondary"
           disabled={link.isPending}
-          onClick={() => link.mutate(topper.id, { onSuccess: ({ url }) => window.open(url, "_blank", "noopener"), onError })}
+          onClick={openFile}
         >
           Open consent file
         </Button>
