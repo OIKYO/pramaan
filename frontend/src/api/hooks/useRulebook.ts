@@ -6,8 +6,8 @@ import { keys } from "./keys";
 import { restore, snapshot } from "./optimistic";
 
 const TOPPER_COLUMNS =
-  "id, full_name, name_variants, exam, exam_year, rank, result_date, course_id, is_minor, has_consent, " +
-  "consent_date, consent_channels, consent_valid_until, guardian_signed, verified_at";
+  "id, full_name, name_variants, exam, exam_year, rank, result_date, course_id, is_minor, has_consent, consent_source, " +
+  "consent_withdrawn_at, consent_date, consent_channels, consent_valid_until, guardian_signed, verified_at";
 
 function friendly(error: { message: string; code?: string }): Error {
   if (error.code === "42501" || /row-level security|permission denied/i.test(error.message)) {
@@ -118,7 +118,7 @@ type TopperEdit = Omit<Topper, "has_consent" | "verified_at">;
 
 const blankTopper: Omit<Topper, "id"> = {
   full_name: "", name_variants: [], exam: "", exam_year: 0, rank: 0, result_date: "", course_id: null, is_minor: false,
-  has_consent: false, consent_date: null, consent_channels: [], consent_valid_until: null, guardian_signed: false, verified_at: null,
+  has_consent: false, consent_source: null, consent_withdrawn_at: null, consent_date: null, consent_channels: [], consent_valid_until: null, guardian_signed: false, verified_at: null,
 };
 
 export const useSaveTopper = () =>

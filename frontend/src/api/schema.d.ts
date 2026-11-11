@@ -66,6 +66,27 @@ export interface paths {
         patch: operations["update_organisation_organisation_patch"];
         trace?: never;
     };
+    "/organisation/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Delete Organisation
+         * @description Delete the organisation and everything in it, at once: its records, posters, consent files,
+         *     logo, audit log and every member's sign-in. It can't be undone.
+         */
+        post: operations["delete_organisation_organisation_delete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/password": {
         parameters: {
             query?: never;
@@ -101,6 +122,27 @@ export interface paths {
          * @description Change your own name. Only the name: anything else would let people promote themselves.
          */
         patch: operations["update_me_me_patch"];
+        trace?: never;
+    };
+    "/me/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Delete Me
+         * @description Delete your account. Your name and email are removed and you can't sign in again. Posters and
+         *     reviews you made stay in your organisation's history, shown as made by a former member.
+         */
+        post: operations["delete_me_me_delete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/members": {
@@ -535,6 +577,115 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/consent-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Requests */
+        get: operations["list_requests_consent_requests_get"];
+        put?: never;
+        /**
+         * Create Request
+         * @description A link for one person. From a poster, it shows that exact version and what it says about them.
+         */
+        post: operations["create_request_consent_requests_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/consent-requests/{request_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke Request */
+        post: operations["revoke_request_consent_requests__request_id__revoke_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/consent/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * View
+         * @description The consent page. No sign-in needed: the link itself is the key.
+         */
+        get: operations["view_consent__token__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/consent/{token}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve */
+        post: operations["approve_consent__token__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/consent/{token}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decline */
+        post: operations["decline_consent__token__decline_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/consent/{token}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Withdraw */
+        post: operations["withdraw_consent__token__withdraw_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/rules": {
         parameters: {
             query?: never;
@@ -561,6 +712,26 @@ export interface paths {
         };
         /** Insights */
         get: operations["insights_insights_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Home
+         * @description What this address is, for anyone who opens it in a browser.
+         */
+        get: operations["home__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -706,6 +877,147 @@ export interface components {
             /** Branches */
             branches: components["schemas"]["BranchChoice"][];
         };
+        /** ConsentApprove */
+        ConsentApprove: {
+            /** Signer Name */
+            signer_name: string;
+            /**
+             * Relation
+             * @enum {string}
+             */
+            relation: "self" | "guardian";
+            /**
+             * Agree
+             * @constant
+             */
+            agree: true;
+        };
+        /** ConsentDecline */
+        ConsentDecline: {
+            /** Reason */
+            reason?: string | null;
+        };
+        /**
+         * ConsentPage
+         * @description What the person sees before they decide: the exact poster and what it says about them.
+         */
+        ConsentPage: {
+            /** Organisation */
+            organisation: string;
+            /** Person Name */
+            person_name: string;
+            /** Is Minor */
+            is_minor: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "approved" | "declined" | "withdrawn" | "revoked" | "expired";
+            /** Channels */
+            channels: ("print" | "instagram" | "whatsapp")[];
+            /**
+             * Valid Until
+             * Format: date
+             */
+            valid_until: string;
+            /** Poster Title */
+            poster_title?: string | null;
+            /** Image Url */
+            image_url?: string | null;
+            /** Box 2D */
+            box_2d?: number[] | null;
+            /**
+             * Shown
+             * @description What the poster or the register says about the person, line by line
+             */
+            shown: string[];
+            /** Signer Name */
+            signer_name?: string | null;
+            /** Signer Relation */
+            signer_relation?: ("self" | "guardian") | null;
+            /** Decided At */
+            decided_at?: string | null;
+            /** Withdrawn At */
+            withdrawn_at?: string | null;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+        };
+        /** ConsentRequestCreate */
+        ConsentRequestCreate: {
+            /** Topper Id */
+            topper_id: string;
+            /**
+             * Version Id
+             * @description The poster version to show, when asking from a poster
+             */
+            version_id?: string | null;
+            /** Channels */
+            channels: ("print" | "instagram" | "whatsapp")[];
+            /**
+             * Valid Until
+             * Format: date
+             */
+            valid_until: string;
+        };
+        /** ConsentRequestCreated */
+        ConsentRequestCreated: {
+            request: components["schemas"]["ConsentRequestOut"];
+            /**
+             * Token
+             * @description Shown once: the link is <app>/consent/<token>
+             */
+            token: string;
+        };
+        /** ConsentRequestOut */
+        ConsentRequestOut: {
+            /** Id */
+            id: string;
+            /** Topper Id */
+            topper_id: string;
+            /** Topper Name */
+            topper_name: string;
+            /** Poster Id */
+            poster_id?: string | null;
+            /** Poster Title */
+            poster_title?: string | null;
+            /** Channels */
+            channels: ("print" | "instagram" | "whatsapp")[];
+            /**
+             * Valid Until
+             * Format: date
+             */
+            valid_until: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "approved" | "declined" | "withdrawn" | "revoked" | "expired";
+            /** Signer Name */
+            signer_name?: string | null;
+            /** Signer Relation */
+            signer_relation?: ("self" | "guardian") | null;
+            /** Decline Reason */
+            decline_reason?: string | null;
+            /** Decided At */
+            decided_at?: string | null;
+            /** Withdrawn At */
+            withdrawn_at?: string | null;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By Name */
+            created_by_name?: string | null;
+        };
         /** ConsentUploaded */
         ConsentUploaded: {
             /** Topper Id */
@@ -719,6 +1031,11 @@ export interface components {
             url: string;
             /** Expires In */
             expires_in: number;
+        };
+        /** ConsentWithdraw */
+        ConsentWithdraw: {
+            /** Signer Name */
+            signer_name: string;
         };
         /** CountItem */
         CountItem: {
@@ -749,6 +1066,14 @@ export interface components {
              * @description A CSV with the header and one example row
              */
             template: string;
+        };
+        /** DeleteOrganisation */
+        DeleteOrganisation: {
+            /**
+             * Confirm Name
+             * @description The organisation's name, typed again to confirm
+             */
+            confirm_name: string;
         };
         /** FindingOut */
         FindingOut: {
@@ -1340,7 +1665,7 @@ export interface components {
             /** Version Id */
             version_id: string | null;
             /** Actor Id */
-            actor_id: string;
+            actor_id: string | null;
             /** Actor Name */
             actor_name: string;
             /** Action */
@@ -1771,6 +2096,39 @@ export interface operations {
             };
         };
     };
+    delete_organisation_organisation_delete_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteOrganisation"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     change_password_me_password_post: {
         parameters: {
             query?: never;
@@ -1818,6 +2176,35 @@ export interface operations {
                 "application/json": components["schemas"]["MeUpdate"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_me_me_delete_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             204: {
@@ -2686,6 +3073,243 @@ export interface operations {
             };
         };
     };
+    list_requests_consent_requests_get: {
+        parameters: {
+            query?: {
+                topper_id?: string | null;
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentRequestOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_request_consent_requests_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConsentRequestCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentRequestCreated"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_request_consent_requests__request_id__revoke_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentRequestOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    view_consent__token__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approve_consent__token__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConsentApprove"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decline_consent__token__decline_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConsentDecline"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    withdraw_consent__token__withdraw_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConsentWithdraw"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     rules_rules_get: {
         parameters: {
             query?: never;
@@ -2744,6 +3368,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    home__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
         };

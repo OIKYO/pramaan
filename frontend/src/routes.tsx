@@ -31,6 +31,8 @@ export const router = createBrowserRouter([
   { path: "*", element: <NotFoundPage />, errorElement: <ErrorPage /> },
   { path: "/join/:token", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Join/JoinPage").then((m) => ({ Component: m.JoinPage })) },
+  { path: "/consent/:token", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
+    lazy: () => import("@/pages/Consent/ConsentPage").then((m) => ({ Component: m.ConsentPage })) },
   { path: "/product", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,
     lazy: () => import("@/pages/Content/ProductPage").then((m) => ({ Component: m.ProductPage })) },
   { path: "/enterprise", errorElement: <ErrorPage />, hydrateFallbackElement: firstLoad,

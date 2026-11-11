@@ -31,6 +31,12 @@ export type InvitePreview = Schemas["InvitePreview"];
 export type CodePreview = Schemas["CodePreview"];
 export type JoinWithCode = Schemas["JoinWithCode"];
 export type JoinWithInvite = Schemas["JoinWithInvite"];
+export type ConsentRequest = Schemas["ConsentRequestOut"];
+export type ConsentRequestCreate = Schemas["ConsentRequestCreate"];
+export type ConsentRequestCreated = Schemas["ConsentRequestCreated"];
+export type ConsentPage = Schemas["ConsentPage"];
+export type ConsentApprove = Schemas["ConsentApprove"];
+export type ConsentStatus = ConsentRequest["status"];
 
 export type Role = "branch_staff" | "regional_manager" | "head_office";
 export type Channel = PosterDetail["channel"];
@@ -142,6 +148,8 @@ export interface Topper {
   course_id: string | null;
   is_minor: boolean;
   has_consent: boolean;
+  consent_source: "file" | "link" | null;
+  consent_withdrawn_at: string | null;
   consent_date: string | null;
   consent_channels: Channel[];
   consent_valid_until: string | null;

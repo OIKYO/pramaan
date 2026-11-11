@@ -42,6 +42,21 @@ export const REVIEW_ACTION_LABEL: Record<string, string> = {
   sent_back: "sent it back",
   finding_resolved: "confirmed a reading",
   finding_overridden: "overrode a finding",
+  consent_withdrawn: "sent it back: consent was withdrawn",
+};
+
+export const CONSENT_REVIEW_LABEL: Record<string, string> = {
+  finding_resolved: "cleared a consent finding",
+  consent_withdrawn: "sent it back: consent was withdrawn",
+};
+
+export const CONSENT_STATUS: Record<string, { label: string; tone: "passed" | "blocked" | "warning" | "neutral" }> = {
+  pending: { label: "Waiting for an answer", tone: "warning" },
+  approved: { label: "Given", tone: "passed" },
+  declined: { label: "Declined", tone: "blocked" },
+  withdrawn: { label: "Withdrawn", tone: "blocked" },
+  revoked: { label: "Cancelled", tone: "neutral" },
+  expired: { label: "Expired", tone: "neutral" },
 };
 
 export const formatDateTime = (iso: string) =>
@@ -67,6 +82,12 @@ const AUDIT_ACTION: Record<string, string> = {
   finding_overridden: "overrode a finding",
   consent_uploaded: "uploaded a consent form",
   consent_viewed: "opened a consent form",
+  consent_link_created: "made a consent link",
+  consent_link_revoked: "cancelled a consent link",
+  consent_approved: "recorded consent given by link",
+  consent_declined: "recorded consent declined by link",
+  consent_withdrawn: "recorded consent withdrawn by link",
+  poster_consent_withdrawn: "sent a poster back: consent withdrawn",
   organisation_created: "created the organisation",
   member_added: "added a team member",
   member_changed: "changed a team member",

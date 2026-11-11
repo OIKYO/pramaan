@@ -54,7 +54,8 @@ export function PosterDetailPage() {
               </TabsList>
               <TabsContent value="findings" className="flex flex-col gap-4">
                 <VersionSwitcher versions={detail.versions} value={versionNo} current={detail.current_version} onChange={setShown} />
-                <PosterWorkspace key={version.id} title={detail.title} version={version} ruleNames={ruleNames} actions={actions} />
+                <PosterWorkspace key={version.id} title={detail.title} version={version} ruleNames={ruleNames} actions={actions}
+                  channel={detail.channel} current={version.version === detail.current_version} />
               </TabsContent>
               <TabsContent value="compare">
                 <VersionCompare versions={detail.versions} />

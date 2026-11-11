@@ -1,6 +1,6 @@
 import { CircleCheck } from "lucide-react";
 import { useState } from "react";
-import type { Finding, Severity, WordingFlag } from "@/api/types";
+import type { Channel, Finding, Severity, WordingFlag } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/Reveal";
 import { EmptyState } from "@/components/ui/States";
@@ -19,6 +19,7 @@ interface FindingListProps {
   canOverride: boolean;
   onResolve: (findingId: string, note: string) => void;
   onOverride: (findingId: string, note: string) => void;
+  consent?: { versionId: string; channel: Channel };
 }
 
 const GROUPS: Exclude<Severity, "pass">[] = ["block", "needs_human", "warn"];
@@ -54,6 +55,7 @@ export function FindingList(props: FindingListProps) {
                 canOverride={props.canOverride}
                 onResolve={(note) => props.onResolve(problem.finding.id, note)}
                 onOverride={(note) => props.onOverride(problem.finding.id, note)}
+                consent={props.consent}
               />
             ))}
           </section>

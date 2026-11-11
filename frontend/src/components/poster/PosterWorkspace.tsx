@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useOverrideFinding, useResolveFinding } from "@/api/hooks/usePoster";
-import type { PosterAction, Version } from "@/api/types";
+import { useProfile } from "@/api/hooks/useSession";
+import type { Channel, PosterAction, Version } from "@/api/types";
 import { toast } from "@/components/ui/Toast";
 import { passesOf, problemsOf } from "@/lib/findings";
 import { scrollToItem } from "@/lib/motion";
@@ -13,14 +14,17 @@ interface PosterWorkspaceProps {
   version: Version;
   ruleNames: Record<string, string>;
   actions: PosterAction[];
+  channel: Channel;
+  current: boolean;
 }
 
-export function PosterWorkspace({ title, version, ruleNames, actions }: PosterWorkspaceProps) {
+export function PosterWorkspace({ title, version, ruleNames, actions, channel, current }: PosterWorkspaceProps) {
   const [selected, setSelected] = useState<number | null>(null);
   const resolve = useResolveFinding();
   const override = useOverrideFinding();
   const problems = problemsOf(version);
   const onError = (error: Error) => toast.error(error.message);
+  const headOffice = useProfile().role === "head_office";
 
   const pickOnPoster = (number: number | null) => {
     setSelected(number);
@@ -48,6 +52,7 @@ export function PosterWorkspace({ title, version, ruleNames, actions }: PosterWo
           canOverride={actions.includes("override")}
           onResolve={(findingId, note) => resolve.mutate({ findingId, note }, { onSuccess: () => toast.success("Reading confirmed."), onError })}
           onOverride={(findingId, note) => override.mutate({ findingId, note }, { onSuccess: () => toast.success("Finding overridden."), onError })}
+          consent={headOffice && current ? { versionId: version.id, channel } : undefined}
         />
       </div>
     </div>

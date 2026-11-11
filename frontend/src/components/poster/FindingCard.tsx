@@ -1,5 +1,7 @@
-import { Crosshair } from "lucide-react";
+import { Crosshair, Link2 } from "lucide-react";
 import { useState } from "react";
+import type { Channel } from "@/api/types";
+import { ConsentLinkDialog } from "@/components/consent/ConsentLinkDialog";
 import { Button } from "@/components/ui/button";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import type { Problem } from "@/lib/findings";
@@ -17,15 +19,19 @@ interface FindingCardProps {
   canOverride: boolean;
   onResolve: (note: string) => void;
   onOverride: (note: string) => void;
+  consent?: { versionId: string; channel: Channel };
 }
 
-export function FindingCard({ problem, ruleName, selected, onSelect, canResolve, canOverride, onResolve, onOverride }: FindingCardProps) {
+export function FindingCard({ problem, ruleName, selected, onSelect, canResolve, canOverride, onResolve, onOverride, consent }: FindingCardProps) {
   const { number, finding, box } = problem;
   const [asking, setAsking] = useState<"resolve" | "override" | null>(null);
   const quoted = typeof finding.evidence?.text === "string" ? finding.evidence.text : null;
   const open = finding.status === "open";
   const ai = finding.kind === "ai";
   const fix = finding.suggested_fix?.replace(/^AI suggestion:\s*/, "");
+  const topperId = typeof finding.evidence?.topper_id === "string" ? finding.evidence.topper_id : null;
+  const askConsent = consent && open && finding.rule_id === "CCPA-02" && topperId;
+  const [askingConsent, setAskingConsent] = useState(false);
 
   return (
     <article
@@ -71,11 +77,16 @@ export function FindingCard({ problem, ruleName, selected, onSelect, canResolve,
         )}
       </dl>
 
-      {(box || (open && (canResolve || canOverride))) && (
+      {(box || askConsent || (open && (canResolve || canOverride))) && (
         <div className="flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
           {box && (
             <Button size="sm" variant="ghost" aria-pressed={selected} onClick={onSelect}>
               <Crosshair /> {selected ? "Shown on the poster" : "Show on the poster"}
+            </Button>
+          )}
+          {askConsent && (
+            <Button size="sm" variant="secondary" onClick={() => setAskingConsent(true)}>
+              <Link2 /> Ask for consent by link
             </Button>
           )}
           {open && canResolve && finding.severity === "needs_human" && (
@@ -89,6 +100,11 @@ export function FindingCard({ problem, ruleName, selected, onSelect, canResolve,
             </Button>
           )}
         </div>
+      )}
+
+      {askConsent && askingConsent && (
+        <ConsentLinkDialog open onOpenChange={setAskingConsent} topperId={topperId} personName={quoted ?? "this person"}
+          versionId={consent.versionId} channels={[consent.channel]} />
       )}
 
       <NoteDialog

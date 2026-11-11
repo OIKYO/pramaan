@@ -12,6 +12,8 @@ export const keys = {
   courses: ["rulebook", "courses"] as const,
   resultStats: ["rulebook", "result-stats"] as const,
   toppers: ["rulebook", "toppers"] as const,
+  consentRequests: (topperId: string) => ["rulebook", "toppers", topperId, "consent-requests"] as const,
+  consentPage: (token: string) => ["consent", token] as const,
   regions: ["organisation", "regions"] as const,
   branches: ["organisation", "branches"] as const,
   members: ["organisation", "members"] as const,

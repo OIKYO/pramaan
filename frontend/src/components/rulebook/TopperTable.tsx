@@ -1,8 +1,8 @@
 import { useKeeps, useVocabulary } from "@/api/hooks/useCatalog";
 import type { Course, Topper } from "@/api/types";
+import { ConsentBadge } from "@/components/consent/ConsentBadge";
 import { Button } from "@/components/ui/button";
 import { DataTable, type Column } from "@/components/ui/DataTable";
-import { ToneBadge } from "@/components/ui/ToneBadge";
 import { CHANNEL_LABEL, capitalise, formatDate } from "@/lib/labels";
 
 interface TopperTableProps {
@@ -35,17 +35,16 @@ export function TopperTable({ toppers, courses, onEdit }: TopperTableProps) {
     ...(results ? resultColumns : []),
     {
       header: "Consent",
-      cell: (t) =>
-        t.has_consent ? (
-          <div className="flex flex-col items-start gap-1">
-            <ToneBadge tone="passed">On file</ToneBadge>
+      cell: (t) => (
+        <div className="flex flex-col items-start gap-1">
+          <ConsentBadge topper={t} />
+          {t.has_consent && (
             <span className="text-xs text-muted-text">
-              Signed {t.consent_date ? formatDate(t.consent_date) : "undated"} · {t.consent_channels.map((c) => CHANNEL_LABEL[c]).join(", ") || "no channels"}
+              {t.consent_date ? formatDate(t.consent_date) : "Undated"} · {t.consent_channels.map((c) => CHANNEL_LABEL[c]).join(", ") || "no channels"}
             </span>
-          </div>
-        ) : (
-          <ToneBadge tone="blocked">No consent</ToneBadge>
-        ),
+          )}
+        </div>
+      ),
     },
     ...(onEdit
       ? [{ header: "Edit", align: "end" as const, shrink: true, cell: (t: Topper) => <Button variant="ghost" size="sm" onClick={() => onEdit(t)} aria-label={`Edit ${t.full_name}`}>Edit</Button> }]
