@@ -1,6 +1,6 @@
 import { FileLock2, Link2 } from "lucide-react";
 import { useState } from "react";
-import { useConsentLink, useUploadConsent } from "@/api/hooks/useRulebook";
+import { useConsentFile, useUploadConsent } from "@/api/hooks/useRulebook";
 import type { Topper } from "@/api/types";
 import { ConsentBadge } from "@/components/consent/ConsentBadge";
 import { ConsentLinkDialog } from "@/components/consent/ConsentLinkDialog";
@@ -11,24 +11,11 @@ import { toast } from "@/components/ui/Toast";
 
 export function ConsentPanel({ topper }: { topper: Topper }) {
   const upload = useUploadConsent();
-  const link = useConsentLink();
+  const onFile = topper.has_consent && topper.consent_source === "file";
+  const fileUrl = useConsentFile(topper.id, onFile);
   const [file, setFile] = useState<File | null>(null);
   const [asking, setAsking] = useState(false);
-  const [blockedUrl, setBlockedUrl] = useState<string | null>(null);
   const onError = (e: Error) => toast.error(e.message);
-  const openFile = () => {
-    // The tab opens during the click: opened only after the link arrives, browsers block it as a pop-up.
-    const tab = window.open("", "_blank");
-    if (tab) tab.opener = null;
-    setBlockedUrl(null);
-    link.mutate(topper.id, {
-      onSuccess: ({ url }) => (tab ? tab.location.replace(url) : setBlockedUrl(url)),
-      onError: (e) => {
-        tab?.close();
-        onError(e);
-      },
-    });
-  };
 
   return (
     <section className="flex flex-col gap-3 rounded-md border border-line bg-surface-sunken/50 p-4">
@@ -51,26 +38,15 @@ export function ConsentPanel({ topper }: { topper: Topper }) {
         <ConsentRequestList topperId={topper.id} />
       </div>
 
-      {topper.has_consent && topper.consent_source === "file" && (
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={link.isPending}
-          onClick={openFile}
-        >
-          Open consent file
+      {onFile && (fileUrl.data ? (
+        <Button asChild variant="secondary">
+          <a href={fileUrl.data} target="_blank" rel="noopener noreferrer">Open consent file</a>
         </Button>
-      )}
-      {blockedUrl && (
-        <p role="status" className="text-sm text-ink">
-          Your browser blocked the new tab.{" "}
-          <a href={blockedUrl} target="_blank" rel="noopener noreferrer" onClick={() => setBlockedUrl(null)}
-            className="font-medium text-ink-strong underline decoration-line-strong underline-offset-4 hover:decoration-ink-strong">
-            Open the consent file
-          </a>{" "}
-          (the link works for 2 minutes).
-        </p>
-      )}
+      ) : (
+        <Button type="button" variant="secondary" disabled>
+          {fileUrl.isError ? "The consent file can't be opened right now" : "Open consent file"}
+        </Button>
+      ))}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-ink-strong" htmlFor="consent-file">
           {topper.consent_source === "file" ? "Replace with a new signed form (PDF)" : "Or upload a signed form (PDF)"}

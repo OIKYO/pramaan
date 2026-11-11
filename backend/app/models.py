@@ -628,6 +628,11 @@ ConsentStatus = Literal["pending", "approved", "declined", "withdrawn", "revoked
 SignerRelation = Literal["self", "guardian"]
 
 
+class ConsentFileLink(BaseModel):
+    path: str = Field(description="Open <api><path> in a new tab: it goes to the consent file. Works for expires_in seconds.")
+    expires_in: int
+
+
 class ConsentRequestCreate(BaseModel):
     topper_id: str
     version_id: str | None = Field(default=None, description="The poster version to show, when asking from a poster")

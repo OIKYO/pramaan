@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
-import { api, postForm } from "../client";
+import { api, apiUrl, postForm } from "../client";
 import { supabase } from "../supabase";
 import type { BrandKit, Course, ResultStat, RulePack, Topper } from "../types";
 import { keys } from "./keys";
@@ -140,8 +140,16 @@ export const useUploadConsent = () =>
     (list: Topper[], { topperId }) => list.map((t) => (t.id === topperId ? { ...t, has_consent: true } : t)),
   );
 
-export const useConsentLink = () =>
-  useMutation({ mutationFn: (topperId: string) => api<{ url: string; expires_in: number }>(`/toppers/${topperId}/consent-url`) });
+/** A link to the consent file that works for 10 minutes, kept fresh while it's on screen. */
+export const useConsentFile = (topperId: string, enabled: boolean) =>
+  useQuery({
+    queryKey: [...keys.toppers, topperId, "consent-file"],
+    queryFn: async () => apiUrl((await api<{ path: string; expires_in: number }>(`/toppers/${topperId}/consent-link`)).path),
+    enabled,
+    staleTime: 8 * 60_000,
+    refetchInterval: 8 * 60_000,
+    refetchOnWindowFocus: true,
+  });
 
 export const useRules = () => useQuery({ queryKey: keys.rules, queryFn: () => api<RulePack>("/rules") });
 
