@@ -199,6 +199,7 @@ export interface ReliabilityPoster {
   image: string;
   runs: ReliabilityRun[];
   unread: number;
+  planned: number;
   consistent: boolean | null;
 }
 
@@ -212,6 +213,9 @@ export interface Reliability {
   prompt_version: string;
   posters: number;
   runs_per_poster: number;
+  repeated: string[];
+  repeat_runs: number;
+  planned_runs: number;
   runs: number;
   unread_runs: number;
   readers: Record<string, number>;
