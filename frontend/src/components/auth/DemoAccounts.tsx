@@ -1,7 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Spinner } from "@/components/ui/Spinner";
-import { ToneBadge } from "@/components/ui/ToneBadge";
 import { DEMO_ACCOUNTS } from "@/lib/demo";
 
 export function DemoAccounts({ pending, onPick }: { pending: string | null; onPick: (email: string) => void }) {
@@ -28,10 +27,7 @@ export function DemoAccounts({ pending, onPick }: { pending: string | null; onPi
               >
                 <Avatar name={account.name} size="sm" />
                 <span className="flex min-w-0 flex-1 flex-col">
-                  <span className="flex items-center gap-2">
-                    <span className="truncate font-medium text-ink-strong">{account.name}</span>
-                    {account.lead && <ToneBadge tone="accent">Team lead</ToneBadge>}
-                  </span>
+                  <span className="truncate font-medium text-ink-strong">{account.name}</span>
                   <span className="truncate text-xs text-muted-text">{account.role} · {account.where}</span>
                 </span>
                 {pending === account.email ? <Spinner /> : <ArrowRight className="size-4 shrink-0 text-muted-text" aria-hidden />}
