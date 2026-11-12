@@ -5,6 +5,7 @@ import {
   Library,
   ListChecks,
   Network,
+  PlayCircle,
   ScrollText,
   Workflow,
   type LucideIcon,
@@ -25,6 +26,7 @@ export const PRODUCT: LandingLink[] = [
   { to: "/product#built-around-your-industry", label: "Rulebooks", text: "Set the rules for your organisation", icon: Library },
   { to: "/enterprise#three-roles-one-review-process", label: "Reviews", text: "Branch, regional, then head office", icon: BadgeCheck },
   { to: "/reliability", label: "Reliability", text: "How often the checks are right, measured", icon: Gauge },
+  { to: "/login#demo", label: "Demo", text: "Sign in as our team at a made-up coaching chain", icon: PlayCircle },
 ];
 
 export const ENTERPRISE: LandingLink[] = [

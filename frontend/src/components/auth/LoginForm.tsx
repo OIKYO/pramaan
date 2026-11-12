@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner";
+import { DEMO_PASSWORD } from "@/lib/demo";
+import { DemoAccounts } from "./DemoAccounts";
 
 export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
   const { signIn } = useSession();
@@ -61,6 +63,7 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
         </Button>
         <p className="text-xs text-muted-text">Forgot your password? Ask your head office to reset it from the Team page.</p>
       </form>
+      <DemoAccounts pending={pending} onPick={(address) => void attempt(address, address, DEMO_PASSWORD)} />
     </div>
   );
 }

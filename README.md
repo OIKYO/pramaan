@@ -20,14 +20,14 @@ The API runs on Render's free tier, which sleeps after 15 idle minutes. Supabase
 
 ### Demo accounts (all fictional)
 
-Password for every account: `Northfield-demo-2026`. Sign in with these on the login page; the public pages no longer link to the demo.
+Password for every account: `Northfield-demo-2026`, or pick a person under **Or try the demo** on the sign-in page. The people are our team; Northfield Academy, its students and its numbers are made up. In the demo, the things that would spoil it for the next person are switched off: deleting it, changing passwords or names, and managing the team.
 
 | Email | Role | Who |
 |---|---|---|
-| `staff.siliguri@pramaan.demo` | Branch staff | Tara Ghosh, Siliguri branch |
-| `regional.east@pramaan.demo` | Regional manager | Vikram Bose, East region |
-| `hq@pramaan.demo` | Head office | Meera Iyer |
-| `staff.kolkata@pramaan.demo` | Branch staff | Rahul Sarkar, Kolkata branch (shows branches can't see each other's posters) |
+| `staff.siliguri@pramaan.demo` | Branch staff | Rudrapriyo Chatterjee, Siliguri branch |
+| `regional.east@pramaan.demo` | Regional manager | Rishav Nandi, East region |
+| `hq@pramaan.demo` | Head office | Oikyo Chowdhury |
+| `staff.kolkata@pramaan.demo` | Branch staff | Zihan Sirat, Kolkata branch (shows branches can't see each other's posters) |
 
 ### Try it
 
