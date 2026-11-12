@@ -97,8 +97,9 @@ Install Tesseract for Windows (the UB Mannheim build, with Hindi and Bengali dat
    covers. Withdrawing later, through the same link, turns the consent off and sends every poster in review or approved that
    shows them back to its branch.
 2. **Reliability report** (public, [`/reliability`](https://pramaanapp.vercel.app/reliability)): the 50 test posters through
-   the live AI reader three times each, with nothing reused, scored per check for catch rate, false flags and whether repeated
-   runs agree. `python -m scripts.reliability` reproduces it.
+   the live AI reader, each once and ten of them three times, with nothing reused, scored per check for catch rate, false
+   flags and whether repeated runs agree. It fills in as the free AI quota allows (the page says how many runs are in).
+   `python -m scripts.reliability` reproduces it.
 3. **More formats:** carousels of up to 10 images and PDF brochures of up to 10 pages. Each page is read and checked on its
    own, then the rules run over the whole post: a finding says which page it is on, and a disclaimer on any page counts. The
    review and approval steps are unchanged.
