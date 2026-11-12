@@ -105,4 +105,4 @@ Pramaan is free during the pilot. It was built by team HEISEN-DE-BUG for CodeNex
 
 For questions or issues, use the [Pramaan GitHub issues page](https://github.com/OIKYO/pramaan/issues).
 
-[Create organisation](/signup)
+[Create organisation](/signup?new)

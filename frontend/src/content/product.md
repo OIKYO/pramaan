@@ -98,4 +98,4 @@ The rules remain tied to the records your head office approves.
 
 Give every branch a clear way to check its posters and give every reviewer a record of what happened.
 
-[Create organisation](/signup)
+[Create organisation](/signup?new)

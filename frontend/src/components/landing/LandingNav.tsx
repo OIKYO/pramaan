@@ -19,7 +19,7 @@ export function LandingNav() {
         <div className="ml-auto flex items-center gap-2">
           <Link to="/login" className="hidden h-8 items-center px-3 text-sm text-ink hover:text-ink-strong sm:flex">Sign in</Link>
           <Button asChild>
-            <Link to="/signup">Create organisation</Link>
+            <Link to="/signup?new">Create organisation</Link>
           </Button>
           <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu" onClick={() => setOpen(true)}>
             <Menu />

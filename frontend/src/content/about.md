@@ -22,4 +22,4 @@ Pramaan's code is open on [GitHub](https://github.com/OIKYO/pramaan). The websit
 
 For questions or issues, use the [GitHub issues page](https://github.com/OIKYO/pramaan/issues).
 
-[Create organisation](/signup)
+[Create organisation](/signup?new)

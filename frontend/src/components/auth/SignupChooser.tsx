@@ -6,19 +6,19 @@ import { SignupForm } from "./SignupForm";
 
 type Mode = "create" | "join";
 const MODES: Segment<Mode>[] = [
-  { value: "create", label: "New organisation", icon: Building2 },
   { value: "join", label: "Join with a code", icon: UserPlus },
+  { value: "create", label: "New organisation", icon: Building2 },
 ];
 
 export function SignupChooser({ onCreated }: { onCreated: () => void }) {
   const [params, setParams] = useSearchParams();
-  const mode: Mode = params.has("join") ? "join" : "create";
+  const mode: Mode = params.has("new") ? "create" : "join";
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl">Create your account</h1>
         <SegmentedControl label="What you're doing" value={mode} options={MODES}
-          onChange={(next) => setParams(next === "join" ? { join: "" } : {}, { replace: true })} />
+          onChange={(next) => setParams(next === "create" ? { new: "" } : {}, { replace: true })} />
       </div>
       {mode === "create" ? <SignupForm onCreated={onCreated} /> : <JoinForm />}
       <p className="text-muted-text">

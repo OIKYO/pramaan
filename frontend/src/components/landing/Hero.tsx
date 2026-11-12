@@ -16,7 +16,7 @@ export function Hero() {
         </p>
         <div className="flex w-full flex-col justify-center gap-3 pt-2 sm:w-auto sm:flex-row">
           <Button size="lg" asChild>
-            <Link to="/signup">Create organisation</Link>
+            <Link to="/signup?new">Create organisation</Link>
           </Button>
           <Button size="lg" variant="secondary" asChild>
             <Link to="/login#demo">Try the demo</Link>

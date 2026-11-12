@@ -58,7 +58,7 @@ export function NavMenus() {
             <p className="text-sm text-muted-text">Every rulebook and check is available, across as many branches as you need. No paid plans or card required.</p>
             <N.Link asChild>
               <Button asChild size="sm" className="self-start">
-                <Link to="/signup">Create organisation</Link>
+                <Link to="/signup?new">Create organisation</Link>
               </Button>
             </N.Link>
           </div>

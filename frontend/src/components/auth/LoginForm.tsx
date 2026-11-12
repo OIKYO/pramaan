@@ -41,8 +41,13 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
         <p className="text-muted-text">
           New here?{" "}
           <Link to="/signup" className="font-medium text-ink-strong underline decoration-line-strong underline-offset-4 hover:decoration-ink-strong">
-            Create an organisation
+            Join with a code
           </Link>
+          , or{" "}
+          <Link to="/signup?new" className="font-medium text-ink-strong underline decoration-line-strong underline-offset-4 hover:decoration-ink-strong">
+            create an organisation
+          </Link>
+          .
         </p>
       </div>
       <form onSubmit={submit} noValidate className="flex flex-col gap-4">

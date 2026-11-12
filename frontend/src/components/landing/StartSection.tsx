@@ -14,7 +14,7 @@ export function StartSection() {
           start checking posters before they go out.
         </p>
         <Button size="lg" asChild className="mt-2">
-          <Link to="/signup">Create organisation</Link>
+          <Link to="/signup?new">Create organisation</Link>
         </Button>
       </div>
       <div className="overflow-hidden rounded-xl border border-line bg-surface">
