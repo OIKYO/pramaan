@@ -25,9 +25,9 @@ Password for every account: `Northfield-demo-2026`, or pick a person under **Or 
 | Email | Role | Who |
 |---|---|---|
 | `staff.siliguri@pramaan.demo` | Branch staff | Rudrapriyo Chatterjee, Siliguri branch |
-| `regional.east@pramaan.demo` | Regional manager | Rishav Nandi, East region |
+| `regional.east@pramaan.demo` | Regional manager | Zihan Sirat, East region |
 | `hq@pramaan.demo` | Head office | Oikyo Chowdhury |
-| `staff.kolkata@pramaan.demo` | Branch staff | Zihan Sirat, Kolkata branch (shows branches can't see each other's posters) |
+| `staff.kolkata@pramaan.demo` | Branch staff | Rishav Nandi, Kolkata branch (shows branches can't see each other's posters) |
 
 ### Try it
 
