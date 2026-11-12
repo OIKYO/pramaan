@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-12T01:12:53+05:30",
+ "generated_at": "2026-11-12T12:55:07+05:30",
  "mode": "live",
  "second_reader": "tesseract",
  "checked_as_of": "2026-11-07",
@@ -21,23 +21,23 @@
  ],
  "repeat_runs": 3,
  "posters": 50,
- "runs": 37,
- "unread_runs": 18,
+ "runs": 42,
+ "unread_runs": 13,
  "planned_runs": 70,
  "readers": {
-  "groq:qwen/qwen3.8-27b": 25,
-  "gemini-3.5-flash": 12
+  "groq:qwen/qwen3.8-27b": 28,
+  "gemini-3.5-flash": 14
  },
  "summary": {
   "catch_rate": 1.0,
-  "caught": 28,
+  "caught": 31,
   "missed": 0,
   "false_flags": 0,
   "false_flag_rate": 0.0,
-  "exactly_right": 37,
+  "exactly_right": 42,
   "consistent_posters": 7,
   "compared_posters": 7,
-  "asked_per_run": 0.11
+  "asked_per_run": 0.1
  },
  "checks": [
   {
@@ -48,7 +48,7 @@
    "caught": 1,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 36,
+   "clean_runs": 41,
    "consistent": 7,
    "compared": 7
   },
@@ -60,7 +60,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -72,7 +72,7 @@
    "caught": 1,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 29,
+   "clean_runs": 33,
    "consistent": 7,
    "compared": 7
   },
@@ -84,7 +84,7 @@
    "caught": 1,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 36,
+   "clean_runs": 41,
    "consistent": 7,
    "compared": 7
   },
@@ -96,7 +96,7 @@
    "caught": 1,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 36,
+   "clean_runs": 41,
    "consistent": 7,
    "compared": 7
   },
@@ -108,7 +108,7 @@
    "caught": 1,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 36,
+   "clean_runs": 41,
    "consistent": 7,
    "compared": 7
   },
@@ -120,7 +120,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 29,
+   "clean_runs": 33,
    "consistent": 7,
    "compared": 7
   },
@@ -129,10 +129,10 @@
    "name": "No banned claims",
    "kind": "code",
    "planted": 6,
-   "caught": 7,
+   "caught": 8,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 30,
+   "clean_runs": 34,
    "consistent": 7,
    "compared": 7
   },
@@ -144,7 +144,7 @@
    "caught": 3,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 34,
+   "clean_runs": 39,
    "consistent": 7,
    "compared": 7
   },
@@ -156,7 +156,7 @@
    "caught": 1,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 36,
+   "clean_runs": 41,
    "consistent": 7,
    "compared": 7
   },
@@ -165,10 +165,10 @@
    "name": "Rank matches the register",
    "kind": "code",
    "planted": 5,
-   "caught": 4,
+   "caught": 5,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 33,
+   "clean_runs": 37,
    "consistent": 7,
    "compared": 7
   },
@@ -180,7 +180,7 @@
    "caught": 2,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 35,
+   "clean_runs": 40,
    "consistent": 7,
    "compared": 7
   },
@@ -192,7 +192,7 @@
    "caught": 2,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 35,
+   "clean_runs": 40,
    "consistent": 7,
    "compared": 7
   },
@@ -204,7 +204,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -216,7 +216,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -228,7 +228,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -240,7 +240,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -249,10 +249,10 @@
    "name": "Prices match approved prices",
    "kind": "code",
    "planted": 4,
-   "caught": 2,
+   "caught": 3,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 35,
+   "clean_runs": 39,
    "consistent": 7,
    "compared": 7
   },
@@ -264,7 +264,7 @@
    "caught": 1,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 36,
+   "clean_runs": 41,
    "consistent": 7,
    "compared": 7
   },
@@ -276,7 +276,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -288,7 +288,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -300,7 +300,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -312,7 +312,7 @@
    "caught": 1,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 36,
+   "clean_runs": 41,
    "consistent": 7,
    "compared": 7
   },
@@ -324,7 +324,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -336,7 +336,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -348,7 +348,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   },
@@ -360,7 +360,7 @@
    "caught": 0,
    "missed": 0,
    "false_flags": 0,
-   "clean_runs": 37,
+   "clean_runs": 42,
    "consistent": 7,
    "compared": 7
   }
@@ -470,9 +470,31 @@
        "message": "“100% selection guaranteed”: The phrase makes a promise about results and uses a superlative claim ('100%') which is prohibited by the tone of voice rules."
       }
      ]
+    },
+    {
+     "failed": [
+      "BRAND-04",
+      "CCPA-01"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-01",
+       "severity": "block",
+       "message": "The poster says “100% selection guaranteed”, which promises a result."
+      },
+      {
+       "rule_id": "BRAND-04",
+       "severity": "warn",
+       "message": "“100% selection guaranteed”: The phrase makes a promise about results and uses a superlative claim ('100%') which is prohibited by the tone of voice rules."
+      }
+     ]
     }
    ],
-   "unread": 1,
+   "unread": 0,
    "consistent": true
   },
   {
@@ -646,9 +668,25 @@
        "message": "Shows ₹45,000 for 2-Year Classroom Programme; the approved fee is ₹48,000."
       }
      ]
+    },
+    {
+     "failed": [
+      "FACT-02"
+     ],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "FACT-02",
+       "severity": "block",
+       "message": "Shows ₹45,000 for 2-Year Classroom Programme; the approved fee is ₹48,000."
+      }
+     ]
     }
    ],
-   "unread": 1,
+   "unread": 0,
    "consistent": true
   },
   {
@@ -838,9 +876,17 @@
      "missed": [],
      "extra": [],
      "findings": []
+    },
+    {
+     "failed": [],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": []
     }
    ],
-   "unread": 1,
+   "unread": 0,
    "consistent": true
   },
   {
@@ -926,9 +972,18 @@
    "expect": [],
    "also": [],
    "image": "reliability/16-clean-offer.jpg",
-   "runs": [],
-   "unread": 1,
-   "consistent": null
+   "runs": [
+    {
+     "failed": [],
+     "reader_model": "gemini-3.5-flash",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": []
+    }
+   ],
+   "unread": 0,
+   "consistent": true
   },
   {
    "name": "17-clean-date",
@@ -1192,9 +1247,26 @@
    ],
    "also": [],
    "image": "reliability/24-wrong-rank-ananya.jpg",
-   "runs": [],
-   "unread": 1,
-   "consistent": null
+   "runs": [
+    {
+     "failed": [
+      "CCPA-04"
+     ],
+     "reader_model": "groq:qwen/qwen3.8-27b",
+     "asked": 0,
+     "missed": [],
+     "extra": [],
+     "findings": [
+      {
+       "rule_id": "CCPA-04",
+       "severity": "block",
+       "message": "Shows AIR 85 for Ananya Roy; the register says AIR 58."
+      }
+     ]
+    }
+   ],
+   "unread": 0,
+   "consistent": true
   },
   {
    "name": "25-wrong-rank-riya-7",
