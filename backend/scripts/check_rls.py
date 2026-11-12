@@ -88,7 +88,7 @@ def main() -> None:
     anon = {"apikey": PUBLISHABLE}
 
     kolkata = db.table("branches").select("id").eq("name", "Northfield Kolkata").execute().data[0]["id"]
-    creator = db.table("profiles").select("id").eq("full_name", "Rahul Sarkar").execute().data[0]["id"]
+    creator = db.table("profiles").select("id").eq("email", "staff.kolkata@pramaan.demo").execute().data[0]["id"]
     poster = db.table("posters").insert({
         "org_id": ORG_ID, "branch_id": kolkata, "created_by": creator, "title": "RLS check (temporary)", "channel": "print",
     }).execute().data[0]

@@ -6,6 +6,7 @@ from app import imports
 from app.auth import require
 from app.catalog import complete, vocabulary
 from app.db import audit, get_db
+from app.demo import not_in_demo
 from app.models import (
     Dataset, DatasetSpecOut, ImportColumn, ImportIssue, ImportPreview, ImportRow, Profile,
 )
@@ -116,6 +117,8 @@ def _write(dataset: str, plan: imports.Plan, existing: imports.Existing, org_id:
 def run_import(dataset: Dataset, user: HeadOffice, file: Annotated[UploadFile, File()],
                commit: Annotated[bool, Form()] = False) -> ImportPreview:
     """Check a CSV and show what would change. With commit=true, save it (only if every row is valid)."""
+    if dataset == "members":
+        not_in_demo(user.org_id, "adding team members")
     if RULEBOOK.get(dataset, "brand") not in _organisation(user.org_id)[0]:
         raise HTTPException(400, "Your organisation doesn't keep this rulebook. Add it on the Rulebooks page first.")
     data = file.file.read(imports.MAX_BYTES + 1)

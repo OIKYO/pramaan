@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from app import invites as rules
 from app.auth import require
 from app.db import audit, get_db
+from app.demo import not_in_demo
 from app.models import (
     BranchChoice, CodePreview, InviteCreate, InviteCreated, InviteOut, InvitePreview, JoinCode, JoinResult, JoinWithCode,
     JoinWithInvite, Profile,
@@ -42,6 +43,7 @@ def _branch_region(org_id: str, branch_id: str | None) -> str | None:
 @router.post("/invites", response_model=InviteCreated, status_code=201)
 def create_invite(body: InviteCreate, user: Inviter) -> InviteCreated:
     """A single-use link for one person, valid for 7 days. The link itself is shown only now."""
+    not_in_demo(user.org_id, "inviting people")
     db = get_db()
     branch_id, region_id = placement(db, user.org_id, body.role, body.branch_id, body.region_id)
     if problem := rules.invite_problem(user.role, user.region_id, body.role, _branch_region(user.org_id, branch_id)):
@@ -117,6 +119,7 @@ def accept_invite(token: str, body: JoinWithInvite, request: Request) -> JoinRes
     """Create the person's account inside the organisation, with the invite's role and place."""
     limit(request, "join")
     row = _invite_by_token(token)
+    not_in_demo(row["org_id"], "joining")
     email = body.email.strip().lower()
     if row["email"] and row["email"] != email:
         raise HTTPException(403, f"This invite is for {row['email']}. Use that email, or ask for a new invite.")
@@ -150,6 +153,7 @@ def join_with_code(body: JoinWithCode, request: Request) -> JoinResult:
     """Join as branch staff of the chosen branch. Head office can change the role later."""
     limit(request, "join")
     org = _org_by_code(body.code)
+    not_in_demo(org["id"], "joining")
     db = get_db()
     branch_id, _ = placement(db, org["id"], "branch_staff", body.branch_id, None)
     email = body.email.strip().lower()
@@ -177,6 +181,7 @@ def get_join_code(user: Inviter) -> JoinCode:
 @router.post("/organisation/join-code", response_model=JoinCode)
 def refresh_join_code(user: HeadOffice, response: Response) -> JoinCode:
     """Replace the code, for example if it was shared outside the organisation. The old one stops working."""
+    not_in_demo(user.org_id, "replacing the join code")
     code = rules.new_code()
     get_db().table("organisations").update({"join_code": code}).eq("id", user.org_id).execute()
     audit(user.org_id, user.id, "join_code_refreshed", "organisation", user.org_id)

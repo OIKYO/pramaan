@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.auth import require
 from app.db import audit, get_db
+from app.demo import not_in_demo
 from app.models import MemberCreate, MemberCreated, MemberOut, MemberUpdate, Profile
 from app.team import add_profile, create_login, placement, temporary_password
 from pipeline.run import IST
@@ -28,6 +29,7 @@ def _active_head_offices(org_id: str) -> int:
 
 @router.post("", response_model=MemberCreated, status_code=201)
 def add_member(body: MemberCreate, user: HeadOffice) -> MemberCreated:
+    not_in_demo(user.org_id, "managing the team")
     db = get_db()
     branch_id, region_id = placement(db, user.org_id, body.role, body.branch_id, body.region_id)
     email, password = body.email.strip().lower(), temporary_password()
@@ -40,6 +42,7 @@ def add_member(body: MemberCreate, user: HeadOffice) -> MemberCreated:
 
 @router.patch("/{member_id}", response_model=MemberOut)
 def update_member(member_id: str, body: MemberUpdate, user: HeadOffice) -> MemberOut:
+    not_in_demo(user.org_id, "managing the team")
     db = get_db()
     member = _member(member_id, user.org_id)
     role = body.role or member["role"]
@@ -58,6 +61,7 @@ def update_member(member_id: str, body: MemberUpdate, user: HeadOffice) -> Membe
 @router.post("/{member_id}/reset-password", response_model=MemberCreated)
 def reset_password(member_id: str, user: HeadOffice) -> MemberCreated:
     """A new temporary password, for someone who forgot theirs."""
+    not_in_demo(user.org_id, "managing the team")
     db = get_db()
     member = _member(member_id, user.org_id)
     password = temporary_password()
@@ -70,6 +74,7 @@ def reset_password(member_id: str, user: HeadOffice) -> MemberCreated:
 @router.post("/{member_id}/deactivate", response_model=MemberOut)
 def deactivate(member_id: str, user: HeadOffice) -> MemberOut:
     """Remove someone's access at once. Their posters and history stay, so the audit trail is intact."""
+    not_in_demo(user.org_id, "managing the team")
     if member_id == user.id:
         raise HTTPException(409, "You can't remove your own access. Ask another head office account.")
     db = get_db()
@@ -83,6 +88,7 @@ def deactivate(member_id: str, user: HeadOffice) -> MemberOut:
 
 @router.post("/{member_id}/reactivate", response_model=MemberOut)
 def reactivate(member_id: str, user: HeadOffice) -> MemberOut:
+    not_in_demo(user.org_id, "managing the team")
     db = get_db()
     member = _member(member_id, user.org_id)
     db.auth.admin.update_user_by_id(member_id, {"ban_duration": "none"})

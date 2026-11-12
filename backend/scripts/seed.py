@@ -38,13 +38,13 @@ BRANCHES = [
 ]
 
 USERS = [
-    {"email": "staff.siliguri@pramaan.demo", "full_name": "Tara Ghosh", "role": "branch_staff",
+    {"email": "staff.siliguri@pramaan.demo", "full_name": "Rudrapriyo Chatterjee", "role": "branch_staff",
      "branch": "Northfield Siliguri"},
-    {"email": "regional.east@pramaan.demo", "full_name": "Vikram Bose", "role": "regional_manager",
+    {"email": "regional.east@pramaan.demo", "full_name": "Rishav Nandi", "role": "regional_manager",
      "region": "East"},
-    {"email": "hq@pramaan.demo", "full_name": "Meera Iyer", "role": "head_office"},
+    {"email": "hq@pramaan.demo", "full_name": "Oikyo Chowdhury", "role": "head_office"},
     # A second branch account, used to test that branches can't see each other's posters.
-    {"email": "staff.kolkata@pramaan.demo", "full_name": "Rahul Sarkar", "role": "branch_staff",
+    {"email": "staff.kolkata@pramaan.demo", "full_name": "Zihan Sirat", "role": "branch_staff",
      "branch": "Northfield Kolkata"},
 ]
 

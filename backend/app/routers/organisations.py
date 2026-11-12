@@ -8,6 +8,7 @@ from app.catalog import (
     OTHER_INDUSTRY, ProfileError, check_profile, check_rulebooks, complete, load_catalog, suggested_rulebooks,
 )
 from app.db import audit, get_db
+from app.demo import not_in_demo
 from app.models import (
     Catalog, DeleteOrganisation, OrganisationOut, OrganisationUpdate, Profile, SignupRequest, SignupResult,
 )
@@ -69,6 +70,7 @@ def signup(body: SignupRequest) -> SignupResult:
 def update_organisation(body: OrganisationUpdate, user: HeadOffice) -> OrganisationOut:
     """Change what the organisation does, or which rulebooks it keeps. The brand kit and branch
     contact details are always kept, and a rulebook brings the ones it depends on with it."""
+    not_in_demo(user.org_id, "changing the organisation's industry or rulebooks")
     db = get_db()
     current = db.table("organisations").select(ORG_COLUMNS).eq("id", user.org_id).single().execute().data
     changes: dict = {}
@@ -114,6 +116,7 @@ def _remove(db, bucket: str, paths: list[str]) -> None:
 def delete_organisation(body: DeleteOrganisation, user: HeadOffice) -> Response:
     """Delete the organisation and everything in it, at once: its records, posters, consent files,
     logo, audit log and every member's sign-in. It can't be undone."""
+    not_in_demo(user.org_id, "deleting the organisation")
     db = get_db()
     org = db.table("organisations").select("id, name").eq("id", user.org_id).single().execute().data
     if body.confirm_name.strip() != org["name"]:
