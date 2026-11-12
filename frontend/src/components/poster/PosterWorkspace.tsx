@@ -5,6 +5,7 @@ import type { Channel, PosterAction, Version } from "@/api/types";
 import { toast } from "@/components/ui/Toast";
 import { pagesOf, passesOf, problemsOf } from "@/lib/findings";
 import { scrollToItem } from "@/lib/motion";
+import { ChecksRunning } from "./ChecksRunning";
 import { FindingList } from "./FindingList";
 import { PageStrip } from "./PageStrip";
 import { PosterCanvas } from "./PosterCanvas";
@@ -28,6 +29,7 @@ export function PosterWorkspace({ title, version, ruleNames, actions, channel, c
   const headOffice = useProfile().role === "head_office";
   const pageList = pagesOf(version);
   const multi = pageList.length > 1;
+  const checking = version.checked_at === null;
   const [page, setPage] = useState(0);
   const pickInList = (number: number | null) => {
     setSelected(number);
@@ -54,10 +56,11 @@ export function PosterWorkspace({ title, version, ruleNames, actions, channel, c
           problems={problems.filter((p) => (p.page ?? 0) === page)} selected={selected} onSelect={pickOnPoster} />
         <p className="text-xs text-muted-text">
           Version {version.version}
-          {multi ? ` · ${pageList.length} pages, ${version.source === "pdf" ? "a PDF brochure" : "a carousel"}` : ""} · read by{" "}
-          {version.reader_model ?? "nobody (the reader failed)"}
+          {multi ? ` · ${pageList.length} pages, ${version.source === "pdf" ? "a PDF brochure" : "a carousel"}` : ""} ·{" "}
+          {checking ? "being read now" : `read by ${version.reader_model ?? "nobody (the reader failed)"}`}
         </p>
       </div>
+      {checking ? <ChecksRunning pages={pageList.length} /> : (
       <div className="flex min-w-0 flex-col gap-5">
         <VerdictSummary version={version} />
         <FindingList
@@ -75,6 +78,7 @@ export function PosterWorkspace({ title, version, ruleNames, actions, channel, c
           consent={headOffice && current ? { versionId: version.id, channel } : undefined}
         />
       </div>
+      )}
     </div>
   );
 }

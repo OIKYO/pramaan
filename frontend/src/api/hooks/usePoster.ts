@@ -6,8 +6,14 @@ import { pendingReview, posterOfFinding, refreshPosterLists, restore, showPoster
 
 const getPoster = (id: string) => api<PosterDetail>(`/posters/${id}`);
 
+// A poster opened while its checks still run ("draft") refreshes itself until they finish.
 export const usePoster = (id: string) =>
-  useQuery({ queryKey: keys.poster(id), queryFn: () => getPoster(id), enabled: Boolean(id) });
+  useQuery({
+    queryKey: keys.poster(id),
+    queryFn: () => getPoster(id),
+    enabled: Boolean(id),
+    refetchInterval: (query) => (query.state.data?.status === "draft" ? 4000 : false),
+  });
 
 export function usePrefetchPoster() {
   const qc = useQueryClient();

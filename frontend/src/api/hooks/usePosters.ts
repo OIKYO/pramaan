@@ -56,5 +56,14 @@ async function listPosters(scope: PosterScope): Promise<PosterListItem[]> {
   return (data as unknown as ListRow[]).map(toListItem);
 }
 
+// While a poster is being checked the list refreshes, except during this person's own upload,
+// whose placeholder row a refresh would drop.
+const checking = (rows: PosterListItem[] | undefined) =>
+  Boolean(rows?.some((r) => r.status === "draft") && !rows.some((r) => r.pending));
+
 export const usePosterList = (scope: PosterScope = "all") =>
-  useQuery({ queryKey: keys.posterList(scope), queryFn: () => listPosters(scope) });
+  useQuery({
+    queryKey: keys.posterList(scope),
+    queryFn: () => listPosters(scope),
+    refetchInterval: (query) => (checking(query.state.data) ? 5000 : false),
+  });
